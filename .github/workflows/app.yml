@@ -50,7 +50,7 @@ jobs:
         with:
           php-version: 8.1.10
       - name: Copy .env
-        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+        run: php -r "file_exists('server/.env') || copy('server/.env.example', 'server/.env');"
       - name: Install dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: Generate key

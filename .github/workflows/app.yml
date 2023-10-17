@@ -53,5 +53,3 @@ jobs:
         run: php artisan key:generate --ansi
       - name: Directory Permissions
         run: chmod -R 777 storage bootstrap/cache
-      - name: Migrate database
-        run: php artisan migrate --force

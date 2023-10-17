@@ -40,6 +40,7 @@ jobs:
     needs: build-frontend
 
     steps:
+      - uses: actions/checkout@v3
       - name: Set up Laravel
         uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
         with:

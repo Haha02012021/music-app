@@ -2,11 +2,6 @@ name: Deploy Web App to Cloud Server
 
 on:
   push:
-    paths:
-      - "web/**"
-      - "server/**"
-    branches: [ "master" ]
-  pull_request:
     branches: [ "master" ]
 
 permissions:

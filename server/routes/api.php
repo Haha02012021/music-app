@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthenticateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('login-social', [AuthenticateController::class, 'loginSocial']);
+
+Route::get('callback/{provider}', [AuthenticateController::class, 'callbackSocial']);
+
+Route::get('auth/user', [AuthenticateController::class, 'getAuthUser']);

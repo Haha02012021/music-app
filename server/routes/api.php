@@ -19,4 +19,6 @@ Route::get('login-social', [AuthenticateController::class, 'loginSocial']);
 
 Route::get('callback/{provider}', [AuthenticateController::class, 'callbackSocial']);
 
-Route::get('auth/user', [AuthenticateController::class, 'getAuthUser']);
+Route::middleware('auth.api')->group(function () {
+    Route::get('auth/user', [AuthenticateController::class, 'getAuthUser']);
+});

@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\AccessToken;
 use App\Models\Account;
 
-class AuthenticateService {
-    public function getZaloUser($accessToken)
+class AuthenticateService 
+{
+    public function getCurrentUser($accessToken, $expiresIn = 0)
     {
         $userCurl = curl_init();
         $userParams = '?fields=id,name,picture';
@@ -28,8 +30,21 @@ class AuthenticateService {
                 'username' => $user->name,
                 'avatar' => $user->picture->data->url,
             ];
-            $account = $newAccount;
-            Account::create($newAccount);
+            $createdAccount = Account::create($newAccount);
+            $account = [
+                'id' => $createdAccount->id,
+                'username' => $createdAccount->username,
+                'avatar' => $createdAccount->avatar,
+            ];
+        }
+
+        if ($expiresIn) {
+            $newAccessToken = [
+                'account_id' => $account['id'],
+                'access_token' => $accessToken,
+                'expires_in' => $expiresIn,
+            ];
+            AccessToken::create($newAccessToken);
         }
         return $account;
     }

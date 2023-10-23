@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Account;
-use App\Models\User;
 use App\Services\AuthenticateService;
 use Illuminate\Http\Request;
 
@@ -60,7 +58,7 @@ class AuthenticateController extends Controller
         $tokens = json_decode($tokensRes);
         curl_close($accessTokenCurl);
         
-        $account = $this->authenticateService->getZaloUser($tokens->access_token);
+        $account = $this->authenticateService->getCurrentUser($tokens->access_token, $tokens->expires_in);
         return response()->json([
             'success' => true,
             'data' => [
@@ -74,7 +72,7 @@ class AuthenticateController extends Controller
     public function getAuthUser(Request $request)
     {
         $accessToken = $request->bearerToken();
-        $account = $this->authenticateService->getZaloUser($accessToken);
+        $account = $this->authenticateService->getCurrentUser($accessToken);
         return response()->json([
             'success' => true,
             'data' => $account,

@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('thumbnail')->nullable();
             $table->string('lyric')->nullable();
             $table->integer('duration');
-            $table->date('released_at');
+            $table->string('audio');
+            $table->date('released_at')->nullable();
             $table->timestamps();
         });
     }

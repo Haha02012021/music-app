@@ -27,4 +27,16 @@ class Account extends Model
     {
         return $this->hasOne(AccessToken::class);
     }
+
+    public function account() {
+        return $this->hasOne(Album::class);
+    }
+
+    public function genres() {
+        return $this->hasMany(Genre::class, 'admin_id');
+    }
+
+    public function song() {
+        return $this->hasOne(Song::class);
+    }
 }

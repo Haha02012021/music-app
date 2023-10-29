@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title', TITLE_LENGTH);
             $table->integer('account_id');
             $table->tinyInteger('type')->default(1)->comment('1:album; 2:playlist');
-            $table->date('released_at');
+            $table->date('released_at')->nullable();
             $table->timestamps();
         });
     }

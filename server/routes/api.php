@@ -28,9 +28,15 @@ Route::middleware('auth.api')->group(function () {
     // Album
     Route::prefix('album')->name('album.')->group(function () {
         Route::post('create', [AlbumController::class, 'create'])->name('create');
+        Route::put('update', [AlbumController::class, 'update'])->name('update');
     });
 });
 
 Route::prefix('song')->name('song.')->group(function () {
     Route::get('lastest/{isVietNamese?}', [SongController::class, 'getNewLastestSongs'])->name('newLastest');
+    Route::get('{id}', [SongController::class, 'getSongById'])->name('detail');
+});
+
+Route::prefix('album')->name('album.')->group(function () {
+    Route::get('{id}', [AlbumController::class, 'getAlbumById'])->name('detail');
 });

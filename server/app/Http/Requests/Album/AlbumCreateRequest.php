@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Album;
 
+use App\Http\Requests\CustomRequest;
 use Illuminate\Validation\Rule;
 
-class AlbumRequest extends CustomRequest
+class AlbumCreateRequest extends CustomRequest
 {
     /**
      * Determine if the user is authorized to make this request.

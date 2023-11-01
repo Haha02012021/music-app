@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Album;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\CustomRequest;
+use Illuminate\Validation\Rule;
 
-class SongRequest extends FormRequest
+class AlbumUpdateRequest extends CustomRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +23,11 @@ class SongRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'unique:songs', 'max:60'],
-            'album_id' => ['exists:albums,id'],
-            'thumbnail' => ['file'],
-            'lyric' => ['string'],
+            'id' => ['required', 'exists:albums,id'],
+            'title' => ['string'],
+            'type' => [Rule::in([1, 2])],
             'released_at' => ['date'],
+            'song_ids' => ['array']
         ];
     }
 }

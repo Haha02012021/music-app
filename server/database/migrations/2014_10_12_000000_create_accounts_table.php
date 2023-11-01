@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->string('uid');
-            $table->string('username');
+            $table->string('username')->unique();
             $table->tinyInteger('role')->default(1)->comment('1: user, 2:admin');
             $table->string('avatar')->nullable();
             $table->timestamps();

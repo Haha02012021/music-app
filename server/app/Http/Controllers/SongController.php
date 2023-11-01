@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SongRequest;
+use App\Http\Requests\Song\SongCreateRequest;
 use App\Models\Song;
 use Illuminate\Support\Facades\DB;
 
 class SongController extends Controller
 {
-    public function create(SongRequest $request) {
+    public function create(SongCreateRequest $request) {
         $newSong = Song::create($request);
 
         return response()->json([
@@ -61,5 +61,22 @@ class SongController extends Controller
             'data' => $songs,
             'message' => 'Lấy các bài hát mới nhất thành công!'
         ]);
+    }
+
+    public function getSongById(int $id) {
+        $song = Song::with('singers')->with('genres')->find($id);
+
+        if ($song) {
+            return response()->json([
+                'success' => true,
+                'data' => $song,
+                'message' => 'Lấy bài hát thành công!'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tồn tại id bài hát!',
+            ], 404);
+        }
     }
 }

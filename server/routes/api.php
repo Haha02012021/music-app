@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActionController;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\AuthenticateController;
 use App\Http\Controllers\SongController;
@@ -39,4 +40,14 @@ Route::prefix('song')->name('song.')->group(function () {
 
 Route::prefix('album')->name('album.')->group(function () {
     Route::get('{id}', [AlbumController::class, 'getAlbumById'])->name('detail');
+<<<<<<< HEAD
 });
+
+Route::prefix('action')->name('song.')->group(function () {
+    Route::post('listen', [ActionController::class, 'listen'])->name('listen');
+    Route::get('listen/albums', [ActionController::class, 'getListendAlbums'])->name('listen.get-albums');
+    Route::get('listen/lastest-song', [ActionController::class, 'getListenedLastestSong'])->name('listen.lastest-song');
+});
+=======
+});
+>>>>>>> d29ad276d9f5d0e82408dae495ac96afc447b6ce

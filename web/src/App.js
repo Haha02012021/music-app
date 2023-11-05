@@ -1,24 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Home, Login, Mymusic, Public, Playlist, ZingChartWeek } from './containers/public/';
+import { Routes, Route } from "react-router-dom";
+import path from "./utils/path";
+import * as actions from './store/actions';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(actions.getHome());
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="">
+        <Routes>
+          <Route path={path.PUBLIC} element={<Public />} >
+            <Route path={path.HOME} element={<Home />} />
+            <Route path={path.LOGIN} element={<Login />} />
+            <Route path={path.MYMUSIC} element={<Mymusic />} />
+            <Route path={path.PLAYLIST__TITLE__PID} element={<Playlist />} />
+            <Route path={path.ALBUM__TITLE__PID} element={<Playlist />} />
+            <Route path={path.ZINGCHARTWEEK__TITLE__CID} element={<ZingChartWeek />} />
+
+            <Route path={path.STAR} element={<Home />} />
+          </Route>
+        </Routes>
+      </div>
+
+      <ToastContainer position='top-right'
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='light'
+      />
+    </>
   );
 }
 

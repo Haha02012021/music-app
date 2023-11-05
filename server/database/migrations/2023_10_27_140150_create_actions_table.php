@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('genres', function (Blueprint $table) {
+        Schema::create('actions', function (Blueprint $table) {
             $table->id();
-            $table->integer('admin_id');
-            $table->string('title', TITLE_LENGTH)->unique();
-            $table->string('name', TITLE_LENGTH)->unique();
+            $table->integer('account_id')->nullable();
+            $table->string('ip')->nullable();
+            $table->integer('item_id');
+            $table->tinyInteger('type')->default(1)->comment('1:like, 2:listen');
+            $table->tinyInteger('item')->default(1)->comment('1:album, 2:song');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('genres');
+        Schema::dropIfExists('actions');
     }
 };

@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('singers', function (Blueprint $table) {
             $table->id();
-            $table->string('name', TITLE_LENGTH);
+            $table->string('name', TITLE_LENGTH)->unique();
+            $table->string('thumbnail')->nullable();
             $table->string('bio')->nullable();
             $table->timestamps();
         });

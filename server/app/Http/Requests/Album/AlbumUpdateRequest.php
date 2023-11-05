@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Album;
 
-use App\Models\AccessToken;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\CustomRequest;
+use Illuminate\Validation\Rule;
 
-class CustomRequest extends FormRequest
+class AlbumUpdateRequest extends CustomRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,17 +23,11 @@ class CustomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'id' => ['required', 'exists:albums,id'],
+            'title' => ['string'],
+            'type' => [Rule::in([1, 2])],
+            'released_at' => ['date'],
+            'song_ids' => ['array']
         ];
-    }
-
-    public function authAccount()
-    {
-        $token = $this->bearerToken();
-        if ($token) {
-            $account = AccessToken::where('access_token', $token)->first()->account;
-            return $account;
-        }
-        return null;
     }
 }

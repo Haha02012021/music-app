@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ActionItem;
 use App\Enums\ActionType;
+use App\Http\Requests\Action\LikeRequest;
 use App\Http\Requests\Action\ListenRequest;
 use App\Http\Requests\CustomRequest;
 use App\Models\Action;
@@ -70,7 +71,7 @@ class ActionController extends Controller
         $account = $request->authAccount();
 
         if ($account) {
-            $albums = $account->listenedAlbums;
+            $albums = $account->actedAlbums()->where('actions.type', ActionType::LISTEN)->get();
             return response()->json([
                 'success' => true,
                 'data' => $albums,
@@ -102,7 +103,7 @@ class ActionController extends Controller
         $account = $request->authAccount();
 
         if ($account) {
-            $song = $account->listenedSongs->first();
+            $song = $account->actedSongs()->where('type', ActionType::LISTEN)->first();
             return response()->json([
                 'success' => true,
                 'data' => $song,
@@ -130,5 +131,61 @@ class ActionController extends Controller
                 'data' => $song,
             ]);
         }
+    }
+
+    public function like(LikeRequest $request) {
+        $account = $request->authAccount();
+
+        $data = [
+            'item_id' => $request->input('item_id'),
+            'item' => $request->input('item'),
+            'account_id' => $account->id,
+            'type' => ActionType::LIKE,
+        ];
+
+        $like = Action::where('item', $data['item'])
+                    ->where('type', ActionType::LIKE)
+                    ->where('item_id', $data['item_id'])
+                    ->first();
+
+        if ($like) {
+            $like->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã bỏ like!'
+            ]);
+        } else {
+            Action::create($data);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã like!',
+            ]);
+        }
+    }
+
+    public function getLikedAlbums(CustomRequest $request) {
+        $account = $request->authAccount();
+
+        $albums = $account->actedAlbums()->where('actions.type', ActionType::LIKE)->with('author')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $albums,
+            'message' => 'Lấy các album đã like thành công!',
+        ]);
+    }
+
+    public function getLikedSongs(CustomRequest $request) {
+        $account = $request->authAccount();
+
+        $songs = $account->actedSongs()->where('type', ActionType::LIKE)->with('author')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $songs,
+            'message' => 'Lấy các bài hát đã like thành công!',
+        ]);
     }
 }

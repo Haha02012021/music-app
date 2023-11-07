@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActionType;
 use App\Http\Requests\Album\AlbumCreateRequest;
 use App\Http\Requests\Album\AlbumUpdateRequest;
+use App\Http\Requests\CustomRequest;
 use App\Models\Album;
 use App\Models\Song;
 use App\Services\AlbumService;
@@ -84,8 +86,22 @@ class AlbumController extends Controller
         }
     }
 
-    public function getAlbumById(int $id) {
-        $album = Album::with('songs')->with('singers')->find($id);
+    public function getAlbumById(CustomRequest $request) {
+        $id = $request->route('id');
+        $album = Album::with('author', 'songs', 'singers', 'songs.author')
+                    ->withCount([
+                        'actions as listens_count' => function ($query) {
+                            $query->where('type', ActionType::LISTEN);
+                        },
+                        'actions as likes_count' => function ($query) {
+                            $query->where('type', ActionType::LIKE);
+                        },
+                    ])
+                    ->withExists('actions as is_liked', function ($query) use ($request) {
+                        $query->where('account_id', $request->authAccount()->id)
+                                ->where('type', ActionType::LIKE);
+                    })
+                    ->find($id);
 
         if ($album) {
             return response()->json([

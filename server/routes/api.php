@@ -42,8 +42,14 @@ Route::prefix('album')->name('album.')->group(function () {
     Route::get('{id}', [AlbumController::class, 'getAlbumById'])->name('detail');
 });
 
-Route::prefix('action')->name('song.')->group(function () {
-    Route::post('listen', [ActionController::class, 'listen'])->name('listen');
-    Route::get('listen/albums', [ActionController::class, 'getListendAlbums'])->name('listen.get-albums');
-    Route::get('listen/lastest-song', [ActionController::class, 'getListenedLastestSong'])->name('listen.lastest-song');
+Route::prefix('action/like')->name('action.')->group(function () {
+    Route::post('', [ActionController::class, 'like'])->name('');
+    Route::get('albums', [ActionController::class, 'getLikedAlbums'])->name('get-albums');
+    Route::get('songs', [ActionController::class, 'getLikedSongs'])->name('get-songs');
+});
+
+Route::prefix('action/listen')->name('action.listen')->group(function () {
+    Route::post('', [ActionController::class, 'listen'])->name('');
+    Route::get('albums', [ActionController::class, 'getListendAlbums'])->name('get-albums');
+    Route::get('lastest-song', [ActionController::class, 'getListenedLastestSong'])->name('lastest-song');
 });

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActionItem;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,12 +17,17 @@ class Album extends Model
         'released_at',
     ];
 
+    public function author() {
+        return $this->belongsTo(Account::class, 'account_id', 'id');
+    }
+
     public function singers() {
         return $this->belongsToMany(Singer::class, 'singers_albums', 'album_id', 'singer_id');
     }
 
     public function actions() {
         return $this->belongsToMany(Account::class, 'actions', 'item_id', 'account_id')
+                    ->wherePivot('item', ActionItem::ALBUM)
                     ->withPivot(['type', 'item'])
                     ->withTimestamps();
     }

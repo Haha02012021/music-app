@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActionType;
+use App\Http\Requests\CustomRequest;
 use App\Http\Requests\Song\SongCreateRequest;
 use App\Models\Song;
 use Illuminate\Support\Facades\DB;
@@ -63,8 +65,22 @@ class SongController extends Controller
         ]);
     }
 
-    public function getSongById(int $id) {
-        $song = Song::with('singers')->with('genres')->find($id);
+    public function getSongById(CustomRequest $request) {
+        $id = $request->route('id');
+        $song = Song::with('author', 'singers', 'genres')
+            ->withCount([
+                'actions as listens_count' => function ($query) {
+                    $query->where('type', ActionType::LISTEN);
+                },
+                'actions as likes_count' => function ($query) {
+                    $query->where('type', ActionType::LIKE);
+                },
+            ])
+            ->withExists('actions as is_liked', function ($query) use ($request) {
+                $query->where('account_id', $request->authAccount()->id)
+                        ->where('type', ActionType::LIKE);
+            })
+            ->find($id);
 
         if ($song) {
             return response()->json([

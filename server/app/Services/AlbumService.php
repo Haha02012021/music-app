@@ -17,7 +17,7 @@ class AlbumService
             $album->songs()->detach();
             $album->singers()->detach();
             $songs = Song::with('singers')->whereIn('id', $songIds)->get();
-            $singerIds = $songs->pluck('singers')->flatten(1)->values()->pluck('id')->toArray();
+            $singerIds = $songs->pluck('singers')->flatten(1)->values()->pluck('id')->unique()->toArray();
             $album->songs()->attach($songIds);
             $album->singers()->attach($singerIds);
         }

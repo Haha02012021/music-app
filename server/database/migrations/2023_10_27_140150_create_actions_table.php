@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('actions', function (Blueprint $table) {
             $table->id();
-            $table->integer('account_id')->nullable();
+            $table->foreignId('account_id')->nullable();
             $table->string('ip')->nullable();
-            $table->integer('item_id');
+            $table->foreignId('item_id');
             $table->tinyInteger('type')->default(1)->comment('1:like, 2:listen');
             $table->tinyInteger('item')->default(1)->comment('1:album, 2:song');
             $table->timestamps();

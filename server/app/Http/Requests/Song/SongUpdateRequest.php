@@ -25,6 +25,7 @@ class SongUpdateRequest extends CustomRequest
             'id' => ['required', 'numeric', 'exists:songs,id'],
             'name' => ['unique:songs', 'max:60'],
             'singer_ids' => ['array'],
+            'genre_ids' => ['array'],
             'album_id' => ['exists:albums,id'],
             'thumbnail' => ['file', 'mimes:jpeg,png', 'mimetypes:image/jpeg,image/png'],
             'audio' => ['file', 'mimes:mp3,wma,wav'],

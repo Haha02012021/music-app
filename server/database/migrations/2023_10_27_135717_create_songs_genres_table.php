@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('songs_genres', function (Blueprint $table) {
             $table->id();
-            $table->integer('song_id');
-            $table->integer('genre_id');
+            $table->foreignId('song_id');
+            $table->foreignId('genre_id');
             $table->timestamps();
         });
     }

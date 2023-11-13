@@ -15,10 +15,23 @@ class Singer extends Model
     ];
 
     public function songs() {
-        return $this->hasMany(Song::class);
+        return $this->belongsToMany(Song::class, 'singers_songs', 'singer_id', 'song_id')
+                    ->select([
+                        'songs.id',
+                        'name',
+                        'thumbnail',
+                        'duration',
+                        'released_at',
+                    ]);
     }
 
     public function albums() {
-        return $this->hasMany(Album::class);
+        return $this->belongsToMany(Album::class, 'singers_albums', 'singer_id', 'album_id')
+                    ->select([
+                        'albums.id',
+                        'title',
+                        'thumbnail',
+                        'released_at',
+                    ]);
     }
 }

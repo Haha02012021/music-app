@@ -8,9 +8,12 @@ use App\Http\Requests\Album\AlbumCreateRequest;
 use App\Http\Requests\Album\AlbumUpdateRequest;
 use App\Http\Requests\CustomRequest;
 use App\Models\Album;
+use App\Models\Genre;
+use App\Models\Singer;
 use App\Services\AlbumService;
 use App\Services\FileService;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AlbumController extends Controller
@@ -134,5 +137,91 @@ class AlbumController extends Controller
                 'message' => 'Không tồn tại id album!',
             ], 404);
         }
+    }
+
+    public function getAllAlbums(CustomRequest $request) {
+        $limit = $request->limit;
+        if (!$limit) {
+            $limit = PAGE_LENGTH;
+        }
+        $albums = Album::select([
+                        'id',
+                        'title',
+                        'thumbnail',
+                    ])
+                    ->withExists('actions as is_liked', function ($query) use ($request) {
+                        $query->where('account_id', $request->authAccount()->id)
+                            ->where('type', ActionType::LIKE);
+                    })
+                    ->with('singers')
+                    ->paginate($limit);
+        collect($albums->items())->map(function ($album) use ($request) {
+            $album->songs_count = $album->songs($request->authAccount()->id)->count();
+            if (str_contains($album->thumbnail, 'https')) {
+                $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR);
+            }
+
+            return $album;
+        });
+        return response()->json([
+            'success' => true,
+            'data' => $albums,
+        ]);
+    }
+
+    public function getAlbumsByGenreId(CustomRequest $request) {
+        $genreId = $request->genreId;
+        $genre = Genre::find($genreId);
+
+        if ($genre) {
+            $albums = $genre->songs()
+                        ->with('albums', 'albums.singers')
+                        ->get()
+                        ->pluck('albums')
+                        ->flatten(1)
+                        ->unique('id')
+                        ->values()
+                        ->map(function ($album) use ($request) {
+                            if (!str_contains($album->thumbnail, 'https')) {
+                                $album->is_liked = $album->where('account_id', $request->authAccount()->id)
+                                                        ->where('type', ActionType::LIKE)
+                                                        ->exists();
+                                $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR);
+                            }
+                            return $album;
+                        });
+            return response()->json([
+                'success' => true,
+                'data' => $albums,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tồn tại genre id!',
+            ], 404);
+        }
+    }
+
+    public function getAlbumsBySingerId(CustomRequest $request) {
+        $singerId = $request->singerId;
+        $albums = Singer::find($singerId)
+                        ->albums()
+                        ->with('singers')
+                        ->withExists('actions as is_liked', function ($query) use ($request) {
+                            $query->where('account_id', $request->authAccount()->id)
+                                ->where('type', ActionType::LIKE);
+                        })
+                        ->get()
+                        ->map(function ($album) {
+                            if (!str_contains($album->thumbnail, 'https')) {
+                                $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR);
+                            }
+                            return $album;
+                        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $albums,
+        ]);
     }
 }

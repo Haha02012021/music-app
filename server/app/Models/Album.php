@@ -39,7 +39,8 @@ class Album extends Model
     public function songs($authId) {
         return $this->belongsToMany(Song::class, 'albums_songs', 'album_id', 'song_id')
                     ->with('singers')
-                    ->select(['songs.id', 'name', 'duration'])
+                    ->select(['songs.id', 'name', 'duration', 'released_at'])
+                    ->orderByDesc('released_at')
                     ->withExists('actions as is_liked', function ($query) use ($authId) {
                         $query->where('account_id', $authId)
                                 ->where('type', ActionType::LIKE);

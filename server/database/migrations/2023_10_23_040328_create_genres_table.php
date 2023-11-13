@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('genres', function (Blueprint $table) {
             $table->id();
-            $table->integer('admin_id');
+            $table->foreignId('admin_id');
             $table->string('title', TITLE_LENGTH)->unique();
             $table->string('name', TITLE_LENGTH)->unique();
             $table->timestamps();

@@ -3,27 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ActionType;
+use App\Enums\AlbumType;
 use App\Http\Requests\Album\AlbumCreateRequest;
 use App\Http\Requests\Album\AlbumUpdateRequest;
 use App\Http\Requests\CustomRequest;
 use App\Models\Album;
-use App\Models\Song;
 use App\Services\AlbumService;
+use App\Services\FileService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 class AlbumController extends Controller
 {
     private AlbumService $albumService;
+    private FileService  $fileService;
 
     /**
      * Define constructors.
      * 
      * @param (\App\Services\AlbumService): $albumService
      */
-    public function __construct(AlbumService $albumService)
+    public function __construct(AlbumService $albumService, FileService $fileService)
     {
         $this->albumService = $albumService;
+        $this->fileService = $fileService;
     }
 
     public function create(AlbumCreateRequest $request) {
@@ -31,10 +34,12 @@ class AlbumController extends Controller
             DB::transaction(function () use ($request) {
                 $data = [
                     'title' => $request->input('title'),
-                    'type' => $request->input('type'),
+                    'type' => AlbumType::ALBUM,
                     'released_at' => $request->input('released_at'),
                     'account_id' => $request->authAccount()->id,
                 ];
+                $media = $this->albumService->updateThumbnail($request, $data['title']);
+                $data = array_merge($data, $media);
                 $album = Album::create($data);
         
                 $songIds = $request->input('song_ids');
@@ -58,37 +63,44 @@ class AlbumController extends Controller
         }
     }
 
+    public function createPlaylist(AlbumCreateRequest $request) {
+        $data = [
+            'title' => $request->input('title'),
+            'type' => AlbumType::PLAYLIST,
+            'account_id' => $request->authAccount()->id,
+        ];
+        $media = $this->albumService->updateThumbnail($request, $data['title']);
+        $data = array_merge($data, $media);
+
+        $playlist = Album::create($data);
+
+        return response()->json([
+            'success' => true,
+            'data' => $playlist,
+            'message' => 'Tạo playlist thành công!'
+        ]);
+    }
+
     public function update(AlbumUpdateRequest $request) {
-        try {
-            DB::transaction(function () use ($request) {
-                $id = $request->input('id');
-                $album = Album::find($id);
+        $id = $request->input('id');
+        $album = Album::find($id);
+        $data = $request->except(['id', 'song_ids', 'thumbnail']);
+        $media = $this->albumService->updateThumbnail($request, $album->title);
+        $data = array_merge($data, $media);
+        $album->update($data);
+        
+        $songIds = $request->input('song_ids');
+        $this->albumService->updateSingersSongs($songIds, $album);
 
-                if ($album) {
-                    $album->update($request->except(['id', 'song_ids']));
-
-                    $songIds = $request->input('song_ids');
-                    $this->albumService->updateSingersSongs($songIds, $album);
-                } else {
-                    return new Exception('Không tồn tại id album!');
-                }
-            });
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Update album thành công!'
-            ]);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'success' => false,
-                'message' => $th->getMessage(),
-            ], 404);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Update playlist/album thành công!',
+        ]);
     }
 
     public function getAlbumById(CustomRequest $request) {
         $id = $request->route('id');
-        $album = Album::with('author', 'songs', 'singers', 'songs.author')
+        $album = Album::with('author', 'singers')
                     ->withCount([
                         'actions as listens_count' => function ($query) {
                             $query->where('type', ActionType::LISTEN);
@@ -102,6 +114,13 @@ class AlbumController extends Controller
                                 ->where('type', ActionType::LIKE);
                     })
                     ->find($id);
+        $songs = $album->songs($request->authAccount()->id)->get()
+                    ->map(function ($song) {
+                        $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, 'thumbnails/');
+                        return $song;
+                    });
+        $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, 'thumbnails/');
+        $album->songs = $songs;
 
         if ($album) {
             return response()->json([

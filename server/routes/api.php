@@ -29,7 +29,17 @@ Route::middleware('auth.api')->group(function () {
     // Album
     Route::prefix('album')->name('album.')->group(function () {
         Route::post('create', [AlbumController::class, 'create'])->name('create');
-        Route::put('update', [AlbumController::class, 'update'])->name('update');
+        Route::post('update', [AlbumController::class, 'update'])->name('update');
+    });
+
+    // Playlist
+    Route::prefix('playlist')->name('playlist.')->group(function () {
+        Route::post('create', [AlbumController::class, 'createPlaylist'])->name('create');
+    });
+
+    Route::prefix('song')->name('song.')->group(function () {
+        Route::post('create', [SongController::class, 'create'])->name('create');
+        Route::post('update', [SongController::class, 'update'])->name('update');
     });
 });
 

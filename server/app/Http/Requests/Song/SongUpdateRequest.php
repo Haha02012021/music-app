@@ -4,7 +4,7 @@ namespace App\Http\Requests\Song;
 
 use App\Http\Requests\CustomRequest;
 
-class SongCreateRequest extends CustomRequest
+class SongUpdateRequest extends CustomRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,10 @@ class SongCreateRequest extends CustomRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'unique:songs', 'max:60'],
+            'id' => ['required', 'numeric', 'exists:songs,id'],
+            'name' => ['unique:songs', 'max:60'],
+            'singer_ids' => ['array'],
             'album_id' => ['exists:albums,id'],
-            'singer_ids' => ['required', 'array'],
             'thumbnail' => ['file', 'mimes:jpeg,png', 'mimetypes:image/jpeg,image/png'],
             'audio' => ['file', 'mimes:mp3,wma,wav'],
             'lyric' => ['string'],

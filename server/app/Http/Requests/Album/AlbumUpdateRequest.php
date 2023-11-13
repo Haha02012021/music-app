@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Album;
 
 use App\Http\Requests\CustomRequest;
-use Illuminate\Validation\Rule;
 
 class AlbumUpdateRequest extends CustomRequest
 {
@@ -25,9 +24,10 @@ class AlbumUpdateRequest extends CustomRequest
         return [
             'id' => ['required', 'exists:albums,id'],
             'title' => ['string'],
-            'type' => [Rule::in([1, 2])],
             'released_at' => ['date'],
-            'song_ids' => ['array']
+            'song_ids' => ['array'],
+            'thumbnail' => ['file', 'mimes:jpeg,png', 'mimetypes:image/jpeg,image/png'],
+            'description' => ['string', 'max:255'],
         ];
     }
 }

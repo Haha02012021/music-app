@@ -47,7 +47,7 @@ jobs:
           host: ${{secrets.INFINITYFREE_HOST}}
           username: ${{secrets.INITIFYFREE_USERNAME}}
           password: ${{secrets.INITIFYFREE_PASSWORD}}
-          script: \
+          script: |
             cd htdocs
             rm -rf *
             cp -R ../public.* .

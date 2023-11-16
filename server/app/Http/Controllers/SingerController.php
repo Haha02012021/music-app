@@ -2,9 +2,122 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\CustomRequest;
+use App\Http\Requests\Singer\SingerCreateRequest;
+use App\Http\Requests\Singer\SingerUpdateRequest;
+use App\Models\Singer;
+use App\Services\FileService;
+use App\Services\SingerService;
 
 class SingerController extends Controller
 {
-    //
+    protected FileService $fileService;
+    protected SingerService $singerService;
+
+    public function __construct(FileService $fileService, SingerService $singerService) {
+        $this->fileService = $fileService;
+        $this->singerService = $singerService;
+    }
+
+    public function getAllSingers(CustomRequest $request) {
+        $limit = $request->limit;
+        if (!$limit) {
+            $limit = PAGE_LENGTH;
+        }
+
+        $singers = Singer::select([
+                        'id',
+                        'name',
+                        'thumbnail',
+                        'updated_at',
+                    ])
+                    ->paginate($limit);
+        collect($singers->items())->map(function ($singer) {
+            if (!str_contains($singer->thumbnail, 'https')) {
+                $singer->thumbnail = $this->fileService->getFileUrl($singer->thumbnail, THUMBNAILS_DIR);
+            };
+
+            return $singer;
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $singers,
+        ]);
+    }
+
+    public function create(SingerCreateRequest $request) {
+        $data = $request->except('thumbnail');
+        
+        $thumbnail = $this->singerService->updateThumbnail($request, $request->input('name'));
+        if ($thumbnail) {
+            $data['thumbnail'] = $thumbnail;
+        }
+
+        Singer::create($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tạo ca sĩ thành công!',
+        ]);
+    }
+
+    public function update(SingerUpdateRequest $request) {
+        $singer = Singer::find($request->input('id'));
+        
+        $data = $request->except(['thumbnail', 'id']);
+
+        $thumbnail = $this->singerService->updateThumbnail($request, $singer->name);
+        if ($thumbnail) {
+            $data['thumbnail'] = $thumbnail;
+        }
+
+        $singer->update($data);
+        return response()->json([
+            'success' => true,
+            'message' => 'Cập nhật nghệ sĩ thành công!',
+        ]);
+    }
+
+    public function getSingerById(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+
+        $id = $request->id;
+        $singer = Singer::find($id)
+                        ->withCount('followers')
+                        ->withExists('followers as is_followed', function ($query) use ($authAccount) {
+                            $query->where('follower_id', $authAccount->id);
+                        })
+                        ->first();
+
+        $limit = $request->limit;
+        if (!$limit) {
+            $limit = SLICE_LENGTH;
+        }
+        $singer->songs_slice = $singer->songs()->get()->take($limit);
+        $singer->albums_slice = $singer->albums()->get()->take($limit);
+        $singer->thumbnail = $this->fileService->getFileUrl($singer->thumbnail, THUMBNAILS_DIR);
+
+        return response()->json([
+            'success' => true,
+            'data' => $singer,
+        ]);
+    }
+
+    public function delete(int $id) {
+        $singer = Singer::find($id);
+        if ($singer) {
+            $singer->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Xóa ca sĩ thành công!',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Không tồn tại singer id!',
+        ]);
+    }
 }

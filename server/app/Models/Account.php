@@ -77,4 +77,9 @@ class Account extends Model
                     ->withPivot(['created_at as listened_at'])
                     ->withTimestamps();
     }
+
+    public function followedSingers() {
+        return $this->belongsToMany(Singer::class, 'singers_followers', 'follower_id', 'singer_id')
+                    ->withTimestamps();
+    }
 }

@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ActionController;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\AuthenticateController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\SingerController;
 use App\Http\Controllers\SongController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,6 +28,8 @@ Route::middleware('auth.api')->group(function () {
     // Auth
     Route::get('auth/user', [AuthenticateController::class, 'getAuthUser']);
 
+    Route::post('follow/singer/{singerId}', [AccountController::class, 'follow']);
+
     // Album
     Route::prefix('album')->name('album.')->group(function () {
         Route::post('create', [AlbumController::class, 'create'])->name('create');
@@ -47,9 +50,18 @@ Route::middleware('auth.api')->group(function () {
     // Only role admin
     Route::middleware('role.admin')->group(function () {
         Route::get('songs', [SongController::class, 'getAllSongs'])->name('song.all');
+        Route::delete('song/{id}', [SongController::class, 'delete'])->name('song.delete');
         Route::get('albums', [AlbumController::class, 'getAllAlbums'])->name('album.all');
+        Route::delete('album/{id}', [AlbumController::class, 'delete'])->name('album.delete');
         Route::prefix('genre')->name('genre.')->group(function () {
-            Route::get('all', [GenreController::class, 'getAllGenres'])->name('all');
+            Route::post('create', [GenreController::class, 'create'])->name('create');
+            Route::put('update', [GenreController::class, 'update'])->name('update');
+            Route::delete('{id}', [GenreController::class, 'delete'])->name('delete');
+        });
+        Route::prefix('singer')->name('singer.')->group(function () {
+            Route::post('create', [SingerController::class, 'create'])->name('create');
+            Route::post('update', [SingerController::class, 'update'])->name('update');
+            Route::delete('{id}', [SingerController::class, 'delete'])->name('delete');
         });
     });
 });
@@ -65,6 +77,16 @@ Route::prefix('album')->name('album.')->group(function () {
     Route::get('{id}', [AlbumController::class, 'getAlbumById'])->name('detail');
     Route::get('genre/{genreId}', [AlbumController::class, 'getAlbumsByGenreId'])->name('genre-id');
     Route::get('singer/{singerId}', [AlbumController::class, 'getAlbumsBySingerId'])->name('singer-id');
+});
+
+Route::prefix('singer')->name('singer.')->group(function () {
+    Route::get('all', [SingerController::class, 'getAllSingers'])->name('all');
+    Route::get('{id}', [SingerController::class, 'getSingerById'])->name('detail');
+});
+
+Route::prefix('genre')->name('genre.')->group(function () {
+    Route::get('all', [GenreController::class, 'getAllGenres'])->name('all');
+    Route::get('{id}', [GenreController::class, 'getGenreById'])->name('detail');
 });
 
 Route::prefix('action/like')->name('action.')->group(function () {

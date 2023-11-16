@@ -4,13 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Singer extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',
+        'thumbnail',
         'bio',
     ];
 
@@ -33,5 +36,9 @@ class Singer extends Model
                         'thumbnail',
                         'released_at',
                     ]);
+    }
+
+    public function followers() {
+        return $this->belongsToMany(Account::class, 'singers_followers', 'singer_id', 'follower_id');
     }
 }

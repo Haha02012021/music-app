@@ -38,9 +38,12 @@ class FileService
 
     public function getFileUrl($file, $fileDir)
     {
-        $file = $this->storage->getBucket()->object($fileDir.$file);
-        $url = $file->signedUrl(new \DateTime('+1 hour'));
+        if ($file) {
+            $file = $this->storage->getBucket()->object($fileDir.$file);
+            $url = $file->signedUrl(new \DateTime('+1 hour'));
 
-        return $url;
+            return $url;
+        }
+        return null;
     }
 }

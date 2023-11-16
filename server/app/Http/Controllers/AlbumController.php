@@ -224,4 +224,21 @@ class AlbumController extends Controller
             'data' => $albums,
         ]);
     }
+
+    public function delete(int $id) {
+        $album = Album::find($id);
+        if ($album) {
+            $album->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Xóa album/playlist thành công!',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Không tồn tại album id!',
+        ], 404);
+    }
 }

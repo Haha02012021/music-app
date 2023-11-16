@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('account_id');
             $table->text('access_token');
+            $table->text('refresh_token');
             $table->integer('expires_in');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('account_id');
             $table->tinyInteger('type')->default(1)->comment('1:album; 2:playlist');
             $table->date('released_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

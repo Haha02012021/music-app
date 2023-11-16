@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('duration');
             $table->string('audio');
             $table->date('released_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

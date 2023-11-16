@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name', TITLE_LENGTH)->unique();
             $table->string('thumbnail')->nullable();
             $table->string('bio')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

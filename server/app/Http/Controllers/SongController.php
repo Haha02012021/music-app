@@ -262,4 +262,21 @@ class SongController extends Controller
             'data' => $songs,
         ]);
     }
+
+    public function delete(int $id) {
+        $song = Song::find($id);
+        if ($song) {
+            $song->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Xóa bài hát thành công!',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Không tồn tại song id!',
+        ]);
+    }
 }

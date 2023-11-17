@@ -30,7 +30,7 @@ jobs:
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
       - name: Install dependencies
-        run: composer install
+        run: composer install --optimize-autoloader --no-dev
       - name: Generate key
         run: php artisan key:generate --ansi
       - name: Directory Permissions
@@ -44,6 +44,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
-          local-dir: ./server/public/
+          local-dir: ./server/
           server-dir: /htdocs/
 

@@ -51,5 +51,5 @@ jobs:
           script: |
             cd htdocs
             rm -rf *
-            cp -R ../public.* .
+            cp -R ../public/* .
 

@@ -23,33 +23,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Laravel
-        uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+      - name: Set up FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.1.1
         with:
-          php-version: 8.1.10
-      - name: Copy .env
-        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-      - name: Install dependencies
-        run: composer install
-      - name: Generate key
-        run: php artisan key:generate --ansi
-      - name: Directory Permissions
-        run: chmod -R 777 storage bootstrap/cache
-  deploy-backend:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./server
-    steps:
-      - name: Deploy to Cloud
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{secrets.INFINITYFREE_HOST}}
-          port: 80
-          username: ${{secrets.INITIFYFREE_USERNAME}}
-          password: ${{secrets.INITIFYFREE_PASSWORD}}
-          script: |
-            cd htdocs
-            rm -rf *
-            cp -R ../public/* .
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          local-dir: ./
+          remote-dir: /public_html
 

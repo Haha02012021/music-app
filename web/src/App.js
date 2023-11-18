@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Home, Login, Mymusic, Public, Playlist, ZingChartWeek } from './containers/public/';
+import { Home, Login, Mymusic, Public, Playlist, ZingChartWeek, ZingChart } from './containers/public/';
 import { Routes, Route } from "react-router-dom";
 import path from "./utils/path";
 import * as actions from './store/actions';
@@ -26,6 +26,7 @@ function App() {
             <Route path={path.PLAYLIST__TITLE__PID} element={<Playlist />} />
             <Route path={path.ALBUM__TITLE__PID} element={<Playlist />} />
             <Route path={path.ZINGCHARTWEEK__TITLE__CID} element={<ZingChartWeek />} />
+            <Route path={path.ZINGCHART} element={<ZingChart />} />
 
             <Route path={path.STAR} element={<Home />} />
           </Route>

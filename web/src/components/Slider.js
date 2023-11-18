@@ -31,9 +31,9 @@ const Slider = () => {
                 }
             }
 
-            sliderElements[max].classList?.add('animate-slide-right', 'order-last', 'z-10');
-            sliderElements[max-1].classList?.add('animate-slide-left2', 'order-2', 'z-20');
-            sliderElements[min].classList?.add('animate-slide-left', 'order-first', 'z-20');
+            sliderElements[max]?.classList?.add('animate-slide-right', 'order-last', 'z-10');
+            sliderElements[max-1]?.classList?.add('animate-slide-left2', 'order-2', 'z-20');
+            sliderElements[min]?.classList?.add('animate-slide-left', 'order-first', 'z-20');
 
             min++;
             max++;

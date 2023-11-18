@@ -13,4 +13,5 @@ export { default as NewRelease } from './NewRelease';
 export { default as NewReleaseItem } from './NewReleaseItem';
 export { default as WeekChart } from './WeekChart';
 export { default as HomeSectionItem } from './HomeSectionItem';
+export { default as ZingChart } from './ZingChart';
 

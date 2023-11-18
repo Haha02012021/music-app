@@ -9,7 +9,7 @@ const { LuDot } = icons;
 const ListSong = ({totalDuration, total}) => {
     const { songs } = useSelector(state => state.music);
   return (
-    <div className='w-full h-screen flex flex-col text-xs overflow-y-auto'>
+    <div className='w-full h-screen flex flex-col text-xs overflow-y-auto mb-36'>
         <div className='flex justify-between items-center font-semibold text-gray-600 p-[10px]'>
             <span>BÀI HÁT</span>
             <span>ALBUM</span>

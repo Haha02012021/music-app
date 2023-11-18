@@ -29,13 +29,13 @@ const NewRelease = ({data}) => {
                         </button>
                         <button type='button' 
                             onClick={() => setType(1)}
-                            className={`border rounded-l-full rounded-r-full py-[6px] px-8 cursor-pointer ${type == 1 && 'bg-main-500 text-white'}`}
+                            className={`border rounded-l-full rounded-r-full py-[6px] px-8 cursor-pointer ${type === 1 && 'bg-main-500 text-white'}`}
                         >
                             VIỆT NAM
                         </button>
                         <button type='button' 
                             onClick={() => setType(2)}
-                            className={`border rounded-l-full rounded-r-full py-[6px] px-8 cursor-pointer ${type == 2 && 'bg-main-500 text-white'}`}
+                            className={`border rounded-l-full rounded-r-full py-[6px] px-8 cursor-pointer ${type === 2 && 'bg-main-500 text-white'}`}
                         >
                             QUỐC TẾ
                         </button>
@@ -46,8 +46,10 @@ const NewRelease = ({data}) => {
                     </div>
                 </div>
                 <div className='flex flex-wrap w-full'>
-                    {songData?.filter((item, index) => index < 12).map((item, index) => (
-                        <NewReleaseItem key={item.encodeId} data={item} id={index} />
+                    {songData?.filter((item, index) => index < 12).map((item) => (
+                        <div key={item.encodeId}  className='w-[300px] min-[1024px]:w-[30%]'>
+                            <NewReleaseItem data={item} time={true} />
+                        </div>
                     ))}
                 </div>
             </div>

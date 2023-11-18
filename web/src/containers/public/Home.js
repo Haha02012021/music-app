@@ -1,5 +1,5 @@
 import { React } from 'react';
-import { HomeSection, NewRelease, Slider, WeekChart } from '../../components';
+import { HomeSection, NewRelease, Slider, WeekChart, ZingChart } from '../../components';
 import { useSelector } from 'react-redux';
 
 const Home = () => {
@@ -18,7 +18,7 @@ const Home = () => {
         <HomeSection key={index} data={item} id={index} />
       ))}
 
-      <div>Zing chart</div>
+      <ZingChart chartData={homeData[9]} />
 
       <div className='flex justify-between items-center'>
         {homeData[10]?.items?.map((item, index) => (

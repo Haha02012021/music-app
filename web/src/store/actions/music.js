@@ -5,6 +5,16 @@ export const setCurSongId = (songId) => ({
     songId,
 });
 
+export const setCurSongData = (songData) => ({
+    type: actionTypes.SET_CUR_SONG_DATA,
+    songData,
+});
+
+export const setCurPlaylistId = (pid) => ({
+    type: actionTypes.SET_CUR_PLAYLIST_ID,
+    pid,
+});
+
 export const playSong = (flag) => ({
     type: actionTypes.PLAY_SONG,
     flag,

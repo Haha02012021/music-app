@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Enums\ActionItem;
+use App\Enums\ActionType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -30,19 +31,19 @@ class Account extends Model
         return $this->hasOne(AccessToken::class);
     }
 
-    public function account() {
-        return $this->hasOne(Album::class);
+    public function albums() {
+        return $this->hasMany(Album::class);
     }
 
     public function genres() {
         return $this->hasMany(Genre::class, 'admin_id');
     }
 
-    public function song() {
-        return $this->hasOne(Song::class);
+    public function songs() {
+        return $this->hasMany(Song::class);
     }
 
-    public function listenedSongs() {
+    public function actedSongs() {
         return $this->belongsToMany(Song::class, 'actions', 'account_id', 'item_id')
                     ->select([
                         'songs.id',
@@ -52,6 +53,7 @@ class Account extends Model
                         'songs.duration',
                         'songs.audio',
                         'songs.released_at',
+                        'songs.account_id',
                     ])
                     ->wherePivot('item', ActionItem::SONG)
                     ->orderByPivot('created_at', 'desc')
@@ -59,7 +61,7 @@ class Account extends Model
                     ->withTimestamps();
     }
 
-    public function listenedAlbums() {
+    public function actedAlbums() {
         return $this->belongsToMany(Album::class, 'actions', 'account_id', 'item_id')
                     ->select([
                         'albums.id',
@@ -68,10 +70,16 @@ class Account extends Model
                         'albums.thumbnail',
                         'albums.type',
                         'albums.released_at',
+                        'albums.account_id',
                     ])
                     ->wherePivot('item', ActionItem::ALBUM)
                     ->orderByPivot('created_at', 'desc')
                     ->withPivot(['created_at as listened_at'])
+                    ->withTimestamps();
+    }
+
+    public function followedSingers() {
+        return $this->belongsToMany(Singer::class, 'singers_followers', 'follower_id', 'singer_id')
                     ->withTimestamps();
     }
 }

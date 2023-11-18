@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('singers_songs', function (Blueprint $table) {
             $table->id();
-            $table->integer('singer_id');
-            $table->integer('song_id');
+            $table->foreignId('singer_id');
+            $table->foreignId('song_id');
             $table->timestamps();
         });
     }

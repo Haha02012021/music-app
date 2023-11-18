@@ -24,9 +24,11 @@ class AlbumCreateRequest extends CustomRequest
     {
         return [
             'title' => ['required', 'string'],
-            'type' => [Rule::in([1, 2])],
             'released_at' => ['date'],
-            'song_ids' => ['array']
+            'song_ids' => ['array'],
+            'thumbnail' => ['file'],
+            'audio' => ['file'],
+            'description' => ['string', 'maxlength:255'],
         ];
     }
 }

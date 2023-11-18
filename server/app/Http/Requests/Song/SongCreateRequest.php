@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Song;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\CustomRequest;
 
-class SongCreateRequest extends FormRequest
+class SongCreateRequest extends CustomRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,10 @@ class SongCreateRequest extends FormRequest
         return [
             'name' => ['required', 'unique:songs', 'max:60'],
             'album_id' => ['exists:albums,id'],
-            'thumbnail' => ['file'],
+            'singer_ids' => ['required', 'array'],
+            'genre_ids' => ['array'],
+            'thumbnail' => ['file', 'mimes:jpeg,png', 'mimetypes:image/jpeg,image/png'],
+            'audio' => ['file', 'mimes:mp3,wma,wav'],
             'lyric' => ['string'],
             'released_at' => ['date'],
         ];

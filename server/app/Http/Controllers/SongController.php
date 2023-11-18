@@ -2,24 +2,69 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActionType;
+use App\Http\Requests\CustomRequest;
 use App\Http\Requests\Song\SongCreateRequest;
+use App\Http\Requests\Song\SongUpdateRequest;
+use App\Models\Genre;
+use App\Models\Singer;
 use App\Models\Song;
+use App\Services\FileService;
+use App\Services\SongService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SongController extends Controller
 {
-    public function create(SongCreateRequest $request) {
-        $newSong = Song::create($request);
+    protected FileService $fileService;
+    protected SongService $songService;
 
-        return response()->json([
-            'success' => true,
-            'data' => $newSong,
-            'message' => 'Tạo bài hát thành công!'
-        ]);
+    public function __construct(FileService $fileService, SongService $songService) {
+        $this->fileService = $fileService;
+        $this->songService = $songService;
+    }
+
+    public function create(SongCreateRequest $request) {
+        try {
+            DB::transaction(function () use ($request) {
+                $authAccount = $request->authAccount();
+    
+                $data = [
+                    'name' => $request->input('name'),
+                    'account_id' => $authAccount->id,
+                    'album_id' => $request->input('album_id'),
+                    'lyric' => $request->input('lyric'),
+                    'released_at' => $request->input('released_at'),
+                ];
+    
+                try {
+                    $medias = $this->songService->updateAudioAndThumbnail($request, $data);
+                    $data = array_merge($data, $medias);
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    return $th;
+                }
+    
+                $newSong = Song::create($data);
+                $newSong->singers()->attach($request->singer_ids);
+                $newSong->genres()->attach($request->input('genre_ids'));
+            });
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Tạo bài hát thành công!'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ]);
+        }
     }
 
     public function getNewLastestSongs(?int $isVietNamese = null) {
-        $songs = Song::with('genres')
+        $songs = Song::orderByDesc('released_at')
+                    ->with('genres')
                     ->with('singers')
                     ->select([
                         'songs.id', 
@@ -30,7 +75,7 @@ class SongController extends Controller
                         'songs.audio', 
                         'songs.released_at'
                     ])
-                    ->joinSub(DB::table(function ($query) {
+                    ->leftJoinSub(DB::table(function ($query) {
                         $query
                             ->select([
                                 'songs_genres.song_id as id',
@@ -52,9 +97,15 @@ class SongController extends Controller
                                 break;
                         }
                     })
-                    ->orderByDesc('released_at')
                     ->limit(40)
-                    ->get();
+                    ->get()
+                    ->map(function ($value) {
+                        if (!str_contains($value->thumbnail, 'https')) {
+                            $value->thumbnail = $this->fileService->getFileUrl($value->thumbnail, 'thumbnails');
+                        }
+
+                        return $value;
+                    });
 
         return response()->json([
             'success' => true,
@@ -63,8 +114,30 @@ class SongController extends Controller
         ]);
     }
 
-    public function getSongById(int $id) {
-        $song = Song::with('singers')->with('genres')->find($id);
+    public function getSongById(CustomRequest $request) {
+        $id = $request->route('id');
+        $song = Song::with('author', 'singers', 'genres')
+            ->withCount([
+                'actions as listens_count' => function ($query) {
+                    $query->where('type', ActionType::LISTEN);
+                },
+                'actions as likes_count' => function ($query) {
+                    $query->where('type', ActionType::LIKE);
+                },
+            ])
+            ->withExists('actions as is_liked', function ($query) use ($request) {
+                $query->where('account_id', $request->authAccount()->id)
+                        ->where('type', ActionType::LIKE);
+            })
+            ->find($id);
+        
+        if (!str_contains($song->thumbnail, 'https')) {
+            $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, 'thumbnails/');
+        }
+
+        if (!str_contains($song->audio, 'https')) {
+            $song->audio = $this->fileService->getFileUrl($song->audio, 'audios/');
+        }
 
         if ($song) {
             return response()->json([
@@ -78,5 +151,132 @@ class SongController extends Controller
                 'message' => 'Không tồn tại id bài hát!',
             ], 404);
         }
+    }
+
+    public function update(SongUpdateRequest $request) {
+        $songId = $request->input('id');
+        $song = Song::find($songId);
+        
+        $data = $request->except(['audio', 'thumbnail', 'singer_ids']);
+        $medias =  $this->songService->updateAudioAndThumbnail($request, $data);
+        $data = array_merge($data, $medias);
+        $song->update($data);
+
+        if ($request->input('singer_ids')) {
+            $song->singers()->attach($request->input('singer_ids'));
+        }
+
+        if ($request->input('genre_ids')) {
+            $song->genres()->attach($request->input('genre_ids'));
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cập nhật bài hát thành công!'
+        ]);
+    }
+
+    public function getAllSongs(Request $request) {
+        $limit = $request->limit;
+        if (!$limit) {
+            $limit = PAGE_LENGTH;
+        }
+        $songs = Song::select([
+                        'id',
+                        'name',
+                        'thumbnail',
+                        'duration',
+                        'released_at',
+                    ])
+                    ->with('singers', 'genres')
+                    ->withExists('actions as is_liked', function ($query) use ($request) {
+                        $query->where('account_id', $request->authAccount()->id)
+                                ->where('type', ActionType::LIKE);
+                    })
+                    ->orderByDesc('released_at')
+                    ->paginate($limit);
+
+        collect($songs->items())->map(function ($song) {
+            if (!str_contains($song->thumbnail, 'https')) {
+                $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, THUMBNAILS_DIR);
+            }
+
+            return $song;
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $songs,
+        ]);
+    }
+
+    public function getSongsByGenreId(CustomRequest $request) {
+        $genreId = $request->genreId;
+        $genre = Genre::find($genreId);
+
+        if ($genre) {
+            $songs = $genre->songs()
+                        ->with('singers')
+                        ->withExists('actions as is_liked', function ($query) use ($request) {
+                            $query->where('account_id', $request->authAccount()->id)
+                                    ->where('type', ActionType::LIKE);
+                        })
+                        ->get()
+                        ->map(function ($song) {
+                            if (!str_contains($song->thumbnail, 'https')) {
+                                $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, THUMBNAILS_DIR);
+                            }
+                            return $song;
+                        });
+            return response()->json([
+                'success' => true,
+                'data' => $songs,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tồn tại genre id!',
+            ], 404);
+        }
+    }
+
+    public function getSongsBySingerId(Request $request) {
+        $singerId = $request->singerId;
+        $songs = Singer::find($singerId)
+                        ->songs()
+                        ->with('singers')
+                        ->withExists('actions as is_liked', function ($query) use ($request) {
+                            $query->where('account_id', $request->authAccount()->id)
+                                    ->where('type', ActionType::LIKE);
+                        })
+                        ->get()
+                        ->map(function ($song) {
+                            if (!str_contains($song->thumbnail, 'https')) {
+                                $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, THUMBNAILS_DIR);
+                            }
+                            return $song;
+                        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $songs,
+        ]);
+    }
+
+    public function delete(int $id) {
+        $song = Song::find($id);
+        if ($song) {
+            $song->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Xóa bài hát thành công!',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Không tồn tại song id!',
+        ]);
     }
 }

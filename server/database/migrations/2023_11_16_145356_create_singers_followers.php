@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('genres', function (Blueprint $table) {
+        Schema::create('singers_followers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('admin_id');
-            $table->string('title', TITLE_LENGTH)->unique();
-            $table->string('name', TITLE_LENGTH)->unique();
-            $table->softDeletes();
+            $table->foreignId('singer_id');
+            $table->foreignId('follower_id');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('genres');
+        Schema::dropIfExists('singers_followers');
     }
 };

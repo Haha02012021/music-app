@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('songs', function (Blueprint $table) {
             $table->id();
             $table->string('name', TITLE_LENGTH)->unique();
-            $table->integer('account_id');
-            $table->integer('album_id')->nullable();
+            $table->foreignId('account_id');
+            $table->foreignId('album_id')->nullable();
             $table->string('thumbnail')->nullable();
             $table->string('lyric')->nullable();
             $table->integer('duration');
             $table->string('audio');
             $table->date('released_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

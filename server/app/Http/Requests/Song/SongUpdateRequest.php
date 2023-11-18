@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Album;
+namespace App\Http\Requests\Song;
 
 use App\Http\Requests\CustomRequest;
 
-class AlbumUpdateRequest extends CustomRequest
+class SongUpdateRequest extends CustomRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,15 @@ class AlbumUpdateRequest extends CustomRequest
     public function rules(): array
     {
         return [
-            'id' => ['required', 'exists:albums,id'],
-            'title' => ['string'],
-            'released_at' => ['date'],
-            'song_ids' => ['array'],
+            'id' => ['required', 'numeric', 'exists:songs,id'],
+            'name' => ['unique:songs', 'max:60'],
+            'singer_ids' => ['array'],
+            'genre_ids' => ['array'],
+            'album_id' => ['exists:albums,id'],
             'thumbnail' => ['file', 'mimes:jpeg,png', 'mimetypes:image/jpeg,image/png'],
-            'description' => ['string', 'max:255'],
+            'audio' => ['file', 'mimes:mp3,wma,wav'],
+            'lyric' => ['string'],
+            'released_at' => ['date'],
         ];
     }
 }

@@ -75,6 +75,7 @@ Route::prefix('song')->name('song.')->group(function () {
 });
 
 Route::prefix('album')->name('album.')->group(function () {
+    Route::get('top', [AlbumController::class, 'getHotAlbums'])->name('top');
     Route::get('{id}', [AlbumController::class, 'getAlbumById'])->name('detail');
     Route::get('genre/{genreId}', [AlbumController::class, 'getAlbumsByGenreId'])->name('genre-id');
     Route::get('singer/{singerId}', [AlbumController::class, 'getAlbumsBySingerId'])->name('singer-id');

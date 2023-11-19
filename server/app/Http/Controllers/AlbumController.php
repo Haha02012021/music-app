@@ -241,4 +241,35 @@ class AlbumController extends Controller
             'message' => 'Không tồn tại album id!',
         ], 404);
     }
+
+    public function getHotAlbums(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+        $albums = Album::withCount('actions')
+                ->orderByDesc('released_at')
+                ->get()
+                ->map(function ($album) use ($authAccount) {
+                    $album->songs = $album->songs($authAccount->id)->get();
+                    $album->songs_actions_count = $album->songs->sum('actions_count');
+                    $album->songs->sortByDesc('actions_count');
+                    return $album;
+                })
+                ->sortByDesc(function ($album) {
+                    if (count($album->songs))
+                        return ($album['songs_actions_count'] + $album['actions_count']) / count($album->songs);
+                    return 0;
+                })
+                ->take(20)
+                ->map(function ($album) {
+                    if (!str_contains($album->thumbnail, 'https')) {
+                        $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR);
+                    }
+                    return $album;
+                })
+                ->flatten(1);
+        
+        return response()->json([
+            'success' => true,
+            'data' => $albums,
+        ]);
+    }
 }

@@ -67,6 +67,7 @@ Route::middleware('auth.api')->group(function () {
 });
 
 Route::prefix('song')->name('song.')->group(function () {
+    Route::get('top', [SongController::class, 'getTopNewSongs'])->name('song');
     Route::get('lastest/{isVietNamese?}', [SongController::class, 'getNewLastestSongs'])->name('newLastest');
     Route::get('{id}', [SongController::class, 'getSongById'])->name('detail');
     Route::get('genre/{genreId}', [SongController::class, 'getSongsByGenreId'])->name('genre-id');
@@ -80,6 +81,7 @@ Route::prefix('album')->name('album.')->group(function () {
 });
 
 Route::prefix('singer')->name('singer.')->group(function () {
+    Route::get('top', [SingerController::class, 'getTopSingers'])->name('top');
     Route::get('all', [SingerController::class, 'getAllSingers'])->name('all');
     Route::get('{id}', [SingerController::class, 'getSingerById'])->name('detail');
 });

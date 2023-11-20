@@ -62,10 +62,18 @@ class SongController extends Controller
         }
     }
 
-    public function getNewLastestSongs(?int $isVietNamese = null) {
+    public function getNewLastestSongs(CustomRequest $request) {
+        $isVietNamese = $request->isVietNamese;
         $songs = Song::orderByDesc('released_at')
                     ->with('genres')
                     ->with('singers')
+                    ->withExists('actions as is_liked', function ($query) use ($request) {
+                        $authAccount = $request->authAccount();
+                        if ($authAccount) {
+                            $query->where('account_id', $request->authAccount()->id)
+                                ->where('type', ActionType::LIKE);
+                        }
+                    })
                     ->select([
                         'songs.id', 
                         'songs.name', 
@@ -126,8 +134,11 @@ class SongController extends Controller
                 },
             ])
             ->withExists('actions as is_liked', function ($query) use ($request) {
-                $query->where('account_id', $request->authAccount()->id)
+                $authAccount = $request->authAccount();
+                if ($authAccount) {
+                    $query->where('account_id', $request->authAccount()->id)
                         ->where('type', ActionType::LIKE);
+                }
             })
             ->find($id);
         
@@ -190,8 +201,11 @@ class SongController extends Controller
                     ])
                     ->with('singers', 'genres')
                     ->withExists('actions as is_liked', function ($query) use ($request) {
-                        $query->where('account_id', $request->authAccount()->id)
+                        $authAccount = $request->authAccount();
+                        if ($authAccount) {
+                            $query->where('account_id', $request->authAccount()->id)
                                 ->where('type', ActionType::LIKE);
+                        }
                     })
                     ->orderByDesc('released_at')
                     ->paginate($limit);
@@ -218,8 +232,11 @@ class SongController extends Controller
             $songs = $genre->songs()
                         ->with('singers')
                         ->withExists('actions as is_liked', function ($query) use ($request) {
-                            $query->where('account_id', $request->authAccount()->id)
+                            $authAccount = $request->authAccount();
+                            if ($authAccount) {
+                                $query->where('account_id', $request->authAccount()->id)
                                     ->where('type', ActionType::LIKE);
+                            }
                         })
                         ->get()
                         ->map(function ($song) {
@@ -246,8 +263,11 @@ class SongController extends Controller
                         ->songs()
                         ->with('singers')
                         ->withExists('actions as is_liked', function ($query) use ($request) {
-                            $query->where('account_id', $request->authAccount()->id)
+                            $authAccount = $request->authAccount();
+                            if ($authAccount) {
+                                $query->where('account_id', $request->authAccount()->id)
                                     ->where('type', ActionType::LIKE);
+                            }
                         })
                         ->get()
                         ->map(function ($song) {
@@ -280,12 +300,19 @@ class SongController extends Controller
         ]);
     }
 
-    public function getTopNewSongs() {
+    public function getTopNewSongs(CustomRequest $request) {
         $first_date = date('Y-m-d',strtotime('first day of this month'));
         $last_date = date('Y-m-d',strtotime('last day of this month'));
         $songs = Song::whereBetween('released_at', [$first_date, $last_date])
                     ->withCount('actions')
                     ->orderByDesc('created_at')
+                    ->withExists('actions as is_liked', function ($query) use ($request) {
+                        $authAccount = $request->authAccount();
+                        if ($authAccount) {
+                            $query->where('account_id', $request->authAccount()->id)
+                                ->where('type', ActionType::LIKE);
+                        }
+                    })
                     ->get()
                     ->sortByDesc('actions_count')
                     ->take(100)

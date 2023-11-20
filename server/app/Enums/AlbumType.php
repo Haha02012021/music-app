@@ -8,4 +8,5 @@ final class AlbumType extends Enum
 {
     const ALBUM = 1;
     const PLAYLIST = 2;
+    const TOP100 = 3;
 }

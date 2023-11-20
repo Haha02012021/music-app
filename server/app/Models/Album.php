@@ -45,8 +45,10 @@ class Album extends Model
                     ->orderByDesc('released_at')
                     ->withCount('actions')
                     ->withExists('actions as is_liked', function ($query) use ($authId) {
-                        $query->where('account_id', $authId)
+                        if ($authId) {
+                            $query->where('account_id', $authId)
                                 ->where('type', ActionType::LIKE);
+                        }
                     });
     }
 }

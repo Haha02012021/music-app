@@ -10,6 +10,7 @@ use App\Http\Requests\CustomRequest;
 use App\Models\Album;
 use App\Models\Genre;
 use App\Models\Singer;
+use App\Models\Song;
 use App\Services\AlbumService;
 use App\Services\FileService;
 use Exception;
@@ -35,6 +36,8 @@ class AlbumController extends Controller
     public function create(AlbumCreateRequest $request) {
         try {
             DB::transaction(function () use ($request) {
+                $authAccount = $request->authAccount();
+                $authId = $authAccount ? $authAccount->id : null;
                 $data = [
                     'title' => $request->input('title'),
                     'type' => AlbumType::ALBUM,
@@ -47,7 +50,7 @@ class AlbumController extends Controller
         
                 $songIds = $request->input('song_ids');
                 try {
-                    $this->albumService->updateSingersSongs($songIds, $album);
+                    $this->albumService->updateSingersSongs($songIds, $album, $authId);
                 } catch (\Exception $e) {
                     DB::rollBack();
                     throw $e;
@@ -85,6 +88,8 @@ class AlbumController extends Controller
     }
 
     public function update(AlbumUpdateRequest $request) {
+        $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
         $id = $request->input('id');
         $album = Album::find($id);
         $data = $request->except(['id', 'song_ids', 'thumbnail']);
@@ -93,7 +98,7 @@ class AlbumController extends Controller
         $album->update($data);
         
         $songIds = $request->input('song_ids');
-        $this->albumService->updateSingersSongs($songIds, $album);
+        $this->albumService->updateSingersSongs($songIds, $album, $authId);
 
         return response()->json([
             'success' => true,
@@ -102,6 +107,8 @@ class AlbumController extends Controller
     }
 
     public function getAlbumById(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
         $id = $request->route('id');
         $album = Album::with('author', 'singers')
                     ->withCount([
@@ -112,20 +119,19 @@ class AlbumController extends Controller
                             $query->where('type', ActionType::LIKE);
                         },
                     ])
-                    ->withExists('actions as is_liked', function ($query) use ($request) {
-                        $query->where('account_id', $request->authAccount()->id)
-                                ->where('type', ActionType::LIKE);
-                    })
                     ->find($id);
-        $songs = $album->songs($request->authAccount()->id)->get()
-                    ->map(function ($song) {
-                        $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, 'thumbnails/');
-                        return $song;
-                    });
-        $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, 'thumbnails/');
-        $album->songs = $songs;
 
         if ($album) {
+            $songs = $album->songs($authId)->get()
+                    ->map(function ($song) {
+                        if (!str_contains($song->thumbnail, 'https')) {
+                            $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, 'thumbnails/');
+                            return $song;
+                        }
+                    });
+            $album->thumbnail = !str_contains($album->thumbnail, 'https') ? $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR) : $album->thumbnail;
+            $album->songs = $songs;
+
             return response()->json([
                 'success' => true,
                 'data' => $album,
@@ -244,7 +250,9 @@ class AlbumController extends Controller
 
     public function getHotAlbums(CustomRequest $request) {
         $authAccount = $request->authAccount();
-        $albums = Album::withCount('actions')
+        $albums = Album::where('type', AlbumType::ALBUM)
+                ->orWhere('type', AlbumType::PLAYLIST)
+                ->withCount('actions')
                 ->orderByDesc('released_at')
                 ->get()
                 ->map(function ($album) use ($authAccount) {
@@ -271,5 +279,126 @@ class AlbumController extends Controller
             'success' => true,
             'data' => $albums,
         ]);
+    }
+
+    public function getTop100(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
+        $albums = Album::where('type', 'like', AlbumType::TOP100.'%')
+                        ->withCount('actions')
+                        ->orderByDesc('released_at')
+                        ->get();
+
+        $outstanding = 'Nổi bật';
+        $vietnam = 'Việt Nam';
+        $usuk = 'Âu Mỹ';
+
+        $firstDate = date('Y-m-d',strtotime('this monday'));
+        $nowDate = date('Y-m-d');
+        if (count($albums) !== 0) {
+            $updatedDate = date('Y-m-d', strtotime($albums->toArray()[0]['created_at']));
+            if (strcmp($firstDate, $nowDate) === 0 && $updatedDate !== $firstDate) {   
+                $vietnamSongs = $this->albumService->getSongsByGenreName($vietnam);
+                $usukSongs = $this->albumService->getSongsByGenreName($usuk);
+                $asiaSongs = $this->albumService->getSongsOfAsia(); 
+
+                $newAsiaAlbums = $asiaSongs->map(function ($item) use ($authId) {
+                    return $this->albumService->updateTop100($item, $authId);
+                });
+    
+                $vietnamAlbums = $vietnamSongs->map(function ($item) use ($authId) {
+                    return $this->albumService->updateTop100($item, $authId);
+                });
+    
+                $usukAlbums = $usukSongs->map(function ($item) use ($authId) {
+                    return $this->albumService->updateTop100($item, $authId);
+                });
+    
+                $outstandingAlbums = $this->albumService->getOutstandingAlbums($authId);
+
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                            [
+                                'title' => $outstanding,
+                                'albums' => $outstandingAlbums,
+                            ],
+                            [
+                                'title' => 'Nhạc Việt Nam',
+                                'albums' => $vietnamAlbums,
+                            ],
+                            [
+                                'title' => 'Nhạc Châu Á',
+                                'albums' => $newAsiaAlbums,
+                            ],
+                            [
+                                'title' => 'Nhạc Âu Mỹ',
+                                'albums' => $usukAlbums,
+                            ]
+                        ],
+                    ]);
+            } else {
+                $albumsList = $albums->groupBy(function ($album) {
+                                    return substr($album['type'], 2);
+                                })
+                                ->map(function ($item, $title) {
+                                    $box = [];
+                                    $box['title'] = 'Nhạc '.$title;
+                                    $box['albums'] = $item;
+                                    return $box;
+                                })
+                                ->values()
+                                ->toArray();
+                $outstandingAlbumsList = [[
+                    'title' => $outstanding,
+                    'albums' => $this->albumService->getOutstandingAlbums($authId),
+                ]];
+
+                return response()->json([
+                    'success' => true,
+                    'data' => array_merge($outstandingAlbumsList, $albumsList),
+                ]);
+            }
+        } else {
+            $vietnamSongs = $this->albumService->getSongsByGenreName($vietnam);
+            $usukSongs = $this->albumService->getSongsByGenreName($usuk);
+            $asiaSongs = $this->albumService->getSongsOfAsia();
+
+            $newAsiaAlbums = $asiaSongs->map(function ($item) use ($authId) {
+                return $this->albumService->createTop100($item, $authId);
+            });
+
+            $vietnamAlbums = $vietnamSongs->map(function ($item) use ($authId) {
+                return $this->albumService->createTop100($item, $authId);
+            });
+
+            $usukAlbums = $usukSongs->map(function ($item) use ($authId) {
+                return $this->albumService->createTop100($item, $authId);
+            });
+
+            $outstandingAlbums = $this->albumService->getOutstandingAlbums($authId);
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    [
+                        'title' => $outstanding,
+                        'albums' => $outstandingAlbums,
+                    ],
+                    [
+                        'title' => 'Nhạc Việt Nam',
+                        'albums' => $vietnamAlbums,
+                    ],
+                    [
+                        'title' => 'Nhạc Châu Á',
+                        'albums' => $newAsiaAlbums,
+                    ],
+                    [
+                        'title' => 'Nhạc Âu Mỹ',
+                        'albums' => $usukAlbums,
+                    ]
+                ],
+            ]);
+        }
     }
 }

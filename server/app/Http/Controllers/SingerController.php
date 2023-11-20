@@ -120,4 +120,39 @@ class SingerController extends Controller
             'message' => 'Không tồn tại singer id!',
         ]);
     }
+
+    public function getTopSingers() {
+        $singers = Singer::with([
+                                'songs' => function ($query) {
+                                    $query->withCount('actions')
+                                        ->orderByDesc('released_at');
+                                },
+                            ])
+                        ->withCount('followers')
+                        ->get()
+                        ->map(function ($singer) {
+                            $singer->songs_actions_count = $singer->songs->sum('actions_count');
+                            $singer->songs->sortByDesc('actions_count');
+                            return $singer;
+                        })
+                        ->sortByDesc('followers_count')
+                        ->sortByDesc(function ($singer) {
+                            if (count($singer->songs))
+                                return $singer['songs_actions_count'] / count($singer->songs);
+                            return 0;
+                        })
+                        ->take(5)
+                        ->map(function ($singer) {
+                            if (!str_contains($singer->thumbnail, 'https')) {
+                                $singer->thumbnail = $this->fileService->getFileUrl($singer->thumbnail, THUMBNAILS_DIR);
+                            }
+                            return $singer;
+                        })
+                        ->flatten(1);
+
+        return response()->json([
+            'success' => true,
+            'data' => $singers,
+        ]);
+    }
 }

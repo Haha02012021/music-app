@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('thumbnail')->nullable();
             $table->text('description')->nullable();
             $table->foreignId('account_id');
-            $table->tinyInteger('type')->default(1)->comment('1:album; 2:playlist');
+            $table->string('type')->default(1)->comment('1:album; 2:playlist; 3-*:top100');
             $table->date('released_at')->nullable();
             $table->softDeletes();
             $table->timestamps();

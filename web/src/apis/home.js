@@ -1,9 +1,9 @@
 import axios from '../axios';
 
-export const getHome = () => new Promise (async( resolve, reject) => {
+export const getTop100 = () => new Promise (async( resolve, reject) => {
     try {
         const response = await axios ({
-            url: '/home',
+            url: '/album/top-100',
             method: 'get',
         });
         resolve(response);

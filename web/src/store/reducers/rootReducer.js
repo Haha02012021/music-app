@@ -1,4 +1,3 @@
-import appReducer from "./appReducer";
 import { combineReducers } from "redux";
 import { persistReducer } from 'redux-persist';
 import musicReducer from "./musicReducer";
@@ -17,7 +16,6 @@ const musicConfig = {
 }
 
 const rootReducer = combineReducers({
-    app: appReducer,
     music: persistReducer(musicConfig, musicReducer),
 })
 

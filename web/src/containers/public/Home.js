@@ -1,16 +1,11 @@
 import { React } from 'react';
 import { HomeSection, NewRelease, Slider, WeekChart, ZingChart } from '../../components';
-import { useSelector } from 'react-redux';
 
 const Home = () => {
 
-  const { 
-    homeData
-  } = useSelector(state => state.app);
-
   return (
     <div className='flex flex-col mb-36 gap-12 overflow-y-auto'>
-      {/* <Slider /> */}
+      {/* <Slider />
 
       <NewRelease data={homeData[2]}/>
 
@@ -25,8 +20,8 @@ const Home = () => {
           <WeekChart key={index} data={item} />
         ))}
       </div>
-      <HomeSection data={homeData[11]} id={11} />
-      <HomeSection data={homeData[13]} id={13} />
+      <HomeSection data={homeData[11]} id={11} /> */}
+      <HomeSection name='Top 100' />
     </div>
   )
 }

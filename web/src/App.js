@@ -3,17 +3,10 @@ import { useDispatch } from 'react-redux';
 import { Home, Login, Mymusic, Public, Playlist, ZingChartWeek, ZingChart, LoginCallback } from './containers/public/';
 import { Routes, Route } from "react-router-dom";
 import path from "./utils/path";
-import * as actions from './store/actions';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(actions.getHome());
-  }, [])
 
   return (
     <>

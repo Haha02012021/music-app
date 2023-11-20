@@ -279,4 +279,27 @@ class SongController extends Controller
             'message' => 'Không tồn tại song id!',
         ]);
     }
+
+    public function getTopNewSongs() {
+        $first_date = date('Y-m-d',strtotime('first day of this month'));
+        $last_date = date('Y-m-d',strtotime('last day of this month'));
+        $songs = Song::whereBetween('released_at', [$first_date, $last_date])
+                    ->withCount('actions')
+                    ->orderByDesc('created_at')
+                    ->get()
+                    ->sortByDesc('actions_count')
+                    ->take(100)
+                    ->map(function ($song) {
+                        if (!str_contains($song->thumbnail, 'https')) {
+                            $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, THUMBNAILS_DIR);
+                        }
+                        return $song;
+                    })
+                    ->flatten(1);
+
+        return response()->json([
+            'success' => true,
+            'data' => $songs,
+        ]);
+    }
 }

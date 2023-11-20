@@ -8,6 +8,7 @@ import { TbChartArcs, TbPlayerPlayFilled, TbPlayerPauseFilled } from 'react-icon
 import { LuDot } from 'react-icons/lu';
 import { SlVolume2, SlVolumeOff } from 'react-icons/sl';
 import { TfiAlarmClock } from 'react-icons/tfi';
+import { FaRegCircleUser } from 'react-icons/fa6';
 
 const icons = {
     MdOutlineLibraryMusic,
@@ -35,6 +36,7 @@ const icons = {
     SlVolume2,
     SlVolumeOff,
     TfiAlarmClock,
+    FaRegCircleUser,
 }
 
 export default icons;

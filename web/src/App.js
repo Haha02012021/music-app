@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Home, Login, Mymusic, Public, Playlist, ZingChartWeek, ZingChart } from './containers/public/';
+import { Home, Login, Mymusic, Public, Playlist, ZingChartWeek, ZingChart, LoginCallback } from './containers/public/';
 import { Routes, Route } from "react-router-dom";
 import path from "./utils/path";
 import * as actions from './store/actions';

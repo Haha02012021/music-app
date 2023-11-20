@@ -10,7 +10,7 @@ const Home = () => {
 
   return (
     <div className='flex flex-col mb-36 gap-12 overflow-y-auto'>
-      <Slider />
+      {/* <Slider /> */}
 
       <NewRelease data={homeData[2]}/>
 

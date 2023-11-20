@@ -1,6 +1,7 @@
 import React from 'react';
 import icons from '../utils/icons';
 import Search from './Search';
+import { Login } from '../containers/public';
 
 const {GoArrowRight, GoArrowLeft} = icons;
 
@@ -21,7 +22,7 @@ const Header = () => {
             </div>
         </div>
         <div>
-            Dang nhap
+            <Login />
         </div>
     </div>
   )

@@ -45,7 +45,8 @@ class GenreSeeder extends Seeder
                 array('name' => 'Rap / Hip Hop', 'title' => 'Rap / Hip Hop', 'admin_id' => 1, 'created_at' => '2023-10-28 20:44:37', 'updated_at' => '2023-10-28 20:44:37'), 
                 array('name' => 'Hoa Ngữ', 'title' => 'Hoa Ngữ', 'admin_id' => 1, 'created_at' => '2023-11-20 22:14:27', 'updated_at' => '2023-11-20 22:14:27'), 
                 array('name' => 'Trung Quốc', 'title' => 'Trung Quốc', 'admin_id' => 1, 'created_at' => '2023-11-20 22:14:27', 'updated_at' => '2023-11-20 22:14:27'),
-                array('name' => 'Nhật Bản', 'title' => 'Nhật Bản', 'admin_id' => 1, 'created_at' => '2023-11-20 22:14:27', 'updated_at' => '2023-11-20 22:14:27')
+                array('name' => 'Nhật Bản', 'title' => 'Nhật Bản', 'admin_id' => 1, 'created_at' => '2023-11-20 22:14:27', 'updated_at' => '2023-11-20 22:14:27'),
+                array('name' => 'EDM Việt', 'title' => 'EDM Việt', 'admin_id' => 1, 'created_at' => '2023-11-20 22:14:27', 'updated_at' => '2023-11-20 22:14:27'),
             )
         );
     }

@@ -32,27 +32,39 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
   useEffect(() => {
     const fetchInfoSong = async () => {
       setIsLoaded(false);
-      const [res1, res2] = await Promise.all([
-        apis.apiGetInfoSong(curSongId),
-        apis.apiGetSong(curSongId),
-      ])
+      const res = await apis.apiGetSong(curSongId);
       setIsLoaded(true);
-      if (res1.data.err === 0 ) {
-        setSongInfo(res1.data.data);
-      } 
-      if (res2.data.err === 0) {
+      if (res?.status === 200) {
+        setSongInfo(res?.data?.data);
+        dispatch(actions.setCurSongData(res?.data?.data));
         audio.pause();
-        setAudio(new Audio(res2.data.data[128]));
+        setAudio(new Audio(res?.data?.data?.audio));
       } else {
         audio.pause();
         intervalId && clearInterval(intervalId);
         dispatch(actions.playSong(false));
-        toast.warn(res2.data.msg);
+        toast.warn(res?.data?.msg);
         audio.currentTime = 0;
         setPlayingTime(0);
         thumref.current.style.cssText = `right: 100%`;
-
       }
+      // if (res1.data.err === 0 ) {
+      //   setSongInfo(res1?.data?.data);
+      //   dispatch(actions.setCurSongData(res1?.data?.data));
+      // } 
+      // if (res2?.data?.err === 0) {
+      //   audio.pause();
+      //   setAudio(new Audio(res2?.data?.data[128]));
+      // } else {
+      //   audio.pause();
+      //   intervalId && clearInterval(intervalId);
+      //   dispatch(actions.playSong(false));
+      //   toast.warn(res2?.data?.msg);
+      //   audio.currentTime = 0;
+      //   setPlayingTime(0);
+      //   thumref.current.style.cssText = `right: 100%`;
+
+      // }
     }
 
     fetchInfoSong();
@@ -64,7 +76,7 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
       audio.load();
       audio.play();
       intervalId = setInterval(() => {
-        var per = Math.round(audio.currentTime * 10000 / songInfo.duration) / 100;
+        var per = Math.round(audio.currentTime * 10000 / songInfo?.duration) / 100;
         thumref.current.style.cssText = `right: ${100-per}%`;
         setPlayingTime(Math.round(audio.currentTime));
       }, 200)
@@ -105,17 +117,17 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
     const trackRect = trackref?.current?.getBoundingClientRect();
     const per = Math.round((e.clientX - trackRect.left) * 10000 / trackRect.width) / 100;
     thumref.current.style.cssText = `right: ${100-per}%`;
-    audio.currentTime = per * songInfo.duration / 100;
+    audio.currentTime = per * songInfo?.duration / 100;
     setPlayingTime(Math.round(audio.currentTime));
   }
 
   const handleNextSong = () => {
-    if (id !== null && id < songs.length - 1) {
-      dispatch(actions.setCurSongId(songs[id + 1].encodeId));
+    if (id !== null && id < songs?.length - 1) {
+      dispatch(actions.setCurSongId(songs[id + 1]?.encodeId));
       dispatch(actions.getSongId(id + 1));
       dispatch(actions.playSong(true));
     } else if (id === songs.length - 1 && isRepeat) {
-      dispatch(actions.setCurSongId(songs[0].encodeId));
+      dispatch(actions.setCurSongId(songs[0]?.encodeId));
       dispatch(actions.getSongId(0));
       dispatch(actions.playSong(true));
     }
@@ -123,15 +135,15 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
 
   const handlePreSong = () => {
     if (id) {
-      dispatch(actions.setCurSongId(songs[id - 1].encodeId));
+      dispatch(actions.setCurSongId(songs[id - 1]?.encodeId));
       dispatch(actions.getSongId(id - 1));
       dispatch(actions.playSong(true));
     }
   }
 
   const shuffleSong = () => {
-    const randId = Math.round(Math.random() * songs.length) - 1;
-    dispatch(actions.setCurSongId(songs[randId].encodeId));
+    const randId = Math.round(Math.random() * songs?.length) - 1;
+    dispatch(actions.setCurSongId(songs[randId]?.encodeId));
     dispatch(actions.getSongId(randId)); 
   }
 
@@ -155,8 +167,8 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
             <img src={songInfo?.thumbnail} alt='thumbnail' className='w-16 h-16 object-cover rounded-md' />
 
             <div className='flex flex-col'>
-              <span className='font-medium text-[#5E5E67]'>{songInfo?.title}</span>
-              <span className='text-gray-500'>{songInfo?.artistsNames}</span>
+              <span className='font-medium text-[#5E5E67]'>{songInfo?.name}</span>
+              <span className='text-gray-500'>{songInfo?.singers[0]?.name}</span>
             </div>
 
             <div className='flex'>

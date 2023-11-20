@@ -3,9 +3,8 @@ import axios from '../axios';
 export const apiGetSong = (songId) => new Promise (async( resolve, reject) => {
     try {
         const response = await axios ({
-            url: '/song',
+            url: `/song/${songId}`,
             method: 'get',
-            params: { id: songId },
         });
         resolve(response);
     } catch (error) {
@@ -26,12 +25,11 @@ export const apiGetInfoSong = (songId) => new Promise (async( resolve, reject) =
     }
 })
 
-export const apiGetDetailPlaylist = (playlistId) => new Promise (async( resolve, reject) => {
+export const apiGetDetailPlaylist = (pid) => new Promise (async( resolve, reject) => {
     try {
         const response = await axios ({
-            url: '/detailplaylist',
+            url: `/album/${pid}`,
             method: 'get',
-            params: { id: playlistId },
         });
         resolve(response);
     } catch (error) {

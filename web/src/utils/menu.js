@@ -15,7 +15,7 @@ export const sidebarMenu = [
     },
 
     {
-        path: 'zingchart',
+        path: 'zing-chart',
         text: '#zingchart',
         icon: <TbChartArcs size={24} />
     },

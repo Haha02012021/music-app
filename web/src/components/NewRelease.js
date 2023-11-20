@@ -1,41 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import icons from '../utils/icons';
 import NewReleaseItem from './NewReleaseItem';
+import * as apis from '../apis';
 
 const { BsChevronRight } = icons;
 
-const NewRelease = ({data}) => {
+const NewRelease = () => {
 
-    const [type, setType] = useState(0);
-    const [songData, setSongData] = useState(data?.items?.all);
+    const [type, setType] = useState(1);
+    const [songData, setSongData] = useState([]);
 
     useEffect(() => {
-        if (type === 0) setSongData(data?.items?.all);
-        if (type === 1) setSongData(data?.items?.vPop);
-        if (type === 2) setSongData(data?.items?.others);
-    }, [type, data])
+        const fetchData = async () => {
+            const response = await apis.getNewRelease(type);
+            setSongData(response?.data?.data);
+        }
+        fetchData();
+    }, [type]);
 
     return (
         <div>
             <div className='flex flex-col gap-5'>
-                <h3 className='text-xl font-bold'>{data?.title}</h3>
+                <h3 className='text-xl font-bold'>Mới phát hành</h3>
                 <div className='flex justify-between items-center'>
                     <div className='flex gap-4 text-xs'>
                         <button type='button' 
-                            onClick={() => setType(0)}
-                            className={`border rounded-l-full rounded-r-full py-[6px] px-8 cursor-pointer ${!type && 'bg-main-500 text-white'}`}
-                        >
-                            TẤT CẢ
-                        </button>
-                        <button type='button' 
                             onClick={() => setType(1)}
-                            className={`border rounded-l-full rounded-r-full py-[6px] px-8 cursor-pointer ${type == 1 && 'bg-main-500 text-white'}`}
+                            className={`border rounded-l-full rounded-r-full py-[6px] px-8 cursor-pointer ${type === 1 && 'bg-main-500 text-white'}`}
                         >
                             VIỆT NAM
                         </button>
                         <button type='button' 
-                            onClick={() => setType(2)}
-                            className={`border rounded-l-full rounded-r-full py-[6px] px-8 cursor-pointer ${type == 2 && 'bg-main-500 text-white'}`}
+                            onClick={() => setType(0)}
+                            className={`border rounded-l-full rounded-r-full py-[6px] px-8 cursor-pointer ${type === 0 && 'bg-main-500 text-white'}`}
                         >
                             QUỐC TẾ
                         </button>
@@ -46,8 +43,10 @@ const NewRelease = ({data}) => {
                     </div>
                 </div>
                 <div className='flex flex-wrap w-full'>
-                    {songData?.filter((item, index) => index < 12).map((item, index) => (
-                        <NewReleaseItem key={item.encodeId} data={item} id={index} />
+                    {songData?.filter((item, index) => index < 12)?.map((item) => (
+                        <div key={item.id}  className='w-[300px] min-[1024px]:w-[30%]'>
+                            <NewReleaseItem data={item} time={true} />
+                        </div>
                     ))}
                 </div>
             </div>

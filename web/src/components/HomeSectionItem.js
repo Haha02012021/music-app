@@ -8,6 +8,7 @@ const HomeSectionItem = ({thumbnail}) => {
 
     const [hover, setHover] = useState(false);
     const imageRef = useRef();
+    //console.log(thumbnail);
 
     return (
         <div onMouseEnter={() => {

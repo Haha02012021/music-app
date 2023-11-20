@@ -8,7 +8,7 @@ const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
     const dispatch = useDispatch();
   return (
     <div onClick={() => {
-        dispatch(actions.setCurSongId(data?.encodeId));
+        dispatch(actions.setCurSongId(data?.id));
         dispatch(actions.playSong(true));
         dispatch(actions.getSongId(null));
     }}
@@ -26,9 +26,9 @@ const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
             />
             <div className='flex flex-col'>
                 <span className='text-md font-semibold'>
-                    {data?.title.length > 23 ? `${data?.title.slice(0, 23)}...` : data?.title}
+                    {data?.name?.length > 23 ? `${data?.name?.slice(0, 23)}...` : data?.name}
                 </span>
-                <span className={`text-xs ${sm ? 'text-gray-300' : 'text-gray-500'}`}>{data?.artistsNames}</span>
+                <span className={`text-xs ${sm ? 'text-gray-300' : 'text-gray-500'}`}>{data?.singers[0]?.name}</span>
                 { !order && time && <span className='text-xs text-gray-500'>
                     {moment(data?.releaseDate * 1000).fromNow()}
                     </span>

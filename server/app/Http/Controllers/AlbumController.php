@@ -119,6 +119,13 @@ class AlbumController extends Controller
                             $query->where('type', ActionType::LIKE);
                         },
                     ])
+                    ->withExists('actions as is_liked', function ($query) use ($request) {
+                        $authAccount = $request->authAccount();
+                        if ($authAccount) {
+                            $query->where('account_id', $request->authAccount()->id)
+                                ->where('type', ActionType::LIKE);
+                        }
+                    })
                     ->find($id);
 
         if ($album) {
@@ -156,8 +163,11 @@ class AlbumController extends Controller
                         'thumbnail',
                     ])
                     ->withExists('actions as is_liked', function ($query) use ($request) {
-                        $query->where('account_id', $request->authAccount()->id)
-                            ->where('type', ActionType::LIKE);
+                        $authAccount = $request->authAccount();
+                        if ($authAccount) {
+                            $query->where('account_id', $request->authAccount()->id)
+                                ->where('type', ActionType::LIKE);
+                        }
                     })
                     ->with('singers')
                     ->paginate($limit);
@@ -188,10 +198,13 @@ class AlbumController extends Controller
                         ->unique('id')
                         ->values()
                         ->map(function ($album) use ($request) {
-                            if (!str_contains($album->thumbnail, 'https')) {
-                                $album->is_liked = $album->where('account_id', $request->authAccount()->id)
+                            $authAccount = $request->authAccount();
+                            if ($authAccount) {
+                                $album->is_liked = $album->where('account_id', $authAccount->id)
                                                         ->where('type', ActionType::LIKE)
                                                         ->exists();
+                            }
+                            if (!str_contains($album->thumbnail, 'https')) {
                                 $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR);
                             }
                             return $album;
@@ -214,8 +227,11 @@ class AlbumController extends Controller
                         ->albums()
                         ->with('singers')
                         ->withExists('actions as is_liked', function ($query) use ($request) {
-                            $query->where('account_id', $request->authAccount()->id)
-                                ->where('type', ActionType::LIKE);
+                            $authAccount = $request->authAccount();
+                            if ($authAccount) {
+                                $query->where('account_id', $request->authAccount()->id)
+                                    ->where('type', ActionType::LIKE);
+                            }
                         })
                         ->get()
                         ->map(function ($album) {
@@ -250,13 +266,21 @@ class AlbumController extends Controller
 
     public function getHotAlbums(CustomRequest $request) {
         $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
         $albums = Album::where('type', AlbumType::ALBUM)
+                ->withExists('actions as is_liked', function ($query) use ($request) {
+                    $authAccount = $request->authAccount();
+                    if ($authAccount) {
+                        $query->where('account_id', $request->authAccount()->id)
+                            ->where('type', ActionType::LIKE);
+                    }
+                })
                 ->orWhere('type', AlbumType::PLAYLIST)
                 ->withCount('actions')
                 ->orderByDesc('released_at')
                 ->get()
-                ->map(function ($album) use ($authAccount) {
-                    $album->songs = $album->songs($authAccount->id)->get();
+                ->map(function ($album) use ($authId) {
+                    $album->songs = $album->songs($authId)->get();
                     $album->songs_actions_count = $album->songs->sum('actions_count');
                     $album->songs->sortByDesc('actions_count');
                     return $album;
@@ -285,6 +309,13 @@ class AlbumController extends Controller
         $authAccount = $request->authAccount();
         $authId = $authAccount ? $authAccount->id : null;
         $albums = Album::where('type', 'like', AlbumType::TOP100.'%')
+                        ->withExists('actions as is_liked', function ($query) use ($request) {
+                            $authAccount = $request->authAccount();
+                            if ($authAccount) {
+                                $query->where('account_id', $request->authAccount()->id)
+                                    ->where('type', ActionType::LIKE);
+                            }
+                        })
                         ->withCount('actions')
                         ->orderByDesc('released_at')
                         ->get();

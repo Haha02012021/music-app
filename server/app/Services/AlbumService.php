@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\ActionType;
 use App\Enums\AlbumType;
 use App\Models\Album;
 use App\Models\Song;
@@ -122,6 +123,9 @@ class AlbumService
         $album = Album::create($item);
         $this->updateSingersSongs($songIds, $album, $authId);
         $album->singers;
+        $album->is_liked = $album->where('account_id', $authId)
+                                ->where('type', ActionType::LIKE)
+                                ->exists();
 
         return $album;
     }
@@ -133,6 +137,9 @@ class AlbumService
         if (!$album) {
             $album = Album::create($item);
             $album->singers;
+            $album->is_liked = $album->where('account_id', $authId)
+                                    ->where('type', ActionType::LIKE)
+                                    ->exists();
         }
         $this->updateSingersSongs($songIds, $album, $authId);
 

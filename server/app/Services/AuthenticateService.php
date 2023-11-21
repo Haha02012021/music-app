@@ -48,6 +48,12 @@ class AuthenticateService
                 'username' => $createdAccount->username,
                 'avatar' => $createdAccount->avatar,
             ];
+        } else {
+            $accessTokenIds = $account->accessTokens()
+                                    ->select('id')
+                                    ->where('access_token', '<>', $accessToken)
+                                    ->get();
+            AccessToken::destroy($accessTokenIds);
         }
 
         if ($expiresIn) {

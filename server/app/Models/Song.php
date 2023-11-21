@@ -29,7 +29,7 @@ class Song extends Model
 
     public function singers() {
         return $this->belongsToMany(Singer::class, 'singers_songs', 'song_id', 'singer_id')
-                    ->select(['singers.id', 'name']);
+                    ->select(['singers.id', 'name', 'thumbnail']);
     }
 
     public function genres() {

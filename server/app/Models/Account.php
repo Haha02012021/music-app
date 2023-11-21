@@ -26,9 +26,9 @@ class Account extends Model
         'avatar',
     ];
 
-    public function accessToken()
+    public function accessTokens()
     {
-        return $this->hasOne(AccessToken::class);
+        return $this->hasMany(AccessToken::class);
     }
 
     public function albums() {

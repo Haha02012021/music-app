@@ -48,13 +48,14 @@ class AuthenticateController extends Controller
             $tokens->refresh_token, 
             $tokens->expires_in
         );
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'user' => $account,
-                'tokens' => $tokens,
-            ],
-            'message' => 'Đăng nhập thành công!',
+        return view('success-login', [
+            'response' => [
+                'success' => true,
+                'data' => [
+                    'user' => $account,
+                    'tokens' => $tokens,
+                ],
+            ]
         ]);
     }
 

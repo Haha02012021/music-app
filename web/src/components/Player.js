@@ -123,11 +123,11 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
 
   const handleNextSong = () => {
     if (id !== null && id < songs?.length - 1) {
-      dispatch(actions.setCurSongId(songs[id + 1]?.encodeId));
+      dispatch(actions.setCurSongId(songs[id + 1]?.id));
       dispatch(actions.getSongId(id + 1));
       dispatch(actions.playSong(true));
     } else if (id === songs.length - 1 && isRepeat) {
-      dispatch(actions.setCurSongId(songs[0]?.encodeId));
+      dispatch(actions.setCurSongId(songs[0]?.id));
       dispatch(actions.getSongId(0));
       dispatch(actions.playSong(true));
     }
@@ -135,7 +135,7 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
 
   const handlePreSong = () => {
     if (id) {
-      dispatch(actions.setCurSongId(songs[id - 1]?.encodeId));
+      dispatch(actions.setCurSongId(songs[id - 1]?.id));
       dispatch(actions.getSongId(id - 1));
       dispatch(actions.playSong(true));
     }
@@ -143,7 +143,7 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
 
   const shuffleSong = () => {
     const randId = Math.round(Math.random() * songs?.length) - 1;
-    dispatch(actions.setCurSongId(songs[randId]?.encodeId));
+    dispatch(actions.setCurSongId(songs[randId]?.id));
     dispatch(actions.getSongId(randId)); 
   }
 

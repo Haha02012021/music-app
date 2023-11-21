@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 
 const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
     const dispatch = useDispatch();
+    console.log(data);
   return (
     <div onClick={() => {
         dispatch(actions.setCurSongId(data?.id));
@@ -30,7 +31,7 @@ const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
                 </span>
                 <span className={`text-xs ${sm ? 'text-gray-300' : 'text-gray-500'}`}>{data?.singers[0]?.name}</span>
                 { !order && time && <span className='text-xs text-gray-500'>
-                    {moment(data?.releaseDate * 1000).fromNow()}
+                    {moment(data?.released_at).fromNow()}
                     </span>
                 }
             </div>

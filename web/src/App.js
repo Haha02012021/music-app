@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Home, Login, Mymusic, Public, Playlist, ZingChartWeek, ZingChart, LoginCallback } from './containers/public/';
+import { Home, Login, Mymusic, Public, Playlist, ZingChartWeek, ZingChart, NewReleaseChart, GenreTopic, Top100 } from './containers/public/';
 import { Routes, Route } from "react-router-dom";
 import path from "./utils/path";
 import { ToastContainer } from 'react-toastify';
@@ -20,6 +20,9 @@ function App() {
             <Route path={path.ALBUM__TITLE__PID} element={<Playlist />} />
             <Route path={path.ZINGCHARTWEEK__TITLE__CID} element={<ZingChartWeek />} />
             <Route path={path.ZINGCHART} element={<ZingChart />} />
+            <Route path={path.NEWRELEASECHART} element={<NewReleaseChart />} />
+            <Route path={path.GENRETOPIC} element={<GenreTopic />} />
+            <Route path={path.TOP100} element={<Top100 />} />
 
             <Route path={path.STAR} element={<Home />} />
           </Route>

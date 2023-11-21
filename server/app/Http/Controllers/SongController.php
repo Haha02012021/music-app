@@ -305,6 +305,7 @@ class SongController extends Controller
         $last_date = date('Y-m-d',strtotime('last day of this month'));
         $songs = Song::whereBetween('released_at', [$first_date, $last_date])
                     ->withCount('actions')
+                    ->with('singers')
                     ->orderByDesc('created_at')
                     ->withExists('actions as is_liked', function ($query) use ($request) {
                         $authAccount = $request->authAccount();

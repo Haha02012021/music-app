@@ -132,9 +132,9 @@ class AlbumController extends Controller
             $songs = $album->songs($authId)->get()
                     ->map(function ($song) {
                         if (!str_contains($song->thumbnail, 'https')) {
-                            $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, 'thumbnails/');
-                            return $song;
+                            $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, THUMBNAILS_DIR);
                         }
+                        return $song;
                     });
             $album->thumbnail = !str_contains($album->thumbnail, 'https') ? $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR) : $album->thumbnail;
             $album->songs = $songs;

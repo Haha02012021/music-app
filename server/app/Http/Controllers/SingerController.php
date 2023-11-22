@@ -81,22 +81,24 @@ class SingerController extends Controller
 
     public function getSingerById(CustomRequest $request) {
         $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
 
         $id = $request->id;
-        $singer = Singer::find($id)
-                        ->withCount('followers')
-                        ->withExists('followers as is_followed', function ($query) use ($authAccount) {
-                            $query->where('follower_id', $authAccount->id);
+        $singer = Singer::withCount('followers')
+                        ->withExists('followers as is_followed', function ($query) use ($authId) {
+                            if ($authId) {
+                                $query->where('follower_id', $authId);
+                            }
                         })
-                        ->first();
-
+                        ->find($id);
+                        
         $limit = $request->limit;
         if (!$limit) {
             $limit = SLICE_LENGTH;
         }
         $singer->songs_slice = $singer->songs()->get()->take($limit);
         $singer->albums_slice = $singer->albums()->get()->take($limit);
-        $singer->thumbnail = $this->fileService->getFileUrl($singer->thumbnail, THUMBNAILS_DIR);
+        $singer->thumbnail = str_contains($singer->thumbnail, 'https') ? $singer->thumbnail : $this->fileService->getFileUrl($singer->thumbnail, THUMBNAILS_DIR);
 
         return response()->json([
             'success' => true,

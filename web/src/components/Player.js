@@ -38,6 +38,9 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
         setSongInfo(res?.data?.data);
         dispatch(actions.setCurSongData(res?.data?.data));
         audio.pause();
+        console.log(res?.data?.data)
+        // const listRes = await apis.apiListenMusic(res?.data?.data?.id, res?.data?.data?.album_id)
+        // console.log(listRes);
         setAudio(new Audio(res?.data?.data?.audio));
       } else {
         audio.pause();

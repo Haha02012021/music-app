@@ -17,7 +17,7 @@ const GenreTopic = () => {
     return (
         <div>
             {data?.map(item => (
-                <HomeSection key={item?.id} name={item?.name} id={4} gid={item?.id} />
+                <HomeSection key={item?.id} name={item?.name} gid={item?.id} />
             ))}
         </div>
     )

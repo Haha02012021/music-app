@@ -33,10 +33,10 @@ const HomeSection = ({id, name, gid, hdata}) => {
             } else if (id === 3) {
                 const response = await apis.getAlbumTop();
                 setData(response?.data?.data);
-            } else if (id === 4) {
+            } else if (gid) {
                 const response = await apis.apiGetGenreAlbum(gid);
                 if (response?.data?.data?.length > 4) setData(response?.data?.data);
-            } else if (id === 5) {
+            } else if (hdata) {
                 setData(hdata?.albums);
             }
             
@@ -47,7 +47,7 @@ const HomeSection = ({id, name, gid, hdata}) => {
     return (
         <div className='flex flex-col gap-5'>
             <div className='flex items-center justify-between'>
-                <h3 className='text-xl font-bold'>{id === 5 ? hdata?.title : name}</h3>
+                <h3 className='text-xl font-bold'>{hdata ? hdata?.title : name}</h3>
                 <div className='flex text-gray-500 justify-center items-center gap-2'>
                     <span className='text-xs'>TẤT CẢ</span>
                     <BsChevronRight size={16} />

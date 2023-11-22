@@ -4,7 +4,7 @@ import { GoArrowLeft, GoArrowRight, GoSearch } from 'react-icons/go';
 import { AiOutlineHeart, AiFillHeart, AiOutlineDelete } from 'react-icons/ai';
 import { BiSkipNext, BiSkipPrevious } from 'react-icons/bi';
 import { PiShuffleLight, PiMusicNotesSimpleLight, PiRepeatLight, PiRepeatOnceLight, PiPlaylistLight, PiMusicNotesPlus } from 'react-icons/pi';
-import { TbChartArcs, TbPlayerPlayFilled, TbPlayerPauseFilled, TbIcons } from 'react-icons/tb';
+import { TbChartArcs, TbPlayerPlayFilled, TbPlayerPauseFilled, TbIcons, TbUserPlus } from 'react-icons/tb';
 import { LuDot } from 'react-icons/lu';
 import { SlVolume2, SlVolumeOff } from 'react-icons/sl';
 import { TfiAlarmClock } from 'react-icons/tfi';
@@ -42,6 +42,7 @@ const icons = {
     FaRegCircleUser,
     FaRegStar,
     IoRemoveOutline,
+    TbUserPlus,
 }
 
 export default icons;

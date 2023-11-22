@@ -7,6 +7,7 @@ const Home = () => {
     <div className='flex flex-col mb-36 gap-12 overflow-y-auto'>
       {/* <Slider /> */}
 
+      <HomeSection id={4} name='Gần đây'/>
       <NewRelease/>
 
       {/* { homeData.filter((item, index) => index >= 3 && index <= 7).map((item, index) => (

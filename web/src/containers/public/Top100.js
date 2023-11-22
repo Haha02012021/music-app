@@ -22,7 +22,7 @@ const Top100 = () => {
             <div className='mt-10'>
                 {data?.map((item, index) => (
                     <div key={index} className='my-20'>
-                        <HomeSection hdata={item} id={5}/>
+                        <HomeSection hdata={item}/>
                     </div>
                 ))}
             </div>

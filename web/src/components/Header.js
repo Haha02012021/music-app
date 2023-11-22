@@ -8,7 +8,7 @@ const {GoArrowRight, GoArrowLeft} = icons;
 const Header = () => {
   return (
     <div className='w-full flex justify-between'>
-        <div className='w-full flex gap-6 items-center'>
+        <div className='w-4/5 flex gap-6 items-center'>
             <div className='flex gap-4 text-[#CECED0]'>
                 <span>
                     <GoArrowLeft size={24} />
@@ -21,7 +21,7 @@ const Header = () => {
                 <Search />
             </div>
         </div>
-        <div>
+        <div className='w-1/5'>
             <Login />
         </div>
     </div>

@@ -27,6 +27,7 @@ Route::get('callback/{provider}', [AuthenticateController::class, 'callbackSocia
 Route::middleware('auth.api')->group(function () {
     // Auth
     Route::get('auth/user', [AuthenticateController::class, 'getAuthUser']);
+    Route::post('auth/logout', [AuthenticateController::class, 'logout']);
 
     Route::post('follow/singer/{singerId}', [AccountController::class, 'follow']);
 

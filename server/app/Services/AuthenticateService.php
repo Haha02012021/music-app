@@ -48,7 +48,7 @@ class AuthenticateService
                 'username' => $createdAccount->username,
                 'avatar' => $createdAccount->avatar,
             ];
-        } else {
+        } else if ($expiresIn) {
             $accessTokenIds = $account->accessTokens()
                                     ->select('id')
                                     ->where('access_token', '<>', $accessToken)

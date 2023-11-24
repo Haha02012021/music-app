@@ -48,6 +48,13 @@ Route::middleware('auth.api')->group(function () {
         Route::post('update', [SongController::class, 'update'])->name('update');
     });
 
+    // Action like
+    Route::prefix('action/like')->name('action.')->group(function () {
+        Route::post('', [ActionController::class, 'like'])->name('');
+        Route::get('albums', [ActionController::class, 'getLikedAlbums'])->name('get-albums');
+        Route::get('songs', [ActionController::class, 'getLikedSongs'])->name('get-songs');
+    });
+
     // Only role admin
     Route::middleware('role.admin')->group(function () {
         Route::get('songs', [SongController::class, 'getAllSongs'])->name('song.all');
@@ -92,12 +99,6 @@ Route::prefix('singer')->name('singer.')->group(function () {
 Route::prefix('genre')->name('genre.')->group(function () {
     Route::get('all', [GenreController::class, 'getAllGenres'])->name('all');
     Route::get('{id}', [GenreController::class, 'getGenreById'])->name('detail');
-});
-
-Route::prefix('action/like')->name('action.')->group(function () {
-    Route::post('', [ActionController::class, 'like'])->name('');
-    Route::get('albums', [ActionController::class, 'getLikedAlbums'])->name('get-albums');
-    Route::get('songs', [ActionController::class, 'getLikedSongs'])->name('get-songs');
 });
 
 Route::prefix('action/listen')->name('action.listen')->group(function () {

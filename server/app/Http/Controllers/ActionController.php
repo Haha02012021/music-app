@@ -9,11 +9,18 @@ use App\Http\Requests\Action\ListenRequest;
 use App\Http\Requests\CustomRequest;
 use App\Models\Action;
 use App\Models\Song;
+use App\Services\FileService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 class ActionController extends Controller
 {
+    protected FileService $fileService;
+
+    public function __construct(FileService $fileService) {
+        $this->fileService = $fileService;
+    }
+
     public function listen(ListenRequest $request) {
         try {
             DB::transaction(function () use ($request) {
@@ -71,7 +78,15 @@ class ActionController extends Controller
         $account = $request->authAccount();
 
         if ($account) {
-            $albums = $account->actedAlbums()->where('actions.type', ActionType::LISTEN)->get();
+            $albums = $account->actedAlbums()
+                            ->where('actions.type', ActionType::LISTEN)
+                            ->get()
+                            ->map(function ($album) {
+                                if ($album->thumbnail && !str_contains($album->thumbnail, 'https')) {
+                                    $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR);
+                                }
+                                return $album;
+                            });
             return response()->json([
                 'success' => true,
                 'data' => $albums,
@@ -104,6 +119,9 @@ class ActionController extends Controller
 
         if ($account) {
             $song = $account->actedSongs()->where('type', ActionType::LISTEN)->first();
+            $song->thumbnail = $song->thumbnail && !str_contains($song->thumbnail, 'https') 
+                                    ? $this->fileService->getFileUrl($song->thumbnail, THUMBNAILS_DIR)
+                                    : $song->thumbnail;
             return response()->json([
                 'success' => true,
                 'data' => $song,
@@ -125,6 +143,9 @@ class ActionController extends Controller
                         ->join('songs', 'songs.id', 'songs.item_id')
                         ->orderByDesc('actions.created_at')
                         ->first();
+            $song->thumbnail = $song->thumbnail && !str_contains($song->thumbnail, 'https') 
+                                    ? $this->fileService->getFileUrl($song->thumbnail, THUMBNAILS_DIR)
+                                    : $song->thumbnail;
 
             return response()->json([
                 'success' => true,
@@ -168,7 +189,16 @@ class ActionController extends Controller
     public function getLikedAlbums(CustomRequest $request) {
         $account = $request->authAccount();
 
-        $albums = $account->actedAlbums()->where('actions.type', ActionType::LIKE)->with('author')->get();
+        $albums = $account->actedAlbums()
+                        ->where('actions.type', ActionType::LIKE)
+                        ->with('author')
+                        ->get()
+                        ->map(function ($album) {
+                            if ($album->thumbnail && !str_contains($album->thumbnail, 'https')) {
+                                $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR);
+                            }
+                            return $album;
+                        });
 
         return response()->json([
             'success' => true,
@@ -180,7 +210,16 @@ class ActionController extends Controller
     public function getLikedSongs(CustomRequest $request) {
         $account = $request->authAccount();
 
-        $songs = $account->actedSongs()->where('type', ActionType::LIKE)->with('author')->get();
+        $songs = $account->actedSongs()
+                        ->where('type', ActionType::LIKE)
+                        ->with('author')
+                        ->get()
+                        ->map(function ($song) {
+                            if ($song->thumbnail && !str_contains($song->thumbnail, 'https')) {
+                                $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, THUMBNAILS_DIR);
+                            }
+                            return $song;
+                        });
 
         return response()->json([
             'success' => true,

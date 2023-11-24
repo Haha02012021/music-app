@@ -19,7 +19,7 @@ const musicConfig = {
 const userConfig = {
     ...commonConfig,
     key: 'user',
-    whiteList: ['token', 'info'],
+    whiteList: ['login', 'info', 'followSingers'],
 }
 
 const rootReducer = combineReducers({

@@ -1,7 +1,17 @@
-import { React } from 'react';
+import { React, useEffect } from 'react';
 import { HomeSection, NewRelease, Slider, WeekChart, ZingChart } from '../../components';
+import * as apis from '../../apis';
 
 const Home = () => {
+
+ useEffect(() => {
+
+    const getLikedAlbums = async () => {
+        const res = await apis.apiGetLikedAlbums();
+        console.log(res);
+    }
+    getLikedAlbums();
+}, [])
 
   return (
     <div className='flex flex-col mb-36 gap-12 overflow-y-auto'>

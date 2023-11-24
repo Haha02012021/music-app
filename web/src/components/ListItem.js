@@ -9,7 +9,6 @@ const { PiMusicNotesSimpleLight, IoRemoveOutline } = icons;
 const ListItem = ({songData, index, release}) => {
 
     const dispatch = useDispatch();
-    console.log(songData);
 
     return (
         <div className='cursor-pointer flex justify-between items-center p-[10px] border-t border-gray-300 hover:bg-gray-100'

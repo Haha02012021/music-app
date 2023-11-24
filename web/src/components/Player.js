@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import RotateLine from './RotateLine';
 
 const {
-  AiFillHeart, AiOutlineHeart, BsThreeDots, PiShuffleLight, PiRepeatOnceLight,
+  AiFillHeart, AiOutlineHeart, BsPlusLg, PiShuffleLight, PiRepeatOnceLight,
   PiRepeatLight, TbPlayerPlayFilled, TbPlayerPauseFilled, BiSkipNext, BiSkipPrevious,
   PiPlaylistLight, SlVolumeOff, SlVolume2,
 } = icons;
@@ -38,9 +38,7 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
         setSongInfo(res?.data?.data);
         dispatch(actions.setCurSongData(res?.data?.data));
         audio.pause();
-        console.log(res?.data?.data)
-        // const listRes = await apis.apiListenMusic(res?.data?.data?.id, res?.data?.data?.album_id)
-        // console.log(listRes);
+        const listRes = await apis.apiListenMusic(res?.data?.data?.id, res?.data?.data?.album_id)
         setAudio(new Audio(res?.data?.data?.audio));
       } else {
         audio.pause();
@@ -176,10 +174,10 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
 
             <div className='flex'>
               <span className='p-2 mx-[2px]'>
-                <AiOutlineHeart size={16}/>
+                <AiOutlineHeart title='Thêm vào thư viện' size={16}/>
               </span>
               <span className='p-2 mx-[2px]'>
-                <BsThreeDots size={16} />
+                <BsPlusLg title='Thêm vào playlist' size={16} />
               </span>
             </div>
         </div>
@@ -207,7 +205,7 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
                 { !isLoaded ? <RotateLine /> : isPlaying ? <TbPlayerPauseFilled size={20} /> : <TbPlayerPlayFilled size={20} /> }
               </span>
               <span onClick={handleNextSong}
-                className={`${(id === null || id == (songs.length - 1)) ? 'text-gray-200' : 'cursor-pointer'}`}
+                className={`${(id === null || id == (songs.length - 1) || songs.length < 2) ? 'text-gray-200' : 'cursor-pointer'}`}
               >
                 <BiSkipNext size={36} />
               </span>

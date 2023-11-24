@@ -9,7 +9,7 @@ const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     
-    console.log(data);
+    //console.log(data);
   return (
     <div 
         className={`flex-auto flex justify-between p-[10px] rounded-md

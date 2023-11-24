@@ -8,17 +8,28 @@ const Login = () => {
   const [loginUrl, setLoginUrl] = useState("");
   const popupRef = useRef(null);
   const dispatch = useDispatch();
-  const {token, info} = useSelector(state => state.user);
-  const [login, setLogin] = useState(token ? true : false);
+  const {login, info} = useSelector(state => state.user);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const response = await apis.apiGetInfo();
+      console.log(response);
+      if (response?.status === 200) {
+        dispatch(actions.getLogin(true));
+      } else {
+        dispatch(actions.getLogin(false));
+      }
+    }
+    checkToken();
+  }, []);
 
   useEffect(() => {
     window.addEventListener("message", (e) => {
       if (e.source === popupRef.current) {
         const res = e.data;
         if (res.success) {
-          setLogin(true);
           localStorage.setItem('accessToken', res?.data?.tokens?.access_token)
-          dispatch(actions.getAccessToken(res?.data?.tokens?.access_token));
+          dispatch(actions.getLogin(true));
           dispatch(actions.getUserInfo(res?.data?.user));
           popupRef.current.close();
           setLoginUrl(null);
@@ -47,17 +58,16 @@ const Login = () => {
         );
       }
       } catch (error) {
-        //console.error('Error fetching login QR:', error);
+        console.error('Error fetching login QR:', error);
       }
   };
 
   const handleLogin = () => {
-    if (!login) {
+    if (login === false) {
       fetchLoginQr();
     } else {
       localStorage.removeItem('accessToken');
-      setLogin(false);
-      dispatch(actions.getAccessToken([]));
+      dispatch(actions.getLogin(false));
       dispatch(actions.getUserInfo({}));
     }
   };

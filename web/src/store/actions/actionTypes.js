@@ -8,8 +8,9 @@ const actionTypes  = {
     SET_SONGS: 'SET_SONGS',
     SONG_ID: 'SONG_ID',
     //user
-    ACCESS_TOKEN: 'ACCESS_TOKEN',
     INFO: 'INFO',
+    FOLLOW_SINGERS: 'FOLLOW_SINGERS',
+    LOGIN: 'LOGIN',
 }
 
 export default actionTypes;

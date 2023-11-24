@@ -6,7 +6,7 @@ import * as apis from '../apis';
 
 const { BsChevronRight } = icons;
 
-const HomeSection = ({id, name, gid, hdata}) => {
+const HomeSection = ({id, name, gid}) => {
 
     const navigate = useNavigate();
     const [data, setData] = useState([]);
@@ -35,9 +35,7 @@ const HomeSection = ({id, name, gid, hdata}) => {
                 setData(response?.data?.data);
             } else if (gid) {
                 const response = await apis.apiGetGenreAlbum(gid);
-                if (response?.data?.data?.length > 4) setData(response?.data?.data);
-            } else if (hdata) {
-                setData(hdata?.albums);
+                setData(response?.data?.data);
             }
             
         }
@@ -47,22 +45,25 @@ const HomeSection = ({id, name, gid, hdata}) => {
     return (
         <div className='flex flex-col gap-5'>
             <div className='flex items-center justify-between'>
-                <h3 className='text-xl font-bold'>{hdata ? hdata?.title : name}</h3>
-                <div className='flex text-gray-500 justify-center items-center gap-2'>
-                    <span className='text-xs'>TẤT CẢ</span>
-                    <BsChevronRight size={16} />
-                </div>
+                <h3 className='text-xl font-bold'>{name}</h3>
             </div>
             <div className='flex gap-7 justify-between items-start '>
                 {data?.filter((item, index) => index < 5)?.map(item => (
                     <div key={item.id}
                         className='w-1/5 flex flex-col gap-2 items-center justify-center cursor-pointer'
                         onClick={() => {
-                            const link = item.title.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll(' ', '-');
-                            navigate(`album/${link}/${item.id}`)
+                            if (id !== 2) {
+                                const link = item?.title?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll(' ', '-');
+                                const newLink = '/album/'+link+'/'+item?.id;
+                                navigate(newLink);
+                            } else {
+                                const link = item?.name?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll(' ', '-');
+                                const newLink = `/singer/${link}/${item?.id}`;
+                                navigate(newLink);
+                            }
                         }}
                     >
-                        <HomeSectionItem thumbnail={item.thumbnail}/>
+                        <HomeSectionItem thumbnail={item?.thumbnail} item_id={id === 2 ? -1 : item?.id}/>
                         <span className={`${id === 3 ? 'text-gray-800 text-base font-semibold' : 'text-gray-400 text-sm'}`}>
                             {id ===3 ? item.title : id === 2 ? item.name 
                             : item?.description?.length > 50 ? `${item?.description?.slice(0, 50)}...` : item?.description}

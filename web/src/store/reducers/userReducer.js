@@ -1,21 +1,27 @@
 import actionTypes from "../actions/actionTypes";
 
 const initState = {
-    token: '',
+    login: false,
     info: {},
+    followSingers: [],
 }
 
 const userReducer = (state = initState, action) => {
     switch(action.type) {
-        case actionTypes.ACCESS_TOKEN: 
+        case actionTypes.LOGIN: 
             return {
                 ...state,
-                token: action.token || '',
+                login: action.login
             }
         case actionTypes.INFO: 
             return {
                 ...state,
                 info: action.info || {},
+            }
+        case actionTypes.FOLLOW_SINGERS: 
+            return {
+                ...state,
+                followSingers: action.followSingers || [],
             }
         default:
             return state;

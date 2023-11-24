@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { useParams } from 'react-router-dom';
 import * as apis from '../../apis';
 import moment from 'moment';
@@ -17,7 +17,6 @@ const Playlist = () => {
     useEffect(() => {
         const fetchDataDetailPlaylist = async () => {
             const response = await apis.apiGetDetailPlaylist(pid);
-            console.log(response);
             if (response?.status === 200) {
                 setPlaylistData(response.data.data);
                 dispatch(actions.setCurPlaylistId(pid));
@@ -65,4 +64,4 @@ const Playlist = () => {
     )
 }
 
-export default Playlist
+export default memo(Playlist)

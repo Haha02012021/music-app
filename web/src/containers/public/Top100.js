@@ -33,7 +33,6 @@ const Top100 = () => {
                                     onClick={() => {
                                         const link = item?.title?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll(' ', '-');
                                         const newLink = `/album/${link}/${item?.id}`;
-                                        //const newLink = 'album/a/1'
                                         navigate(newLink);
                                     }}
                                 >

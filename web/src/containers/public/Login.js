@@ -13,8 +13,7 @@ const Login = () => {
   useEffect(() => {
     const checkToken = async () => {
       const response = await apis.apiGetInfo();
-      console.log(response);
-      if (response?.status === 200) {
+      if (response?.data?.success === true) {
         dispatch(actions.getLogin(true));
       } else {
         dispatch(actions.getLogin(false));

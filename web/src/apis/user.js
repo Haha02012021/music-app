@@ -120,3 +120,42 @@ export const apiGetLikedAlbums = () => new Promise (async( resolve, reject) => {
         reject(error);
     }
 })
+
+export const apiGetLikedSongs = () => new Promise (async( resolve, reject) => {
+    try {
+        const accessToken = localStorage.getItem('accessToken');
+
+        const response = await axios ({
+            url: `/action/like/songs`,
+            method: 'get',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+        });
+        resolve(response);
+    } catch (error) {
+        reject(error);
+    }
+})
+
+export const apiCreatePlaylist = (title) => new Promise (async( resolve, reject) => {
+    try {
+        const accessToken = localStorage.getItem('accessToken');
+
+        const response = await axios ({
+            url: `/playlist/create`,
+            method: 'post',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            data: {
+                title: title,
+            }
+        });
+        resolve(response);
+    } catch (error) {
+        reject(error);
+    }
+})

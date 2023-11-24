@@ -1,18 +1,31 @@
-import { React, memo } from 'react';
+import { React, memo, useState } from 'react';
 import moment from 'moment';
 import 'moment/locale/vi';
 import * as actions from '../store/actions';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import icons from '../utils/icons';
+import * as apis from '../apis';
 
+const { AiOutlineHeart, AiFillHeart } = icons;
 const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [hover, setHover] = useState(false);
+    const [liked, setLiked] = useState(data?.is_liked);
     
     //console.log(data);
+    const handleLikeSong = (e) => {
+        e.stopPropagation();
+        const likeSong = async() => {
+            const res = await apis.apiLikeSong(data?.id, 2);
+            setLiked(prev => !prev)
+        }
+        likeSong();
+    }
   return (
-    <div 
-        className={`flex-auto flex justify-between p-[10px] rounded-md
+    <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+        className={`flex-auto flex justify-between items-center p-[10px] rounded-md
             ${style ? style : 'hover:bg-white-30 w-full'}`
         }>
         <div className='flex justify-start gap-[10px]'>
@@ -47,6 +60,9 @@ const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
                 }
             </div>
         </div>
+        {hover && <span className='mr-5 text-gray-600 cursor-pointer' onClick={handleLikeSong}> 
+            {liked ? <AiFillHeart title='Xóa khỏi thư viện' size={16} /> : <AiOutlineHeart title='Thêm vào thư viện' size={16} /> }
+        </span>}
         { percent && <span className='text-lg font-bold'>
             {percent}%
         </span> }

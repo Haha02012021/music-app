@@ -15,7 +15,7 @@ const Singer = () => {
     const dispatch = useDispatch();
     const { songs } = useSelector(state => state.music);
     const navigate = useNavigate();
-    const { token, followSingers } = useSelector(state => state.user);
+    const { token } = useSelector(state => state.user);
 
     useEffect(() => {
       const fetchData = async () => {
@@ -37,14 +37,7 @@ const Singer = () => {
 
     const handleFollowSinger = () => {
       followSinger();
-      
-      if (follow) {
-        setFollow(false);
-        followSingers?.filter(item => item !== sid)
-      } else {
-        setFollow(true);
-        followSingers.push(sid);
-      }
+      setFollow(prev => !prev);
     }
   return (
     <div className='flex flex-col mb-36'>

@@ -40,7 +40,7 @@ const HomeSection = ({id, name, gid}) => {
             
         }
         fetchData();
-    }, [id]);
+    }, []);
 
     return (
         <div className='flex flex-col gap-5'>
@@ -63,7 +63,7 @@ const HomeSection = ({id, name, gid}) => {
                             }
                         }}
                     >
-                        <HomeSectionItem thumbnail={item?.thumbnail} item_id={id === 2 ? -1 : item?.id}/>
+                        <HomeSectionItem thumbnail={item?.thumbnail} item_id={id === 2 ? -1 : item?.id} is_liked={item?.is_liked}/>
                         <span className={`${id === 3 ? 'text-gray-800 text-base font-semibold' : 'text-gray-400 text-sm'}`}>
                             {id ===3 ? item.title : id === 2 ? item.name 
                             : item?.description?.length > 50 ? `${item?.description?.slice(0, 50)}...` : item?.description}

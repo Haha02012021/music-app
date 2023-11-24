@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { useParams } from 'react-router-dom';
 import * as apis from '../../apis';
 import moment from 'moment';
@@ -17,11 +17,10 @@ const Playlist = () => {
     useEffect(() => {
         const fetchDataDetailPlaylist = async () => {
             const response = await apis.apiGetDetailPlaylist(pid);
-            console.log(response);
             if (response?.status === 200) {
                 setPlaylistData(response.data.data);
                 dispatch(actions.setCurPlaylistId(pid));
-                dispatch(actions.setSong(response?.data?.data?.song?.items));
+                dispatch(actions.setSong(response?.data?.data?.songs));
             }
         }
 
@@ -58,13 +57,11 @@ const Playlist = () => {
                     <span>{playlistData?.sortDescription}</span>
                 </div>
                 <div className='mb-10'>
-                    <ListSong totalDuration={playlistData?.song?.totalDuration}
-                        total={playlistData?.song?.total}
-                    />
+                    <ListSong />
                 </div>
             </div>
         </div>
     )
 }
 
-export default Playlist
+export default memo(Playlist)

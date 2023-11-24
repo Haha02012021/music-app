@@ -20,15 +20,17 @@ const LeftSideBar = () => {
         </div>
 
         <div className='flex flex-col'>
-          {sidebarMenu.map(item => ( 
-            <NavLink to={item.path}
-              key={item.path}
-              end={item.end}
-              className={ ({isActive}) => isActive ? active : noneActive}
-            >
-              {item.icon}
-              {item.text}
-            </NavLink>
+          {sidebarMenu.map((item, index) => ( 
+            <div key={item.path}>
+              <NavLink to={item.path}
+                end={item.end}
+                className={ ({isActive}) => isActive ? active : noneActive}
+              >
+                {item.icon}
+                {item.text}
+              </NavLink>
+              {index === 3 && <div className='h-[1px] w-[90%] bg-gray-400 my-5 mx-3'></div>}
+            </div>
           ))}
         </div>
     </div>

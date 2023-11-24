@@ -25,3 +25,11 @@
     -1px 1px 0 #E35050,
      1px 1px 0 #E35050;
 }
+
+.text-shadow-no4 {
+  text-shadow:
+   -1px -1px 0 #97979C,  
+    1px -1px 0 #97979C,
+    -1px 1px 0 #97979C,
+     1px 1px 0 #97979C;
+}

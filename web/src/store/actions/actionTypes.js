@@ -7,6 +7,10 @@ const actionTypes  = {
     PLAY_SONG: 'PLAY_SONG',
     SET_SONGS: 'SET_SONGS',
     SONG_ID: 'SONG_ID',
+    //user
+    INFO: 'INFO',
+    FOLLOW_SINGERS: 'FOLLOW_SINGERS',
+    LOGIN: 'LOGIN',
 }
 
 export default actionTypes;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import icons from '../../utils/icons';
 import * as apis from '../../apis';
-import { HomeSectionItem, ListItem } from '../../components';
+import { AudioUpload, HomeSectionItem, ListItem } from '../../components';
 
 const { 
   BsPlusLg
@@ -12,6 +12,8 @@ const Mymusic = () => {
   const [data, setData] = useState([]);
   const [likedSongData, setLikedSongData] = useState([]);
   const [isOpenPopup, setIsOpenPopup] = useState(false);
+  const [type, setType] = useState(1);
+  const [isCreate, setIsCreate] = useState(false);
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
@@ -24,6 +26,7 @@ const Mymusic = () => {
   getLiked();
   }, []);
 
+  console.log(likedSongData);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -47,7 +50,7 @@ const Mymusic = () => {
       <div className='w-full flex flex-col gap-4'>
         <div className='flex justify-start items-center gap-4'>
           <span className='text-xl font-bold'>PLAYLIST</span>
-          <span className='p-1 rounded-full bg-gray-200' onClick={() => setIsOpenPopup(true)}><BsPlusLg /></span>
+          <span className='p-1 rounded-full bg-gray-200 cursor-pointer' onClick={() => setIsOpenPopup(true)}><BsPlusLg /></span>
         </div>
         {isOpenPopup && <div>
           <form onSubmit={handleSubmit}>
@@ -69,12 +72,31 @@ const Mymusic = () => {
       </div>
       <div className='w-full flex flex-col gap-4'>
         <span className='text-xl font-bold'>Bài hát</span>
-        <div>{likedSongData?.map(item => (
+        <div className='flex gap-4'>
+          <button type='button' 
+            onClick={() => setType(1)}
+            className={`border rounded-l-full rounded-r-full py-[6px] px-8 cursor-pointer ${type === 1 && 'bg-main-500 text-white'}`}
+          >
+              Yêu thích
+          </button>
+          <button type='button' 
+              onClick={() => setType(0)}
+              className={`border rounded-l-full rounded-r-full py-[6px] px-8 cursor-pointer ${type === 0 && 'bg-main-500 text-white'}`}
+          >
+              Đã tải lên
+          </button>
+        </div>
+        {type === 1 && <div>{likedSongData?.map(item => (
           <div key={item?.id}>
-            <ListItem songData={item}/>
+            <ListItem songData={item} is_liked={true} />
           </div>
         ))}
+        </div>}
+        {type === 0 && <div className='w-full'>
+          <span className='cursor-pointer' onClick={() => setIsCreate(prev => !prev)} ><BsPlusLg className='p-1 rounded-full bg-gray-200' size={24} /></span>
+          {isCreate === true && <AudioUpload />}
         </div>
+        }
       </div>
     </div>
   )

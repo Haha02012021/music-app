@@ -7,11 +7,11 @@ import * as apis from '../apis';
 
 const { PiMusicNotesSimpleLight, IoRemoveOutline, AiOutlineHeart, AiFillHeart } = icons;
 
-const ListItem = ({songData, index, release}) => {
+const ListItem = ({songData, index, release, is_liked}) => {
 
     const dispatch = useDispatch();
     const [hover, setHover] = useState(false);
-    const [liked, setLiked] = useState(songData?.is_liked);
+    const [liked, setLiked] = useState(is_liked);
 
     const handleLikeSong = (e) => {
         e.stopPropagation();
@@ -21,6 +21,8 @@ const ListItem = ({songData, index, release}) => {
         }
         likeSong();
     }
+
+    console.log(liked);
 
     return (
         <div className='cursor-pointer flex justify-between items-center p-[10px] border-t border-gray-300 hover:bg-gray-100'

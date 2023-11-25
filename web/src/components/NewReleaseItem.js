@@ -14,7 +14,7 @@ const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
     const [hover, setHover] = useState(false);
     const [liked, setLiked] = useState(data?.is_liked);
     
-    console.log(data);
+    //console.log(data);
     const handleLikeSong = (e) => {
         e.stopPropagation();
         const likeSong = async() => {

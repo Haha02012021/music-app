@@ -15,7 +15,7 @@ const ListSong = ({release}) => {
     const hour = Math.floor(totalDuration / 3600);
     const minute = Math.floor((totalDuration - hour * 3600) / 60);
     const second = totalDuration - hour * 3600 - minute * 60; 
-    
+    console.log(songs);
     return (
         <div className='w-full h-screen flex flex-col text-xs overflow-y-auto mb-36'>
             {!release && <div className='flex justify-between items-center font-semibold text-gray-600 p-[10px]'>
@@ -24,7 +24,7 @@ const ListSong = ({release}) => {
             </div> }
             <div className='p-[10px] flex flex-col'>
                 {songs?.map((item, index) => (
-                    <ListItem key={item.id} songData={item} index={index} release={release}/>
+                    <ListItem key={item.id} songData={item} is_liked={item?.is_liked} index={index} release={release}/>
                 ))}
             </div>
             <div className='border-t border-gray-300'>

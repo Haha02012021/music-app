@@ -159,3 +159,22 @@ export const apiCreatePlaylist = (title) => new Promise (async( resolve, reject)
         reject(error);
     }
 })
+
+export const apiCreateSong = (FormData) => new Promise (async( resolve, reject) => {
+    try {
+        const accessToken = localStorage.getItem('accessToken');
+
+        const response = await axios ({
+            url: `/song/create`,
+            method: 'post',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            data: FormData
+        });
+        resolve(response);
+    } catch (error) {
+        reject(error);
+    }
+})

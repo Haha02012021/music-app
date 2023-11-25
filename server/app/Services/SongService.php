@@ -10,19 +10,19 @@ class SongService
         $this->fileService = $fileService;
     }
 
-    public function updateAudioAndThumbnail($request)
+    public function updateAudioAndThumbnail($request, $name)
     {
         $medias = [];
         if ($request->hasFile('thumbnail')) {
             $thumbnail = $request->file('thumbnail');
-            $thumbnailData = $this->fileService->uploadFile($thumbnail, 'thumbnails/', $request->input('name'));
+            $thumbnailData = $this->fileService->uploadFile($thumbnail, THUMBNAILS_DIR, $request->input('name') ?? $name);
 
             $medias['thumbnail'] = $thumbnailData['fileName'];
         }
 
         if ($request->hasFile('audio')) {
             $audio = $request->file('audio');
-            $audioData = $this->fileService->uploadFile($audio, 'audios/', $request->input('name'));
+            $audioData = $this->fileService->uploadFile($audio, AUDIOES_DIR, $request->input('name') ?? $name);
             $medias['audio'] = $audioData['fileName'];
             $medias['duration'] = $audioData['duration'];
         }

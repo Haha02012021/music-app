@@ -169,7 +169,7 @@ class SongController extends Controller
         $song = Song::find($songId);
         
         $data = $request->except(['audio', 'thumbnail', 'singer_ids']);
-        $medias =  $this->songService->updateAudioAndThumbnail($request, $data);
+        $medias =  $this->songService->updateAudioAndThumbnail($request, $song->name);
         $data = array_merge($data, $medias);
         $song->update($data);
 

@@ -106,6 +106,26 @@ class AlbumController extends Controller
         ]);
     }
 
+    public function getPlaylists(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+        $playlists = $authAccount->albums()
+                                ->where('type', AlbumType::PLAYLIST)
+                                ->orderByDesc('updated_at')
+                                ->with('singers')
+                                ->get()
+                                ->map(function ($playlist) {
+                                    if ($playlist->thumbnail && !str_contains($playlist->thumbnail, 'https')) {
+                                        $playlist->thumbnail = $this->fileService->getFileUrl($playlist->thumbnail, THUMBNAILS_DIR);
+                                    }
+                                    return $playlist;
+                                });
+        
+        return response()->json([
+            'data' => $playlists,
+            'message' => 'Lấy các playlist thành công!'
+        ]);
+    }
+
     public function getAlbumById(CustomRequest $request) {
         $authAccount = $request->authAccount();
         $authId = $authAccount ? $authAccount->id : null;
@@ -162,6 +182,7 @@ class AlbumController extends Controller
                         'title',
                         'thumbnail',
                     ])
+                    ->where('type', AlbumType::ALBUM)
                     ->withExists('actions as is_liked', function ($query) use ($request) {
                         $authAccount = $request->authAccount();
                         if ($authAccount) {

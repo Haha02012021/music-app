@@ -36,6 +36,11 @@ class FileService
         }  
     }
 
+    public function uploadAudio($audio, $audioName)
+    {
+        $this->storage->getBucket()->upload($audio, ['name' => AUDIOES_DIR . $audioName]);
+    }
+
     public function getFileUrl($file, $fileDir)
     {
         if ($file) {

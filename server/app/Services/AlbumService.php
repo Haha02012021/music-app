@@ -30,7 +30,7 @@ class AlbumService
         $t = [];
         if ($request->hasFile('thumbnail')) {
             $thumbnail = $request->file('thumbnail');
-            $thumbnailData = $this->fileService->uploadFile($thumbnail, 'thumbnails/', $name);
+            $thumbnailData = $this->fileService->uploadFile($thumbnail, THUMBNAILS_DIR, $name);
             $t['thumbnail'] = $thumbnailData['fileName'];
         }
 

@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\ActionItem;
 use App\Enums\ActionType;
+use App\Enums\AlbumType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;

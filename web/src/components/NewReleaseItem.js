@@ -14,15 +14,17 @@ const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
     const [hover, setHover] = useState(false);
     const [liked, setLiked] = useState(data?.is_liked);
     
-    //console.log(data);
+    console.log(data);
     const handleLikeSong = (e) => {
         e.stopPropagation();
         const likeSong = async() => {
             const res = await apis.apiLikeSong(data?.id, 2);
             setLiked(prev => !prev)
+            console.log(res)
         }
         likeSong();
     }
+    
   return (
     <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
         className={`flex-auto flex justify-between items-center p-[10px] rounded-md

@@ -64,17 +64,7 @@ class SongController extends Controller
 
     public function getNewLastestSongs(CustomRequest $request) {
         $isVietNamese = $request->isVietNamese;
-        $songs = Song::orderByDesc('released_at')
-                    ->with('genres')
-                    ->with('singers')
-                    ->withExists('actions as is_liked', function ($query) use ($request) {
-                        $authAccount = $request->authAccount();
-                        if ($authAccount) {
-                            $query->where('account_id', $request->authAccount()->id)
-                                ->where('type', ActionType::LIKE);
-                        }
-                    })
-                    ->select([
+        $songs = Song::select([
                         'songs.id', 
                         'songs.name', 
                         'songs.thumbnail', 
@@ -83,6 +73,16 @@ class SongController extends Controller
                         'songs.audio', 
                         'songs.released_at'
                     ])
+                    ->withExists('actions as is_liked', function ($query) use ($request) {
+                        $authAccount = $request->authAccount();
+                        if ($authAccount) {
+                            $query->where('account_id', $authAccount->id)
+                                ->where('type', ActionType::LIKE);
+                        }
+                    })
+                    ->with('genres')
+                    ->with('singers')
+                    ->orderByDesc('released_at')
                     ->leftJoinSub(DB::table(function ($query) {
                         $query
                             ->select([
@@ -108,7 +108,7 @@ class SongController extends Controller
                     ->limit(40)
                     ->get()
                     ->map(function ($value) {
-                        if (!str_contains($value->thumbnail, 'https')) {
+                        if ($value->thumbnail && !str_contains($value->thumbnail, 'https')) {
                             $value->thumbnail = $this->fileService->getFileUrl($value->thumbnail, 'thumbnails');
                         }
 
@@ -136,7 +136,7 @@ class SongController extends Controller
             ->withExists('actions as is_liked', function ($query) use ($request) {
                 $authAccount = $request->authAccount();
                 if ($authAccount) {
-                    $query->where('account_id', $request->authAccount()->id)
+                    $query->where('account_id', $authAccount->id)
                         ->where('type', ActionType::LIKE);
                 }
             })

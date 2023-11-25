@@ -6,6 +6,7 @@ import { ListSong, AudioSpinner } from '../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import * as actions from '../../store/actions';
 import icons from '../../utils/icons';
+import defaultBackground from '../../assets/PlaylistDefaultBackground.png';
 
 const { TbPlayerPlayFilled } = icons;
 
@@ -31,7 +32,7 @@ const Playlist = () => {
         <div className='h-full flex gap-8 mb-36'>
             <div className='flex-none w-1/4 flex flex-col items-center gap-2'>
                 <div className='w-full relative overflow-hidden'>
-                    <img src={playlistData?.thumbnail} alt='Thumbnail' 
+                    <img src={playlistData?.thumbnail ? playlistData?.thumbnail : defaultBackground} alt='Thumbnail' 
                         className='w-full object-contain rounded-md shadow-md' 
                     />
                     <div className='absolute top-0 left-0 bottom-0 right-0 hover:bg-black hover:opacity-30 text-white flex items-center justify-center '>

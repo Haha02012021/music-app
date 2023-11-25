@@ -5,11 +5,6 @@ export const getUserInfo = (info) => ({
     info,
 })
 
-export const getFollowSingers = (followSingers) => ({
-    type: actionTypes.FOLLOW_SINGERS,
-    followSingers,
-})
-
 export const getLogin = (login) => ({
     type: actionTypes.LOGIN,
     login,

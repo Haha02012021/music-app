@@ -3,7 +3,6 @@ import actionTypes from "../actions/actionTypes";
 const initState = {
     login: false,
     info: {},
-    followSingers: [],
 }
 
 const userReducer = (state = initState, action) => {
@@ -17,11 +16,6 @@ const userReducer = (state = initState, action) => {
             return {
                 ...state,
                 info: action.info || {},
-            }
-        case actionTypes.FOLLOW_SINGERS: 
-            return {
-                ...state,
-                followSingers: action.followSingers || [],
             }
         default:
             return state;

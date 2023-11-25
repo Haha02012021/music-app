@@ -9,7 +9,6 @@ const actionTypes  = {
     SONG_ID: 'SONG_ID',
     //user
     INFO: 'INFO',
-    FOLLOW_SINGERS: 'FOLLOW_SINGERS',
     LOGIN: 'LOGIN',
 }
 

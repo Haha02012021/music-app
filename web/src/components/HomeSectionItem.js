@@ -1,6 +1,7 @@
 import React, { memo, useRef, useState } from 'react';
 import icons from '../utils/icons';
 import * as apis from '../apis';
+import defaultBackground from '../assets/PlaylistDefaultBackground.png'
 
 const { AiFillHeart,
     AiOutlineHeart, TbPlayerPlayFilled, BsPlusLg } = icons;
@@ -36,7 +37,7 @@ const HomeSectionItem = ({thumbnail, item_id, is_liked}) => {
             }} 
             className='relative w-full rounded-md overflow-hidden'
         >
-            <img ref={imageRef} className='w-full h-auto rounded-md' src={thumbnail} alt='thumbnail' /> 
+            <img ref={imageRef} className='w-full h-auto rounded-md' src={thumbnail ? thumbnail : defaultBackground} alt='thumbnail' /> 
             { hover && 
                 <div className={`absolute top-0 bottom-0 left-0 right-0 rounded-md bg-overlay-30
                     text-white flex justify-center items-center gap-8`}>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import icons from '../../utils/icons';
 import * as apis from '../../apis';
 import { AudioUpload, HomeSectionItem, ListItem } from '../../components';
+import { useNavigate } from 'react-router-dom';
 
 const { 
   BsPlusLg
@@ -14,19 +15,25 @@ const Mymusic = () => {
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [type, setType] = useState(1);
   const [isCreate, setIsCreate] = useState(false);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    name: '',
+  });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getLiked = async () => {
       const res = await apis.apiGetLikedAlbums();
-      setData(res?.data?.data);
+      //setData(res?.data?.data);
       const res2 = await apis.apiGetLikedSongs();
       setLikedSongData(res2?.data?.data);
+      const res3 = await apis.apiGetPlaylist();
+      console.log(res3?.data?.data);
+      setData([...res3?.data?.data, ...res?.data?.data]);
   }
   getLiked();
   }, []);
+  console.log(data);
 
-  console.log(likedSongData);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -35,14 +42,11 @@ const Mymusic = () => {
     })
   }
 
-  const handleSubmit = () => {
-    const creatForm = async () => {
-      const res = await apis.apiCreatePlaylist(formData?.name);
-      console.log(res);
-    }
-    console.log(creatForm);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const res = await apis.apiCreatePlaylist(formData?.name);
+    console.log(res);
   }
-
 
   return (
     <div className='w-full flex flex-col gap-7 mb-36'>
@@ -63,7 +67,13 @@ const Mymusic = () => {
         </div>}
         <div className='w-full flex flex-wrap gap-7'>
           {data?.map(item => (
-            <div key={item?.id} className='w-[18%] flex flex-col gap-2'>
+            <div key={item?.id} className='w-[18%] flex flex-col gap-2 cursor-pointer'
+              onClick={() => {
+                const link = item?.title?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll(' ', '-');
+                const newLink = '/album/'+link+'/'+item?.id;
+                navigate(newLink);
+              }}
+            >
               <HomeSectionItem thumbnail={item?.thumbnail} is_liked={true} item_id={item?.id}/>
               <span className='text-base font-medium'>{item?.title}</span>
             </div>

@@ -42,13 +42,21 @@ const AudioUpload = () => {
         })
     }
 
-    const handleSubmit = () => {
-        const creatForm = async () => {
-          const res = await apis.apiCreateSong(formData);
-          console.log(res);
-        }
-        console.log(creatForm);
-      }
+    const handleSubmit = async (e) => {
+        console.log(formData);
+        e.preventDefault();
+        const data = new FormData();
+        Object.entries(formData).forEach(([key, value]) => {
+            data.append(key, value);
+        });
+        apis.apiCreateSong(data)
+        .then(response => {
+            console.log('Response from server:', response.data);
+        })
+        .catch(error => {
+            console.error('Error creating song:', error);
+        });
+    }
 
     return (
         <div className='w-full bg-gray-400 p-3'>

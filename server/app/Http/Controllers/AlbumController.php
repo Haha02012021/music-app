@@ -112,6 +112,12 @@ class AlbumController extends Controller
                                 ->where('type', AlbumType::PLAYLIST)
                                 ->orderByDesc('updated_at')
                                 ->with('singers')
+                                ->withExists('actions as is_liked', function ($query) use ($authAccount) {
+                                    if ($authAccount) {
+                                        $query->where('account_id', $authAccount->authAccount()->id)
+                                            ->where('type', ActionType::LIKE);
+                                    }
+                                })
                                 ->get()
                                 ->map(function ($playlist) {
                                     if ($playlist->thumbnail && !str_contains($playlist->thumbnail, 'https')) {

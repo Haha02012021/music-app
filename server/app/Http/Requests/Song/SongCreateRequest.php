@@ -23,8 +23,7 @@ class SongCreateRequest extends CustomRequest
     {
         return [
             'name' => ['required', 'unique:songs', 'max:60'],
-            'album_id' => ['exists:albums,id'],
-            'singer_ids' => ['required', 'array'],
+            'singer_ids' => ['array'],
             'genre_ids' => ['array'],
             'thumbnail' => ['file', 'mimes:jpeg,png', 'mimetypes:image/jpeg,image/png'],
             'audio' => ['file', 'mimes:mp3,wma,wav'],

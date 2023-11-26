@@ -14,8 +14,5 @@ RUN chmod 777 -R /var/www/storage/ && \
     echo "Listen 8080" >> /etc/apache2/ports.conf && \
     chown -R www-data:www-data /var/www/
 
-RUN php artisan config:cache
-RUN php artisan event:cache
-RUN php artisan route:cache
-RUN php artisan migrate
-RUN php artisan db:seed
+RUN chmod +x /var/www/html/db-migration.sh
+ENTRYPOINT ["/var/www/html/db.sh"]

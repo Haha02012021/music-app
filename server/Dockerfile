@@ -13,6 +13,3 @@ COPY .env.example /var/www/.env
 RUN chmod 777 -R /var/www/storage/ && \
     echo "Listen 8080" >> /etc/apache2/ports.conf && \
     chown -R www-data:www-data /var/www/
-
-RUN chmod +x /var/www/html/db.sh
-ENTRYPOINT ["/var/www/html/db.sh"]

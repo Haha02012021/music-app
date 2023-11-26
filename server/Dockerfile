@@ -1,7 +1,7 @@
 FROM composer:2.5.4 as build
 WORKDIR /app
 COPY . /app
-RUN composer global require hirak/prestissimo && composer install
+RUN composer global require hirak/prestissimo && composer install --optimize-autoloader --no-dev
 
 FROM php:8.1.10-apache-stretch
 RUN docker-php-ext-install pdo pdo_mysql
@@ -14,3 +14,9 @@ RUN chmod 777 -R /var/www/storage/ && \
     echo "Listen 8080" >> /etc/apache2/ports.conf && \
     chown -R www-data:www-data /var/www/ && \
     a2enmod rewrite
+
+RUN php artisan config:cache
+RUN php artisan event:cache
+RUN php artisan route:cache
+RUN php artisan migrate
+RUN php artisan db:seed

@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import icons from '../utils/icons';
 import * as apis from '../apis';
 
-const { AiOutlineHeart, AiFillHeart } = icons;
-const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
+const { AiOutlineHeart, AiFillHeart, BsPlusLg } = icons;
+const NewReleaseItem = ({data, order, percent, style, sm, time, setIsAdd}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [hover, setHover] = useState(false);
@@ -28,7 +28,7 @@ const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
     
   return (
     <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
-        className={`flex-auto flex justify-between items-center p-[10px] rounded-md
+        className={`relative flex-auto flex justify-between items-center p-[10px] rounded-md
             ${style ? style : 'hover:bg-white-30 w-full'}`
         }>
         <div className='flex justify-start gap-[10px]'>
@@ -65,9 +65,14 @@ const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
                 }
             </div>
         </div>
-        {hover && <span className='mr-5 text-gray-600 cursor-pointer' onClick={handleLikeSong}> 
+        {hover && <div className='flex gap-5'>
+            <span className='mr-5 text-gray-600 cursor-pointer' onClick={handleLikeSong}> 
             {liked ? <AiFillHeart title='Xóa khỏi thư viện' size={16} /> : <AiOutlineHeart title='Thêm vào thư viện' size={16} /> }
-        </span>}
+            </span>
+            <span className='mr-5 text-gray-600 cursor-pointer' onClick={() => {setIsAdd(true)}}> 
+                <BsPlusLg title='Thêm vào playlist' size={16} />
+            </span>
+        </div>}
         { percent && <span className='text-lg font-bold'>
             {percent}%
         </span> }

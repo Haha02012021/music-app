@@ -195,3 +195,21 @@ export const apiCreateSong = (formData) => new Promise(async (resolve, reject) =
       reject(error);
     }
   });
+
+  export const apiUpdateAlbum = (formData) => new Promise(async (resolve, reject) => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+  
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+  
+      const response = await axios.post(`/song/create`, formData, config);
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });

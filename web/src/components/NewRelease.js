@@ -11,18 +11,26 @@ const NewRelease = () => {
 
     const [type, setType] = useState(1);
     const [songData, setSongData] = useState([]);
+    const [isAdd, setIsAdd] = useState(false);
+    const [playlist, setPlaylist] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             const response = await apis.getNewRelease(type);
             setSongData(response?.data?.data);
+            const resPlaylist = await apis.apiGetPlaylist();
+            setPlaylist(resPlaylist?.data?.data);
         }
         fetchData();
     }, [type]);
 
+    const handleAddPlaylist = (playlistData) => {
+
+    }
+
     return (
-        <div>
+        <div className='relative'>
             <div className='flex flex-col gap-5'>
                 <h3 className='text-xl font-bold'>Mới phát hành</h3>
                 <div className='flex justify-between items-center'>
@@ -50,11 +58,20 @@ const NewRelease = () => {
                 <div className='flex flex-wrap w-full'>
                     {songData?.filter((item, index) => index < 12)?.map((item) => (
                         <div key={item.id}  className='w-[300px] min-[1024px]:w-[30%]'>
-                            <NewReleaseItem data={item} time={true} />
+                            <NewReleaseItem data={item} time={true} setIsAdd={setIsAdd} />
                         </div>
                     ))}
                 </div>
             </div>
+            {isAdd && <div className='absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center'>
+                <div className='w-[30%] rounded-md p-4 shadow-md bg-white'>
+                    {playlist?.map(item => (
+                        <div className='w-[80%] cursor-pointer' onClick={handleAddPlaylist(item)}>
+                            <span className='w-full p-2 border-t-2 border-gray-300'>{item?.title}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>}
         </div>
   )
 }

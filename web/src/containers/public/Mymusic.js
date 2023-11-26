@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import icons from '../../utils/icons';
 import * as apis from '../../apis';
+import * as actions from '../../store/actions';
 import { AudioUpload, HomeSectionItem, ListItem } from '../../components';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const { 
@@ -22,29 +23,33 @@ const Mymusic = () => {
   });
   const navigate = useNavigate();
   const { login } = useSelector(state => state.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getLiked = async () => {
       const res = await apis.apiGetLikedAlbums();
-      //setData(res?.data?.data);
-      if (res?.success === false) {
-        toast.warn(res?.message);
+      console.log(res);
+      if (res?.data?.success === false) {
+        toast.warn(res?.data?.message);
+        dispatch(actions.getLogin(false))
       }
       const res2 = await apis.apiGetLikedSongs();
-      if (res2?.success === false) {
-        toast.warn(res2?.message);
+      if (res2?.data?.success === false) {
+        toast.warn(res2?.data?.message);
+        dispatch(actions.getLogin(false))
       } else {
         setLikedSongData(res2?.data?.data);
       }
       const res3 = await apis.apiGetPlaylist();
-      if (res3?.success === false) {
-        toast.warn(res3?.message);
+      if (res3?.data?.success === false) {
+        toast.warn(res3?.data?.message);
+        dispatch(actions.getLogin(false))
       } else {
         setData([...res3?.data?.data, ...res?.data?.data]);
       }
   }
   getLiked();
-  }, []);
+  }, [isOpenPopup]);
   //console.log(data);
 
   const handleInputChange = (e) => {
@@ -59,6 +64,7 @@ const Mymusic = () => {
     e.preventDefault();
     const res = await apis.apiCreatePlaylist(formData?.name);
     console.log(res);
+    setIsOpenPopup(false);
   }
 
   return (

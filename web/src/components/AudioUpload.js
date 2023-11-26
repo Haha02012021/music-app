@@ -19,6 +19,10 @@ const AudioUpload = ({setIsCreate}) => {
         // Kiểm tra nếu file được chọn
         if (file) {
             setSelectedImage(file);
+            setFormData({
+                ...formData,
+                thumbnail: file,
+            })
         }
     };
 
@@ -26,10 +30,6 @@ const AudioUpload = ({setIsCreate}) => {
         // Xử lý các tệp tin đã chấp nhận ở đây
         console.log('Accepted files:', acceptedFiles?.[0]);
         setSelectedAudio(acceptedFiles?.[0]);
-        setFormData({
-            ...formData,
-            audio: acceptedFiles?.[0]
-        })
     }, []);
 
     const { getRootProps, getInputProps } = useDropzone({
@@ -39,6 +39,7 @@ const AudioUpload = ({setIsCreate}) => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+        console.log(e);
         setFormData({
         ...formData,
         [name]: value,
@@ -46,7 +47,12 @@ const AudioUpload = ({setIsCreate}) => {
     }
 
     const handleSubmit = async (e) => {
-        console.log(formData);
+        if (selectedAudio) {
+            setFormData({
+                ...formData,
+                audio: selectedAudio,
+            })
+        }
         e.preventDefault();
         const data = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
@@ -61,6 +67,7 @@ const AudioUpload = ({setIsCreate}) => {
             console.error('Error creating song:', error);
         });
     }
+    console.log(formData);
 
     return (
         <div className='w-full bg-gray-400 p-3 rounded-2xl'>

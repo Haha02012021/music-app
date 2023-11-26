@@ -12,8 +12,7 @@ COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY .env.example /var/www/.env
 RUN chmod 777 -R /var/www/storage/ && \
     echo "Listen 8080" >> /etc/apache2/ports.conf && \
-    chown -R www-data:www-data /var/www/ && \
-    LoadModule rewrite_module modules/mod_rewrite.so
+    chown -R www-data:www-data /var/www/
 
 RUN php artisan config:cache
 RUN php artisan event:cache

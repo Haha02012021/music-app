@@ -5,6 +5,7 @@ const path = {
     STAR: '*',
     MYMUSIC: 'mymusic',
     NEWRELEASECHART: 'moi-phat-hanh',
+    NEWRELEASE: 'new-release',
     GENRETOPIC: 'hub',
     TOP100: 'top100',
     SINGER__TITLE__SID: 'singer/:title/:sid',

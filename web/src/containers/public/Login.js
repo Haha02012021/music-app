@@ -11,18 +11,6 @@ const Login = () => {
   const {login, info} = useSelector(state => state.user);
 
   useEffect(() => {
-    const checkToken = async () => {
-      const response = await apis.apiGetInfo();
-      if (response?.data?.success === true) {
-        dispatch(actions.getLogin(true));
-      } else {
-        dispatch(actions.getLogin(false));
-      }
-    }
-    checkToken();
-  }, []);
-
-  useEffect(() => {
     window.addEventListener("message", (e) => {
       if (e.source === popupRef.current) {
         const res = e.data;

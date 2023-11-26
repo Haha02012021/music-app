@@ -33,3 +33,11 @@
     -1px 1px 0 #97979C,
      1px 1px 0 #97979C;
 }
+
+.text-shadow-no5 {
+  text-shadow:
+   -1px -1px 0 #E8D3E3,  
+    1px -1px 0 #E8D3E3,
+    -1px 1px 0 #E8D3E3,
+     1px 1px 0 #E8D3E3;
+}

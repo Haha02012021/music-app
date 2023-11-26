@@ -1,25 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import icons from '../utils/icons';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import NewReleaseItem from './NewReleaseItem';
 import * as apis from '../apis';
+import * as actions from '../store/actions';
 
 const { TfiAlarmClock, AiOutlineDelete } = icons;
 
 const RightSideBar = () => {
 
   const [recent, setRecent] = useState(true);
-  const { curSongData, curPlaylistId } = useSelector(state => state.music);
+  const { curSongData, curPlaylistId, nearlyListenSongs } = useSelector(state => state.music);
   const [playlist, setPlaylist] = useState(null);
   const [playlistTitle, setPlaylistTitle] = useState(null);
+  const dispatch = useDispatch();
 
   const fetchPlaylistData = async () => {
     const response = await apis.apiGetDetailPlaylist(curPlaylistId);
-    if (response?.data?.err === 0) {
-      setPlaylist(response?.data?.data?.song?.items);
+    //console.log(response);
+    if (response?.data?.success === true) {
+      setPlaylist(response?.data?.data?.songs);
       setPlaylistTitle(response?.data?.data?.title);
     }
   }
+  console.log(nearlyListenSongs);
 
   useEffect(() => {
     curPlaylistId && fetchPlaylistData();
@@ -28,12 +32,12 @@ const RightSideBar = () => {
   useEffect(() => {
     if (curPlaylistId) fetchPlaylistData();
   }, [curPlaylistId])
-  console.log(playlist);
+  //console.log(playlist);
 
   return (
     <div className='w-full flex flex-col text-[13px] font-medium cursor-pointer px-2 mb-36'>
       <div className='h-[70px] py-[14px] px-2 flex-none flex items-center justify-between gap-1'>
-        <div className='flex flex-row bg-gray-100 rounded-r-full rounded-l-full py-1 px-1'>
+        <div className='flex flex-row bg-gray-100 rounded-r-full rounded-l-full py-1 px-2'>
           <span className={`${recent && 'bg-white text-[#7F1FAF]'} rounded-r-full rounded-l-full py-1 px-2`}
             onClick={() => setRecent(true)}
           >
@@ -46,15 +50,18 @@ const RightSideBar = () => {
           </span>
         </div>
         <div className='flex flex-row gap-2'>
-          <span className='p-2 rounded-full bg-gray-100 text-gray-600'>
-            <TfiAlarmClock title='Bộ hẹn giờ dừng phát nhạc' size={16} /> 
-          </span>
-          <span className='p-2 rounded-full bg-gray-100 text-gray-600'>
+          <span className='p-2 rounded-full bg-gray-100 text-gray-600' onClick={()=>{
+            if (recent) {
+              dispatch(actions.setCurPlaylistId(null));
+            } else {
+              dispatch(actions.setNearlyListenSongs([]));
+            }
+          }}>
             <AiOutlineDelete title='Xóa danh sách phát' size={16} />
           </span>
         </div>
       </div>
-      <div>
+      {recent && <div>
         <div>
           <NewReleaseItem data={curSongData} style='bg-[#9431C6] text-white' sm={true} time={false} />
         </div>
@@ -72,7 +79,12 @@ const RightSideBar = () => {
             ))}
           </div>
         </div>
-      </div>
+      </div>}
+      {!recent && <div className='h-screen overflow-y-auto'>
+            {nearlyListenSongs?.map((item, index) => (
+              <NewReleaseItem key={index} data={item} time={false} sm={true} />
+            ))}
+          </div>}
     </div>
   )
 }

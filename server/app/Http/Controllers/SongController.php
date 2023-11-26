@@ -32,7 +32,6 @@ class SongController extends Controller
                 $data = [
                     'name' => $request->input('name'),
                     'account_id' => $authAccount->id,
-                    'album_id' => $request->input('album_id'),
                     'lyric' => $request->input('lyric'),
                     'released_at' => $request->input('released_at'),
                 ];

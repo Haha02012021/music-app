@@ -1,7 +1,7 @@
 FROM composer:2.5.4 as build
 WORKDIR /app
 COPY . /app
-RUN composer global require hirak/prestissimo && composer install --optimize-autoloader --no-dev
+RUN composer install --optimize-autoloader --no-dev
 
 FROM php:8.1.25-cli
 RUN docker-php-ext-install pdo pdo_mysql

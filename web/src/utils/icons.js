@@ -10,6 +10,7 @@ import { SlVolume2, SlVolumeOff } from 'react-icons/sl';
 import { TfiAlarmClock } from 'react-icons/tfi';
 import { FaRegCircleUser, FaRegStar, FaCheck } from 'react-icons/fa6';
 import { IoRemoveOutline } from 'react-icons/io5';
+import { IoIosCloseCircleOutline } from 'react-icons/io';
 
 const icons = {
     MdOutlineLibraryMusic,
@@ -35,6 +36,7 @@ const icons = {
     TbPlayerPlayFilled,
     TbPlayerPauseFilled,
     TbIcons,
+    TbUserPlus,
     LuDot,
     SlVolume2,
     SlVolumeOff,
@@ -43,7 +45,7 @@ const icons = {
     FaRegStar,
     FaCheck,
     IoRemoveOutline,
-    TbUserPlus,
+    IoIosCloseCircleOutline,
 }
 
 export default icons;

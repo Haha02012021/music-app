@@ -3,6 +3,7 @@ import icons from '../utils/icons';
 import { useNavigate } from 'react-router-dom';
 import HomeSectionItem from './HomeSectionItem';
 import * as apis from '../apis';
+import { useSelector } from 'react-redux';
 
 const { BsChevronRight } = icons;
 
@@ -10,6 +11,7 @@ const HomeSection = ({id, name, gid}) => {
 
     const navigate = useNavigate();
     const [data, setData] = useState([]);
+    const { curPlaylistId } = useSelector(state => state.music);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,6 +43,7 @@ const HomeSection = ({id, name, gid}) => {
         }
         fetchData();
     }, []);
+    //console.log(data);
 
     return (
         <div className='flex flex-col gap-5'>

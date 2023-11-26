@@ -15,6 +15,11 @@ export const setCurPlaylistId = (pid) => ({
     pid,
 });
 
+export const setNearlyListenSongs = (listenSongs) => ({
+    type: actionTypes.SET_NEARLY_LISTEN_SONGS,
+    listenSongs,
+});
+
 export const playSong = (flag) => ({
     type: actionTypes.PLAY_SONG,
     flag,

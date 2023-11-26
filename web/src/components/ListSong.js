@@ -15,7 +15,7 @@ const ListSong = ({release}) => {
     const hour = Math.floor(totalDuration / 3600);
     const minute = Math.floor((totalDuration - hour * 3600) / 60);
     const second = totalDuration - hour * 3600 - minute * 60; 
-    console.log(songs);
+    //console.log(songs);
     return (
         <div className='w-full h-screen flex flex-col text-xs overflow-y-auto mb-36'>
             {!release && <div className='flex justify-between items-center font-semibold text-gray-600 p-[10px]'>

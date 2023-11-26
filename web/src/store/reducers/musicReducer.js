@@ -4,6 +4,7 @@ const initState = {
     curSongId: null,
     curSongData: null,
     curPlaylistId: null,
+    nearlyListenSongs: [],
     isPlaying: false,
     id: null,
     songs: [],
@@ -25,6 +26,11 @@ const musicReducer = (state = initState, action) => {
             return {
                 ...state,
                 curPlaylistId: action.pid || null,
+            }
+        case actionTypes.SET_NEARLY_LISTEN_SONGS:
+            return {
+                ...state,
+                nearlyListenSongs: action.listenSongs || [],
             }
         case actionTypes.PLAY_SONG:
             return {

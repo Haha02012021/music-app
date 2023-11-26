@@ -2,7 +2,7 @@ import { React, memo, useState } from 'react';
 import moment from 'moment';
 import 'moment/locale/vi';
 import * as actions from '../store/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import icons from '../utils/icons';
 import * as apis from '../apis';
@@ -13,6 +13,7 @@ const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
     const navigate = useNavigate();
     const [hover, setHover] = useState(false);
     const [liked, setLiked] = useState(data?.is_liked);
+    const { nearlyListenSongs } = useSelector(state => state.music);
     
     //console.log(data);
     const handleLikeSong = (e) => {
@@ -20,7 +21,7 @@ const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
         const likeSong = async() => {
             const res = await apis.apiLikeSong(data?.id, 2);
             setLiked(prev => !prev)
-            console.log(res)
+            //console.log(res)
         }
         likeSong();
     }
@@ -42,6 +43,8 @@ const NewReleaseItem = ({data, order, percent, style, sm, time}) => {
                     dispatch(actions.setCurSongId(data?.id));
                     dispatch(actions.playSong(true));
                     dispatch(actions.getSongId(null));
+                    dispatch(actions.setNearlyListenSongs([...nearlyListenSongs, data]));
+
                 }}
             />
             <div className='flex flex-col'>

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import icons from '../utils/icons';
 import NewReleaseItem from './NewReleaseItem';
 import * as apis from '../apis';
+import path from '../utils/path';
+import { useNavigate } from 'react-router-dom';
 
 const { BsChevronRight } = icons;
 
@@ -9,6 +11,7 @@ const NewRelease = () => {
 
     const [type, setType] = useState(1);
     const [songData, setSongData] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,7 +40,9 @@ const NewRelease = () => {
                             QUỐC TẾ
                         </button>
                     </div>
-                    <div className='flex text-gray-500 justify-center items-center gap-2'>
+                    <div className='flex text-gray-500 justify-center items-center gap-2 cursor-pointer' onClick={() => {
+                        navigate(path.NEWRELEASE);
+                    }}>
                         <span className='text-xs'>TẤT CẢ</span>
                         <BsChevronRight size={16} />
                     </div>

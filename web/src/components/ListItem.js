@@ -1,7 +1,7 @@
 import { React, memo, useState } from 'react';
 import icons from '../utils/icons';
 import moment from 'moment';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as actions from '../store/actions';
 import * as apis from '../apis';
 
@@ -12,6 +12,7 @@ const ListItem = ({songData, index, release, is_liked}) => {
     const dispatch = useDispatch();
     const [hover, setHover] = useState(false);
     const [liked, setLiked] = useState(is_liked);
+    const { nearlyListenSongs } = useSelector(state => state.music);
 
     const handleLikeSong = (e) => {
         e.stopPropagation();
@@ -22,13 +23,12 @@ const ListItem = ({songData, index, release, is_liked}) => {
         likeSong();
     }
 
-    console.log(liked);
-
     return (
         <div className='cursor-pointer flex justify-between items-center p-[10px] border-t border-gray-300 hover:bg-gray-100'
             onClick={() => {
                 dispatch(actions.setCurSongId(songData?.id));
                 dispatch(actions.playSong(true));
+                dispatch(actions.setNearlyListenSongs([...nearlyListenSongs, songData]));
                 {!release && dispatch(actions.getSongId(index))};
             }}
             onMouseEnter={() => setHover(true)}

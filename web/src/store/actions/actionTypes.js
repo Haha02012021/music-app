@@ -7,6 +7,8 @@ const actionTypes  = {
     PLAY_SONG: 'PLAY_SONG',
     SET_SONGS: 'SET_SONGS',
     SONG_ID: 'SONG_ID',
+    SET_NEARLY_LISTEN_SONGS: 'SET_NEARLY_LISTEN_SONGS',
+
     //user
     INFO: 'INFO',
     LOGIN: 'LOGIN',

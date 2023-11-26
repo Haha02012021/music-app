@@ -3,6 +3,8 @@ import icons from '../../utils/icons';
 import * as apis from '../../apis';
 import { AudioUpload, HomeSectionItem, ListItem } from '../../components';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const { 
   BsPlusLg
@@ -19,20 +21,31 @@ const Mymusic = () => {
     name: '',
   });
   const navigate = useNavigate();
+  const { login } = useSelector(state => state.user);
 
   useEffect(() => {
     const getLiked = async () => {
       const res = await apis.apiGetLikedAlbums();
       //setData(res?.data?.data);
+      if (res?.success === false) {
+        toast.warn(res?.message);
+      }
       const res2 = await apis.apiGetLikedSongs();
-      setLikedSongData(res2?.data?.data);
+      if (res2?.success === false) {
+        toast.warn(res2?.message);
+      } else {
+        setLikedSongData(res2?.data?.data);
+      }
       const res3 = await apis.apiGetPlaylist();
-      console.log(res3?.data?.data);
-      setData([...res3?.data?.data, ...res?.data?.data]);
+      if (res3?.success === false) {
+        toast.warn(res3?.message);
+      } else {
+        setData([...res3?.data?.data, ...res?.data?.data]);
+      }
   }
   getLiked();
   }, []);
-  console.log(data);
+  //console.log(data);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -104,7 +117,7 @@ const Mymusic = () => {
         </div>}
         {type === 0 && <div className='w-full'>
           <span className='cursor-pointer' onClick={() => setIsCreate(prev => !prev)} ><BsPlusLg className='p-1 rounded-full bg-gray-200' size={24} /></span>
-          {isCreate === true && <AudioUpload />}
+          {isCreate === true && <AudioUpload setIsCreate={setIsCreate} />}
         </div>
         }
       </div>

@@ -9,3 +9,4 @@ export { default as NewReleaseChart } from './NewReleaseChart';
 export { default as GenreTopic } from './GenreTopic';
 export { default as Top100 } from './Top100';
 export { default as Singer } from './Singer';
+export { default as NewRelease } from './NewRelease';

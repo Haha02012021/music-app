@@ -46,7 +46,7 @@ jobs:
       - name: Deploy
         run: |-
           gcloud run deploy $REPO_NAME \
-          --project=$PROJECT_ID\
+          --project=$PROJECT_ID \
           --region=$REGION \
           --image=gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA \
           --platform="managed" \

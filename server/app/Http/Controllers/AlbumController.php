@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ActionType;
 use App\Enums\AlbumType;
+use App\Enums\Role;
 use App\Http\Requests\Album\AlbumCreateRequest;
 use App\Http\Requests\Album\AlbumUpdateRequest;
 use App\Http\Requests\CustomRequest;
@@ -119,7 +120,8 @@ class AlbumController extends Controller
                                     }
                                 })
                                 ->get()
-                                ->map(function ($playlist) {
+                                ->map(function ($playlist) use ($authAccount) {
+                                    $playlist->song_ids = $playlist->songs($authAccount->id)->get('id');
                                     if ($playlist->thumbnail && !str_contains($playlist->thumbnail, 'https')) {
                                         $playlist->thumbnail = $this->fileService->getFileUrl($playlist->thumbnail, THUMBNAILS_DIR);
                                     }
@@ -295,6 +297,8 @@ class AlbumController extends Controller
         $authAccount = $request->authAccount();
         $authId = $authAccount ? $authAccount->id : null;
         $albums = Album::where('type', AlbumType::ALBUM)
+                ->orWhere('type', AlbumType::PLAYLIST)
+                ->whereNotNull('thumbnail')
                 ->withExists('actions as is_liked', function ($query) use ($request) {
                     $authAccount = $request->authAccount();
                     if ($authAccount) {
@@ -302,19 +306,18 @@ class AlbumController extends Controller
                             ->where('type', ActionType::LIKE);
                     }
                 })
-                ->orWhere('type', AlbumType::PLAYLIST)
                 ->withCount('actions')
                 ->orderByDesc('released_at')
                 ->get()
                 ->map(function ($album) use ($authId) {
-                    $album->songs = $album->songs($authId)->get();
-                    $album->songs_actions_count = $album->songs->sum('actions_count');
-                    $album->songs->sortByDesc('actions_count');
+                    $songs = $album->songs($authId)->get();
+                    $album->songs_count = $songs->count();
+                    $album->songs_actions_count = $songs->sum('actions_count');
                     return $album;
                 })
                 ->sortByDesc(function ($album) {
-                    if (count($album->songs))
-                        return ($album['songs_actions_count'] + $album['actions_count']) / count($album->songs);
+                    if ($album->songs_count)
+                        return ($album['songs_actions_count'] + $album['actions_count']) / $album->songs_count;
                     return 0;
                 })
                 ->take(20)
@@ -356,6 +359,7 @@ class AlbumController extends Controller
         if (count($albums) !== 0) {
             $updatedDate = date('Y-m-d', strtotime($albums->toArray()[0]['created_at']));
             if (strcmp($firstDate, $nowDate) === 0 && $updatedDate !== $firstDate) {   
+                dd("abc");
                 $vietnamSongs = $this->albumService->getSongsByGenreName($vietnam);
                 $usukSongs = $this->albumService->getSongsByGenreName($usuk);
                 $asiaSongs = $this->albumService->getSongsOfAsia(); 

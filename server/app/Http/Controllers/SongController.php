@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ActionType;
+use App\Enums\Role;
 use App\Http\Requests\CustomRequest;
 use App\Http\Requests\Song\SongCreateRequest;
 use App\Http\Requests\Song\SongUpdateRequest;
@@ -37,7 +38,7 @@ class SongController extends Controller
                 ];
     
                 try {
-                    $medias = $this->songService->updateAudioAndThumbnail($request, $data);
+                    $medias = $this->songService->updateAudioAndThumbnail($request, $data['name']);
                     $data = array_merge($data, $medias);
                 } catch (\Throwable $th) {
                     DB::rollBack();
@@ -282,6 +283,21 @@ class SongController extends Controller
         ]);
     }
 
+    public function getUploadedSongs(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+        $songs = $authAccount->songs
+                            ->map(function ($song) {
+                                if (!str_contains($song->thumbnail, 'https')) {
+                                    $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, THUMBNAILS_DIR);
+                                }
+                                return $song;
+                            });
+        return response()->json([
+            'success' => true,
+            'data' => $songs,
+        ]);
+    }
+
     public function delete(int $id) {
         $song = Song::find($id);
         if ($song) {
@@ -303,6 +319,7 @@ class SongController extends Controller
         $first_date = date('Y-m-d',strtotime('first day of this month'));
         $last_date = date('Y-m-d',strtotime('last day of this month'));
         $songs = Song::whereBetween('released_at', [$first_date, $last_date])
+                    ->whereRelation('author', 'role', Role::ADMIN)
                     ->withCount('actions')
                     ->with('singers')
                     ->orderByDesc('created_at')

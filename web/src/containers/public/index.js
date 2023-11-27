@@ -10,3 +10,7 @@ export { default as GenreTopic } from './GenreTopic';
 export { default as Top100 } from './Top100';
 export { default as Singer } from './Singer';
 export { default as NewRelease } from './NewRelease';
+export { default as CreateSinger } from './CreateSinger';
+export { default as CreateGenre } from './CreateGenre';
+export { default as CreateAlbum } from './CreateAlbum';
+export { default as CreateSong } from './CreateSong';

@@ -4,13 +4,14 @@ import { GoArrowLeft, GoArrowRight, GoSearch } from 'react-icons/go';
 import { AiOutlineHeart, AiFillHeart, AiOutlineDelete } from 'react-icons/ai';
 import { BiSkipNext, BiSkipPrevious } from 'react-icons/bi';
 import { PiShuffleLight, PiMusicNotesSimpleLight, PiRepeatLight, PiRepeatOnceLight, PiPlaylistLight, PiMusicNotesPlus } from 'react-icons/pi';
-import { TbChartArcs, TbPlayerPlayFilled, TbPlayerPauseFilled, TbIcons, TbUserPlus } from 'react-icons/tb';
+import { TbChartArcs, TbPlayerPlayFilled, TbPlayerPauseFilled, TbIcons, TbUserPlus, TbUsersPlus, TbMusicPlus } from 'react-icons/tb';
 import { LuDot } from 'react-icons/lu';
 import { SlVolume2, SlVolumeOff } from 'react-icons/sl';
 import { TfiAlarmClock } from 'react-icons/tfi';
-import { FaRegCircleUser, FaRegStar, FaCheck } from 'react-icons/fa6';
+import { FaRegCircleUser, FaRegStar, FaCheck, FaIcons } from 'react-icons/fa6';
 import { IoRemoveOutline } from 'react-icons/io5';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
+import { RiPlayListAddFill } from 'react-icons/ri';
 
 const icons = {
     MdOutlineLibraryMusic,
@@ -37,6 +38,8 @@ const icons = {
     TbPlayerPauseFilled,
     TbIcons,
     TbUserPlus,
+    TbUsersPlus,
+    TbMusicPlus,
     LuDot,
     SlVolume2,
     SlVolumeOff,
@@ -44,8 +47,10 @@ const icons = {
     FaRegCircleUser,
     FaRegStar,
     FaCheck,
+    FaIcons,
     IoRemoveOutline,
     IoIosCloseCircleOutline,
+    RiPlayListAddFill,
 }
 
 export default icons;

@@ -207,9 +207,11 @@ export const apiCreateSong = (formData) => new Promise(async (resolve, reject) =
         },
       };
   
-      const response = await axios.post(`/song/create`, formData, config);
+      const response = await axios.post(`/album/update`, formData, config);
       resolve(response);
     } catch (error) {
       reject(error);
     }
   });
+
+

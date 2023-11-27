@@ -113,12 +113,12 @@ const Mymusic = () => {
         </div>
         {type === 1 && <div>{likedSongData?.map(item => (
           <div key={item?.id}>
-            <ListItem songData={item} is_liked={true} />
+            <ListItem songData={item} is_liked={true} myMusic={true} />
           </div>
         ))}
         </div>}
         {type === 0 && <div className='w-full'>
-          <span className='cursor-pointer' onClick={() => setIsCreate(prev => !prev)} ><BsPlusLg className='p-1 rounded-full bg-gray-200' size={24} /></span>
+          <span className='cursor-pointer mt-4' onClick={() => setIsCreate(prev => !prev)} ><BsPlusLg className='p-1 rounded-full bg-gray-200' size={24} /></span>
           {isCreate === true && <AudioUpload setIsCreate={setIsCreate} />}
         </div>
         }

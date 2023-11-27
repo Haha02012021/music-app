@@ -102,7 +102,7 @@ const Singer = () => {
         <span className='text-xl font-bold'>Về {data?.name}</span>
         <div className='flex gap-7 w-full mt-5'>
           <span className='w-1/3'>
-            <img className='w-[90%] rounded-2xl' src={data?.thumbnail}/>
+            <img className='w-[90%] rounded-2xl' alt='thumbnail' src={data?.thumbnail}/>
           </span>
           <div className='flex flex-col justify-between text-gray-500'>
             <div className='h-[80%] flex items-center'>

@@ -15,12 +15,11 @@ const Top100 = () => {
         }
         fetchData();
     }, [])
-    console.log(navigate);
 
     return (
         <div className='mb-36'>
             <span className='w-full flex items-center justify-center'>
-                <img src={top100Src} />
+                <img src={top100Src} alt='thumbnailTop100' />
             </span>
             <div className='mt-10 flex flex-col gap-10'>
                 {data?.map(top100Item => (

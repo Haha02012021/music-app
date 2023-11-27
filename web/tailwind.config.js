@@ -12,6 +12,7 @@ export const theme = {
       'main-400': '#FFFFFF',
       'main-500': '#9431C6',
       'overlay-30': 'rgba(0, 0, 0, 0.3)',
+      'overlay-60': 'rgba(0, 0, 0, 0.6)',
       'white-30': 'rgba(203, 213, 225, 0.3)',
     },
 

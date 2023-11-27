@@ -22,7 +22,6 @@ const RightSideBar = () => {
       setPlaylistTitle(response?.data?.data?.title);
     }
   }
-  console.log(nearlyListenSongs);
 
   useEffect(() => {
     curPlaylistId && fetchPlaylistData();
@@ -61,7 +60,7 @@ const RightSideBar = () => {
       </div>
       {recent && <div>
         <div>
-          <NewReleaseItem data={curSongData} style='bg-[#9431C6] text-white' sm={true} time={false} />
+          <NewReleaseItem data={curSongData} style={'bg-[#9431C6] text-white'} sm={true} time={false} />
         </div>
         <div className='flex flex-col py-4 px-2 gap-1'>
           <span className='text-base font-bold'>Tiếp theo</span>

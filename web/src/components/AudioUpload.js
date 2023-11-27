@@ -61,7 +61,7 @@ const AudioUpload = ({setIsCreate}) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = new FormData();
-        console.log(formData);
+       // console.log(formData);
         Object.entries(formData).forEach(([key, value]) => {
             data.append(key, value);
         });
@@ -91,7 +91,7 @@ const AudioUpload = ({setIsCreate}) => {
                 <input type="file" accept="image/*" onChange={handleImageChange} id="thumbnail" name="thumbnail" />
                 {selectedImage && (
                     <div>
-                        <img src={URL.createObjectURL(selectedImage)} alt="Preview" className='w-[300px] h-[300px] rounded-md' />
+                        <img src={URL.createObjectURL(selectedImage)} alt="Preview" className='w-[200px] h-[200px] rounded-md' />
                     </div>
                 )}
                 <div {...getRootProps()} className="w-full flex flex-col items-start border-dashed border-2 p-4 rounded-md text-center cursor-pointer">

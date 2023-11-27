@@ -7,6 +7,10 @@ const { MdOutlineLibraryMusic,
     PiMusicNotesPlus,
     TbIcons,
     FaRegStar,
+    TbUsersPlus,
+    FaIcons,
+    RiPlayListAddFill,
+    TbMusicPlus,
 } = icons;
 
 export const sidebarMenu = [
@@ -51,6 +55,30 @@ export const sidebarMenu = [
         path: 'top100',
         text: 'Top 100',
         icon: <FaRegStar size={24} />
+    },
+
+    {
+        path: 'create-singer',
+        text: 'Tạo ca sĩ mới',
+        icon: <TbUsersPlus size={24} />
+    },
+
+    {
+        path: 'create-genre',
+        text: 'Tạo thể loại mới',
+        icon: <FaIcons size={24} />
+    },
+
+    {
+        path: 'create-album',
+        text: 'Tạo album mới',
+        icon: <RiPlayListAddFill size={24} />
+    },
+
+    {
+        path: 'create-song',
+        text: 'Tạo bài hát mới',
+        icon: <TbMusicPlus size={24} />
     },
 
 ]

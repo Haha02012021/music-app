@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\ActionType;
 use App\Enums\AlbumType;
+use App\Enums\Role;
 use App\Models\Album;
 use App\Models\Song;
 
@@ -37,10 +38,6 @@ class AlbumService
         }
     }
 
-    public function removeSingersSongs() {
-
-    }
-
     public function updateThumbnail($request, $name) {
         $t = [];
         if ($request->hasFile('thumbnail')) {
@@ -53,7 +50,9 @@ class AlbumService
     }
 
     public function getSongsByGenreName($genreName) {
+        $countries = ['Hàn Quốc', 'Hoa Ngữ', 'Nhật Bản'];
         $songs = Song::whereRelation('genres', 'name', $genreName)
+                    ->whereRelation('author', 'role', Role::ADMIN)
                     ->withCount(['actions' => function ($query) {
                         $first_date = date('Y-m-d',strtotime('first day of this month'));
                         $last_date = date('Y-m-d',strtotime('last day of this month'));
@@ -64,16 +63,17 @@ class AlbumService
                     ->get()
                     ->sortByDesc('actions_count')
                     ->flatten(1)
-                    ->groupBy(function ($song) use ($genreName) {
+                    ->groupBy(function ($song) use ($genreName, $countries) {
                         $genres = $song['genres'];
-                        if (count($genres) > 1) {
+                        $genreNames = collect($genres)->pluck('name')->diff($countries);
+                        if ($genreNames->count() > 1) {
                             foreach ($genres as $genre) {
                                 if (strcmp($genreName, $genre['name']) !== 0) {
                                     return $genre['name'];
                                 }
                             }
                         } else {
-                            return 'Nhạc Trẻ';
+                            return 'Trẻ';
                         }
                     })
                     ->map(function ($songs, $title) use ($genreName) {
@@ -96,6 +96,7 @@ class AlbumService
         $songs = Song::whereRelation('genres', function ($query) use ($countries) {
                         $query->whereIn('name', $countries);
                     })
+                    ->whereRelation('author', 'role', Role::ADMIN)
                     ->withCount(['actions' => function ($query) {
                         $first_date = date('Y-m-d',strtotime('first day of this month'));
                         $last_date = date('Y-m-d',strtotime('last day of this month'));

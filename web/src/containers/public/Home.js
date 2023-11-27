@@ -13,7 +13,7 @@ const Home = () => {
             setBanner([...data, ...data]);
         }
         fetchData();
-    })
+    }, [])
 
   return (
     <div className='flex flex-col mb-36 gap-12 overflow-y-auto'>

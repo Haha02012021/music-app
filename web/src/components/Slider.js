@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import * as actions from '../store/actions';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import icons from '../utils/icons';
 import path from '../utils/path';
@@ -8,7 +6,6 @@ import path from '../utils/path';
 const { BsChevronRight } = icons; 
 
 const Slider = ({banner}) => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     useEffect(() => {
 
@@ -46,19 +43,6 @@ const Slider = ({banner}) => {
         }
     }, [banner])
 
-    //console.log(banner);
-    
-    const handleClickBanner = (item) => {
-        if(item?.type === 1) {
-            dispatch(actions.setCurSongId(item.encodeId));
-            dispatch(actions.playSong(true));
-            dispatch(actions.getSongId(null));
-        } else if (item?.type === 4) {
-            const playlistPath = item?.link?.split('.')[0];
-            navigate(playlistPath);
-        }
-    }
-
     return (
         <div>
             <div className='flex flex-row justify-between items-center'>
@@ -73,9 +57,11 @@ const Slider = ({banner}) => {
             <div className='w-full h-[200px] gap-4 flex item-center overflow-hidden pt-4 cursor-pointer'>
                 {banner?.map( (item, index) => (
                     <div key={index} className={`slider-item h-[150px] w-[32%] rounded-lg ${ index <= 2 ? 'flex' : 'hidden'}
-                        bg-white shadow-md p-4`}>
+                        bg-white shadow-md p-4 cursor-pointer`}
+                        onClick={() => navigate(path.NEWRELEASECHART)}
+                    >
                         <div className='w-[118px] h-[118px] rounded-lg mr-2'>
-                            <img src={item?.thumbnail} 
+                            <img src={item?.thumbnail} alt='thumbnail'
                                 className='w-[118px] h-[118px] rounded-lg'
                             />
                         </div>

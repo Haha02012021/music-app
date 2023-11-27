@@ -59,7 +59,7 @@ const Login = () => {
   return (
     <div className="w-full flex items-center justify-end gap-4">
       {login && <div>
-        <img src={info?.avatar} className="w-10 h-10 rounded-full border-[#9431C6] border-[2px]"></img>
+        <img src={info?.avatar} alt='avatar' className="w-10 h-10 rounded-full border-[#9431C6] border-[2px]"></img>
       </div>}
       <span
         onClick={handleLogin}

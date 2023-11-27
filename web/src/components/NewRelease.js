@@ -5,13 +5,14 @@ import * as apis from '../apis';
 import path from '../utils/path';
 import { useNavigate } from 'react-router-dom';
 
-const { BsChevronRight } = icons;
+const { BsChevronRight, IoIosCloseCircleOutline } = icons;
 
 const NewRelease = () => {
 
     const [type, setType] = useState(1);
     const [songData, setSongData] = useState([]);
     const [isAdd, setIsAdd] = useState(false);
+    const [addItem, setAddItem] = useState({});
     const [playlist, setPlaylist] = useState([]);
     const navigate = useNavigate();
 
@@ -19,15 +20,36 @@ const NewRelease = () => {
         const fetchData = async () => {
             const response = await apis.getNewRelease(type);
             setSongData(response?.data?.data);
-            const resPlaylist = await apis.apiGetPlaylist();
-            setPlaylist(resPlaylist?.data?.data);
-            console.log(resPlaylist);
         }
         fetchData();
     }, [type]);
 
-    const handleAddPlaylist = (playlistData) => {
+    useEffect(() => {
+        const fetchPlaylistData = async () => {
+            const resPlaylist = await apis.apiGetPlaylist();
+            setPlaylist(resPlaylist?.data?.data);
+            console.log(resPlaylist?.data?.data);
+        }
+        fetchPlaylistData();
+    }, [isAdd])
 
+    const handleAddPlaylist = (playlistData) => {
+        const formData = new FormData();
+        var songs = playlistData?.song_ids;
+        songs = [...songs, addItem?.id];
+        console.log(playlistData?.id);
+        songs.forEach((item, index) => {
+            formData.append(`song_ids[${index}]`, item);
+          });
+        formData.append('id', playlistData?.id);
+        const updateAlbum = async () => {
+            const res = await apis.apiUpdateAlbum(formData);
+            if(res?.data?.success === true) {
+                console.log(res);
+                setIsAdd(false);
+            }
+        }
+        updateAlbum();
     }
 
     return (
@@ -59,18 +81,21 @@ const NewRelease = () => {
                 <div className='flex flex-wrap w-full'>
                     {songData?.filter((item, index) => index < 12)?.map((item) => (
                         <div key={item.id}  className='w-[300px] min-[1024px]:w-[30%]'>
-                            <NewReleaseItem data={item} time={true} setIsAdd={setIsAdd} />
+                            <NewReleaseItem data={item} time={true} setIsAdd={setIsAdd} setAddItem={setAddItem} />
                         </div>
                     ))}
                 </div>
             </div>
             {isAdd && <div className='absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center'>
                 <div className='w-[30%] rounded-md p-4 shadow-md bg-white'>
-                    {playlist?.map(item => (
-                        <div key={item?.id} className='w-[80%] cursor-pointer' onClick={handleAddPlaylist(item)}>
+                    <div className='flex flex-row-reverse cursor-pointer' onClick={() => setIsAdd(false)}>
+                        <IoIosCloseCircleOutline size={24} />
+                    </div>
+                    {playlist ? playlist?.map(item => (
+                        <div key={item?.id} className='w-[80%] cursor-pointer' onClick={() => handleAddPlaylist(item)}>
                             <span className='w-full p-2 border-t-2 border-gray-300'>{item?.title}</span>
                         </div>
-                    ))}
+                    )) : <div>Hiện chưa có playlist</div>}
                 </div>
             </div>}
         </div>

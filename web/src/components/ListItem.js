@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as actions from '../store/actions';
 import * as apis from '../apis';
 
-const { PiMusicNotesSimpleLight, IoRemoveOutline, AiOutlineHeart, AiFillHeart } = icons;
+const { PiMusicNotesSimpleLight, IoRemoveOutline, AiOutlineHeart, AiFillHeart, BsPlusLg } = icons;
 
-const ListItem = ({songData, index, release, is_liked}) => {
+const ListItem = ({songData, index, release, is_liked, setIsAdd, setAddItem, myMusic}) => {
 
     const dispatch = useDispatch();
     const [hover, setHover] = useState(false);
@@ -24,13 +24,7 @@ const ListItem = ({songData, index, release, is_liked}) => {
     }
 
     return (
-        <div className='cursor-pointer flex justify-between items-center p-[10px] border-t border-gray-300 hover:bg-gray-100'
-            onClick={() => {
-                dispatch(actions.setCurSongId(songData?.id));
-                dispatch(actions.playSong(true));
-                dispatch(actions.setNearlyListenSongs([...nearlyListenSongs, songData]));
-                {!release && dispatch(actions.getSongId(index))};
-            }}
+        <div className='flex justify-between items-center p-[10px] border-t border-gray-300 hover:bg-gray-100'
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
         >
@@ -47,7 +41,13 @@ const ListItem = ({songData, index, release, is_liked}) => {
                     </div>
                 }
                 <img src={songData?.thumbnail} alt='thumbnail'
-                    className='w-10 h-10 object-cover rounded-md'
+                    className='w-10 h-10 object-cover rounded-md cursor-pointer'
+                    onClick={() => {
+                        dispatch(actions.setCurSongId(songData?.id));
+                        dispatch(actions.playSong(true));
+                        dispatch(actions.setNearlyListenSongs([...nearlyListenSongs, songData]));
+                        {!release && dispatch(actions.getSongId(index))};
+                    }}
                 />
                 <div className='flex flex-col'>
                     <span className='text-sm text-gray-500 font-semibold'>
@@ -59,8 +59,14 @@ const ListItem = ({songData, index, release, is_liked}) => {
             {!hover && <div className='flex-1 flex justify-end'>
                 {moment.utc(songData?.duration * 1000).format("mm:ss")}
             </div>}
-            {hover && <div className='flex-1 flex justify-end cursor-pointer' onClick={handleLikeSong}>
-                {liked ? <AiFillHeart size={16}/> : <AiOutlineHeart size={16} />}
+            {hover && !myMusic && <div className='flex-1 flex justify-end gap-7 cursor-pointer'>
+                <div onClick={handleLikeSong}>
+                    {liked ? <AiFillHeart title='Thêm vào thư viện' size={16}/> : <AiOutlineHeart title='Thêm vào thư viện' size={16} />}
+                </div>
+                <BsPlusLg size={16} title='Thêm vào playlist' onClick={() => {
+                    setIsAdd(true); 
+                    setAddItem(songData)
+                }} />
             </div>}
         </div>
     )

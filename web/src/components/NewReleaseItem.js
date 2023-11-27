@@ -8,7 +8,7 @@ import icons from '../utils/icons';
 import * as apis from '../apis';
 
 const { AiOutlineHeart, AiFillHeart, BsPlusLg } = icons;
-const NewReleaseItem = ({data, order, percent, style, sm, time, setIsAdd}) => {
+const NewReleaseItem = ({data, order, percent, style, sm, time, setIsAdd, setAddItem}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [hover, setHover] = useState(false);
@@ -52,7 +52,7 @@ const NewReleaseItem = ({data, order, percent, style, sm, time, setIsAdd}) => {
                 <span className={`cursor-pointer text-xs hover:text-[#9431C6] ${sm ? 'text-gray-300' : 'text-gray-500'}`}
                     onClick={() => {
                         const link = data?.singers?.[0]?.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll(' ', '-');
-                        navigate(`singer/${link}/${data?.singers?.[0]?.pivot?.singer_id}`)
+                        navigate(`/singer/${link}/${data?.singers?.[0]?.pivot?.singer_id}`)
                     }}
                 >
                     {data?.singers[0]?.name}
@@ -67,7 +67,7 @@ const NewReleaseItem = ({data, order, percent, style, sm, time, setIsAdd}) => {
             <span className='mr-5 text-gray-600 cursor-pointer' onClick={handleLikeSong}> 
             {liked ? <AiFillHeart title='Xóa khỏi thư viện' size={16} /> : <AiOutlineHeart title='Thêm vào thư viện' size={16} /> }
             </span>
-            <span className='mr-5 text-gray-600 cursor-pointer' onClick={() => {setIsAdd(true)}}> 
+            <span className='mr-5 text-gray-600 cursor-pointer' onClick={() => {setIsAdd(true); setAddItem(data)}}> 
                 <BsPlusLg title='Thêm vào playlist' size={16} />
             </span>
         </div>}

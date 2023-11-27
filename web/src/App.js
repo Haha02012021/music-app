@@ -1,4 +1,6 @@
-import { Home, Login, Mymusic, Public, Playlist, ZingChartWeek, ZingChart, NewReleaseChart, GenreTopic, Top100, Singer, NewRelease } from './containers/public/';
+import { Home, Login, Mymusic, Public, Playlist, ZingChartWeek, ZingChart, NewReleaseChart, 
+  GenreTopic, Top100, Singer, NewRelease, CreateSinger, CreateGenre, CreateAlbum, CreateSong 
+} from './containers/public/';
 import { Routes, Route } from "react-router-dom";
 import path from "./utils/path";
 import { ToastContainer } from 'react-toastify';
@@ -23,6 +25,10 @@ function App() {
             <Route path={path.TOP100} element={<Top100 />} />
             <Route path={path.SINGER__TITLE__SID} element={<Singer />} />
             <Route path={path.NEWRELEASE} element={<NewRelease />} />
+            <Route path={path.CREATESINGER} element={<CreateSinger />} />
+            <Route path={path.CREATEGENRE} element={<CreateGenre />} />
+            <Route path={path.CREATEALBUM} element={<CreateAlbum />} />
+            <Route path={path.CREATESONG} element={<CreateSong />} />
 
             <Route path={path.STAR} element={<Home />} />
           </Route>

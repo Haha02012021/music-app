@@ -19,6 +19,7 @@ const Playlist = () => {
         const fetchDataDetailPlaylist = async () => {
             const response = await apis.apiGetDetailPlaylist(pid);
             if (response?.status === 200) {
+                //console.log(response);
                 setPlaylistData(response.data.data);
                 dispatch(actions.setCurPlaylistId(pid));
                 dispatch(actions.setSong(response?.data?.data?.songs));

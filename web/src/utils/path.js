@@ -13,6 +13,12 @@ const path = {
     ALBUM__TITLE__PID: 'album/:title/:pid',
     ZINGCHARTWEEK__TITLE__CID: 'zing-chart-tuan/:title/:cid',
     ZINGCHART: 'zing-chart',
+    //admin
+    CREATESINGER: 'create-singer',
+    CREATEGENRE: 'create-genre',
+    CREATEALBUM: 'create-album',
+    CREATESONG: 'create-song',
+    
 }
 
 export default path;

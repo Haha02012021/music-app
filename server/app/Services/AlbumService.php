@@ -17,13 +17,28 @@ class AlbumService
 
     public function updateSingersSongs($songIds, $album, $authId) {
         if ($songIds) {
+            $songIds = collect($songIds);
+            $addSongIds = $songIds->filter(function (int $value) {
+                return $value > 0;
+            });
+            $removeSongIds = $songIds->map(function (int $value) {
+                if ($value < 0) {
+                    return - $value;
+                }
+            });
+            $currentSongIds = $album->songs($authId)->select('songs.id')->get()->pluck('id');
+            $newSongIds = $currentSongIds->merge(collect($addSongIds))->unique()->diff($removeSongIds);
             $album->songs($authId)->detach();
             $album->singers()->detach();
-            $songs = Song::with('singers')->whereIn('id', $songIds)->get();
+            $songs = Song::with('singers')->whereIn('id', $newSongIds)->get();
             $singerIds = $songs->pluck('singers')->flatten(1)->values()->pluck('id')->unique()->toArray();
-            $album->songs($authId)->attach($songIds);
+            $album->songs($authId)->attach($newSongIds);
             $album->singers()->attach($singerIds);
         }
+    }
+
+    public function removeSingersSongs() {
+
     }
 
     public function updateThumbnail($request, $name) {

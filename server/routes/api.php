@@ -47,6 +47,7 @@ Route::middleware('auth.api')->group(function () {
     Route::prefix('song')->name('song.')->group(function () {
         Route::post('create', [SongController::class, 'create'])->name('create');
         Route::post('update', [SongController::class, 'update'])->name('update');
+        Route::get('uploaded', [SongController::class, 'getUploadedSongs'])->name('uploaded');
     });
 
     // Action like

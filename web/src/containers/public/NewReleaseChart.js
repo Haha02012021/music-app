@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import icons from '../../utils/icons';
 import * as apis from '../../apis';
 import ListSong from '../../components/ListSong';

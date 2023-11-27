@@ -1,6 +1,5 @@
 import { React, useEffect, useState } from 'react';
-import { HomeSection, NewRelease, Slider, WeekChart, ZingChart } from '../../components';
-import { useSelector } from 'react-redux';
+import { HomeSection, NewRelease, Slider } from '../../components';
 import * as apis from '../../apis';
 
 const Home = () => {

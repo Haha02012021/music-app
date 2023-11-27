@@ -9,7 +9,7 @@ import { ListItem, HomeSectionItem } from '../../components';
 const { TbUserPlus, FaCheck } = icons;
 
 const Singer = () => {
-    const { sid, title } = useParams();
+    const { sid } = useParams();
     const [data, setData] = useState([]);
     const [follow, setFollow] = useState(false);
     const dispatch = useDispatch();

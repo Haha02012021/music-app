@@ -21,6 +21,7 @@ const NewRelease = () => {
             setSongData(response?.data?.data);
             const resPlaylist = await apis.apiGetPlaylist();
             setPlaylist(resPlaylist?.data?.data);
+            console.log(resPlaylist);
         }
         fetchData();
     }, [type]);
@@ -66,7 +67,7 @@ const NewRelease = () => {
             {isAdd && <div className='absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center'>
                 <div className='w-[30%] rounded-md p-4 shadow-md bg-white'>
                     {playlist?.map(item => (
-                        <div className='w-[80%] cursor-pointer' onClick={handleAddPlaylist(item)}>
+                        <div key={item?.id} className='w-[80%] cursor-pointer' onClick={handleAddPlaylist(item)}>
                             <span className='w-full p-2 border-t-2 border-gray-300'>{item?.title}</span>
                         </div>
                     ))}

@@ -15,13 +15,11 @@ const NewReleaseItem = ({data, order, percent, style, sm, time, setIsAdd}) => {
     const [liked, setLiked] = useState(data?.is_liked);
     const { nearlyListenSongs } = useSelector(state => state.music);
     
-    //console.log(data);
     const handleLikeSong = (e) => {
         e.stopPropagation();
         const likeSong = async() => {
             const res = await apis.apiLikeSong(data?.id, 2);
             setLiked(prev => !prev)
-            //console.log(res)
         }
         likeSong();
     }

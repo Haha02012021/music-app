@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { Home, Login, Mymusic, Public, Playlist, ZingChartWeek, ZingChart, NewReleaseChart, GenreTopic, Top100, Singer, NewRelease } from './containers/public/';
 import { Routes, Route } from "react-router-dom";
 import path from "./utils/path";

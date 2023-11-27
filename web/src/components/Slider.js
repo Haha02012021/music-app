@@ -10,14 +10,11 @@ const { BsChevronRight } = icons;
 const Slider = ({banner}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    console.log(banner);
-
     useEffect(() => {
 
         const sliderElements = document.getElementsByClassName('slider-item');
         let min = 0;
         let max = 2;
-        console.log(sliderElements.length);
 
         const intervalId = setInterval(() => {
             for (let i = 0; i < sliderElements.length; ++i) {
@@ -38,7 +35,7 @@ const Slider = ({banner}) => {
 
             min++;
             max++;
-            if (min == 8) {
+            if (min === 8) {
                 min = 0;
                 max = 2;
             }
@@ -77,9 +74,9 @@ const Slider = ({banner}) => {
                 {banner?.map( (item, index) => (
                     <div key={index} className={`slider-item h-[150px] w-[32%] rounded-lg ${ index <= 2 ? 'flex' : 'hidden'}
                         bg-white shadow-md p-4`}>
-                        <div className='w-[30%] rounded-lg mr-2'>
+                        <div className='w-[118px] h-[118px] rounded-lg mr-2'>
                             <img src={item?.thumbnail} 
-                                className='w-full object-contain rounded-lg'
+                                className='w-[118px] h-[118px] rounded-lg'
                             />
                         </div>
                         <div className='flex-auto flex flex-col justify-between'>

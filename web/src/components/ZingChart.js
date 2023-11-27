@@ -107,12 +107,9 @@ const ZingChart = ({ chartData }) => {
                     pointHoverBorderWidth: 3,
                 })
             }
-        setData({labels, datasets});
+            setData({labels, datasets});
         }
-        //console.log({labels, datasets});
     }, [chartData]);
-
-    //console.log(chartData.items);
 
     return (
         <div className='w-full max-h-[430px] p-4 bg-[#3F1859] rounded-xl text-white'>

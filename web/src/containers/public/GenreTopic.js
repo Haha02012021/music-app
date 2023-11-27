@@ -4,7 +4,6 @@ import { HomeSection } from '../../components';
 
 const GenreTopic = () => {
 
-    const [id, setId] = useState(1);
     const [data, setData] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
@@ -12,7 +11,7 @@ const GenreTopic = () => {
             setData(response?.data?.data?.data);
         }
         fetchData();
-    }, [id])
+    }, [])
 
     return (
         <div>

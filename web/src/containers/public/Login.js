@@ -5,7 +5,6 @@ import * as actions from '../../store/actions';
 import { useSelector, useDispatch } from 'react-redux';
 
 const Login = () => {
-  const [loginUrl, setLoginUrl] = useState("");
   const popupRef = useRef(null);
   const dispatch = useDispatch();
   const {login, info} = useSelector(state => state.user);
@@ -19,7 +18,6 @@ const Login = () => {
           dispatch(actions.getLogin(true));
           dispatch(actions.getUserInfo(res?.data?.user));
           popupRef.current.close();
-          setLoginUrl(null);
         }
       }
     });
@@ -36,7 +34,6 @@ const Login = () => {
       const response = await apis.getLogin();
       if (response.status === 200) {
         const qrCodeData = response?.data?.data;
-        setLoginUrl(qrCodeData);
 
         popupRef.current = window.open(
           qrCodeData,

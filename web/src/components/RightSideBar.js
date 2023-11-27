@@ -5,7 +5,7 @@ import NewReleaseItem from './NewReleaseItem';
 import * as apis from '../apis';
 import * as actions from '../store/actions';
 
-const { TfiAlarmClock, AiOutlineDelete } = icons;
+const { AiOutlineDelete } = icons;
 
 const RightSideBar = () => {
 
@@ -17,7 +17,6 @@ const RightSideBar = () => {
 
   const fetchPlaylistData = async () => {
     const response = await apis.apiGetDetailPlaylist(curPlaylistId);
-    //console.log(response);
     if (response?.data?.success === true) {
       setPlaylist(response?.data?.data?.songs);
       setPlaylistTitle(response?.data?.data?.title);
@@ -32,7 +31,6 @@ const RightSideBar = () => {
   useEffect(() => {
     if (curPlaylistId) fetchPlaylistData();
   }, [curPlaylistId])
-  //console.log(playlist);
 
   return (
     <div className='w-full flex flex-col text-[13px] font-medium cursor-pointer px-2 mb-36'>

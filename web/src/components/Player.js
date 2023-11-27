@@ -25,6 +25,7 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
   const [isRepeat, setIsRepeat] = useState(0);
   const [isLoaded, setIsLoaded] = useState(true);
   const [volume, setVolume] = useState(100);
+  const [liked, setLiked] = useState(false);
   const thumref = useRef();
   const trackref = useRef();
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
       setIsLoaded(true);
       if (res?.status === 200) {
         setSongInfo(res?.data?.data);
+        setLiked(res?.data?.data?.is_liked);
         dispatch(actions.setCurSongData(res?.data?.data));
         audio.pause();
         const listRes = await apis.apiListenMusic(res?.data?.data?.id, res?.data?.data?.album_id)
@@ -162,6 +164,15 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
     volume > 0 ? setVolume(0) : setVolume(100);
   }
 
+  const handleLikeSong = (e) => {
+    e.stopPropagation();
+    const likeSong = async() => {
+        const res = await apis.apiLikeSong(songInfo?.id, 2);
+        setLiked(prev => !prev)
+    }
+    likeSong();
+}
+
   return (
     <div className='bg-main-400 border-t-2 px-5 h-full flex'>
         <div className='w-[30%] flex items-center gap-3'>
@@ -173,10 +184,10 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
             </div>
 
             <div className='flex'>
-              <span className='p-2 mx-[2px]'>
-                <AiOutlineHeart title='Thêm vào thư viện' size={16}/>
+              <span className='p-2 mx-[2px] cursor-pointer' onClick={handleLikeSong}>
+                {liked ? <AiFillHeart title='Xoá khỏi thư viện' size={16} /> : <AiOutlineHeart title='Thêm vào thư viện' size={16}/>}
               </span>
-              <span className='p-2 mx-[2px]'>
+              <span className='p-2 mx-[2px] cursor-pointer'>
                 <BsPlusLg title='Thêm vào playlist' size={16} />
               </span>
             </div>
@@ -205,7 +216,7 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
                 { !isLoaded ? <RotateLine /> : isPlaying ? <TbPlayerPauseFilled size={20} /> : <TbPlayerPlayFilled size={20} /> }
               </span>
               <span onClick={handleNextSong}
-                className={`${(id === null || id == (songs.length - 1) || songs.length < 2) ? 'text-gray-200' : 'cursor-pointer'}`}
+                className={`${(id === null || id === (songs.length - 1) || songs.length < 2) ? 'text-gray-200' : 'cursor-pointer'}`}
               >
                 <BiSkipNext size={36} />
               </span>

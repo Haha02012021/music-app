@@ -14,7 +14,6 @@ const NewRelease = () => {
     useEffect(() => {
         const fetchData = async () => {
             const response = await apis.getNewRelease(type);
-            console.log(response);
             if (response?.status === 200) {
                 dispatch(actions.setSong(response?.data?.data));
             }

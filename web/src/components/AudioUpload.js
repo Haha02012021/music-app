@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import * as apis from '../apis';
 import icons from '../utils/icons';
+import moment from 'moment';
 
 const { IoIosCloseCircleOutline } = icons;
 
@@ -46,15 +47,21 @@ const AudioUpload = ({setIsCreate}) => {
         })
     }
 
+    useEffect(() => {
+        const released_at = moment().format("YYYY-MM-DD");
+        //console.log(released_at);
+        setFormData({
+            ...formData,
+            audio: selectedAudio,
+            released_at: released_at,
+        })
+        
+    }, [selectedAudio])
+
     const handleSubmit = async (e) => {
-        if (selectedAudio) {
-            setFormData({
-                ...formData,
-                audio: selectedAudio,
-            })
-        }
         e.preventDefault();
         const data = new FormData();
+        console.log(formData);
         Object.entries(formData).forEach(([key, value]) => {
             data.append(key, value);
         });
@@ -67,7 +74,6 @@ const AudioUpload = ({setIsCreate}) => {
             console.error('Error creating song:', error);
         });
     }
-    console.log(formData);
 
     return (
         <div className='w-full bg-gray-400 p-3 rounded-2xl'>

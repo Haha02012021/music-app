@@ -4,7 +4,7 @@ import * as apis from '../../apis';
 import * as actions from '../../store/actions';
 import { AudioUpload, HomeSectionItem, ListItem } from '../../components';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const { 
@@ -22,13 +22,11 @@ const Mymusic = () => {
     name: '',
   });
   const navigate = useNavigate();
-  const { login } = useSelector(state => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const getLiked = async () => {
       const res = await apis.apiGetLikedAlbums();
-      console.log(res);
       if (res?.data?.success === false) {
         toast.warn(res?.data?.message);
         dispatch(actions.getLogin(false))
@@ -50,7 +48,6 @@ const Mymusic = () => {
   }
   getLiked();
   }, [isOpenPopup]);
-  //console.log(data);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -63,7 +60,6 @@ const Mymusic = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await apis.apiCreatePlaylist(formData?.name);
-    console.log(res);
     setIsOpenPopup(false);
   }
 

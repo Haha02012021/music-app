@@ -11,7 +11,6 @@ const HomeSectionItem = ({thumbnail, item_id, is_liked}) => {
     const [hover, setHover] = useState(false);
     const imageRef = useRef();
     const [liked, setLiked] = useState(is_liked);
-    //console.log(thumbnail);
 
     const handleLikeAlbum = (e) => {
         e.stopPropagation();

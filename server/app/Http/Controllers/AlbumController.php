@@ -359,7 +359,6 @@ class AlbumController extends Controller
         if (count($albums) !== 0) {
             $updatedDate = date('Y-m-d', strtotime($albums->toArray()[0]['created_at']));
             if (strcmp($firstDate, $nowDate) === 0 && $updatedDate !== $firstDate) {   
-                dd("abc");
                 $vietnamSongs = $this->albumService->getSongsByGenreName($vietnam);
                 $usukSongs = $this->albumService->getSongsByGenreName($usuk);
                 $asiaSongs = $this->albumService->getSongsOfAsia(); 
@@ -426,11 +425,11 @@ class AlbumController extends Controller
             $usukSongs = $this->albumService->getSongsByGenreName($usuk);
             $asiaSongs = $this->albumService->getSongsOfAsia();
 
-            $newAsiaAlbums = $asiaSongs->map(function ($item) use ($authId) {
+            $vietnamAlbums = $vietnamSongs->map(function ($item) use ($authId) {
                 return $this->albumService->createTop100($item, $authId);
             });
 
-            $vietnamAlbums = $vietnamSongs->map(function ($item) use ($authId) {
+            $newAsiaAlbums = $asiaSongs->map(function ($item) use ($authId) {
                 return $this->albumService->createTop100($item, $authId);
             });
 

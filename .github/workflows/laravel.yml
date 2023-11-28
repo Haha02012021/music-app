@@ -5,7 +5,8 @@ on:
     branches:
       - master
     paths:
-      - server
+      - server/**
+      - .github/workflows/laravel.yml
 
 env:
   PROJECT_ID: ${{ secrets.CLOUD_RUN_PROJECT_NAME }}

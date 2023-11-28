@@ -1,7 +1,7 @@
 # base image
 FROM node:18.18-buster-slim
 
-# Create and change to the app directory.
+# Create and change to the app directory
 WORKDIR /app
 
 COPY package*.json ./

@@ -202,7 +202,7 @@ class AlbumController extends Controller
                     ->paginate($limit);
         collect($albums->items())->map(function ($album) use ($request) {
             $album->songs_count = $album->songs($request->authAccount()->id)->count();
-            if (str_contains($album->thumbnail, 'https')) {
+            if (!str_contains($album->thumbnail, 'https')) {
                 $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR);
             }
 

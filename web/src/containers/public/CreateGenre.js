@@ -3,10 +3,11 @@ import * as apis from '../../apis';
 import icons from '../../utils/icons';
 import { toast } from 'react-toastify';
 
-const { BsPlusLg, IoIosCloseCircleOutline } = icons;
+const { BsPlusLg, IoIosCloseCircleOutline, AiOutlineDelete, CiEdit } = icons;
 
 const CreateGenre = () => {
     const [pageId, setPageId] = useState(1);
+    const [deleteId, setDeleteId] = useState(0);
     const [data, setData] = useState([]);
     const [lastPage, setLastPage] = useState(1);
     const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +21,7 @@ const CreateGenre = () => {
             setLastPage(response?.data?.data?.last_page);
         }
         fetchData();
-    }, [pageId])
+    }, [pageId, deleteId])
 
     const handleChangePageId = (e) => {
         setPageId(e.target.value);
@@ -46,6 +47,19 @@ const CreateGenre = () => {
         }
        createGenre();
     }
+
+    const handleDelete = (e, item) => {
+        e.stopPropagation();
+        const deleteModel = async () => {
+          const res = await apis.apiDelete('genre', item?.id);
+          if (res?.data?.success === true) {
+            toast.success(res?.data?.message);
+            if (data?.length === 1) setPageId(pageId - 1);
+            else setDeleteId(item?.id);
+          }
+        }
+        deleteModel();
+      }
 
     return (
         <div className='relative flex flex-col gap-7'>
@@ -86,6 +100,7 @@ const CreateGenre = () => {
                         <th className="py-2 px-4 border-b">Thể loại</th>
                         <th className="py-2 px-4 border-b">Số album</th>
                         <th className="py-2 px-4 border-b">Số bài hát</th>
+                        <th className="py-2 px-4 border-b">Thao tác</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -95,6 +110,12 @@ const CreateGenre = () => {
                                 <td className="py-2 px-4 border-b text-center">{item?.title}</td>
                                 <td className="py-2 px-4 border-b text-center">{item?.albums_count}</td>
                                 <td className="py-2 px-4 border-b text-center">{item?.songs_count}</td>
+                                <td className="py-2 px-4 border-b text-center">
+                                    <div className='w-full flex gap-7 justify-center items-center cursor-pointer'>
+                                        <CiEdit size={16}/>
+                                        <AiOutlineDelete size={16} onClick={(event) => handleDelete(event, item)} />
+                                    </div>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

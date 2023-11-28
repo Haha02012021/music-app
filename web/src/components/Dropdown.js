@@ -1,92 +1,101 @@
-import { React, useState } from 'react'
+import { React, useEffect, useState } from 'react';
+import icons from '../utils/icons';
 
-const Dropdown = () => {
+const { FaAngleDown, GoArrowLeft, GoArrowRight } = icons;
+
+const Dropdown = ({setSongs, data, setSongPageId, pageId, lastPage}) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [selectedIds, setSelectedIds] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedItem, setSelectedItem] = useState(null);
-  
-    const dropdownItems = [
-      'Item 1',
-      'Item 2',
-      'Item 3',
-      // Thêm các mục khác nếu cần
-    ];
-  
-    const filteredItems = dropdownItems.filter((item) =>
-      item.toLowerCase().includes(searchTerm.toLowerCase())
+    console.log(data);
+    const filteredItems = data.filter((item) =>
+        (item?.name ? item?.name : item?.title)?.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  
+
     const toggleDropdown = () => {
-      setIsOpen(!isOpen);
+        setIsOpen(!isOpen);
     };
-  
+
+    useEffect(() => {
+        setSongs(selectedIds);
+    }, [selectedIds])
+
     const handleItemClick = (item) => {
-      setSelectedItem(item);
-      setIsOpen(false);
+        if (selectedItems.includes(item?.name ? item?.name : item?.title)) {
+            setSelectedItems(selectedItems.filter((selected) => selected !== (item?.name ? item?.name : item?.title)));
+            setSelectedIds(selectedIds.filter((selected) => selected !== item?.id))
+        } else {
+            setSelectedItems([...selectedItems, (item?.name ? item?.name : item?.title)]);
+            setSelectedIds([...selectedIds, item?.id])
+        }
     };
-  
+
     return (
-      <div className="relative inline-block text-left">
-        <div>
-          <button
-            onClick={toggleDropdown}
-            type="button"
-            className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            id="options-menu"
-            aria-haspopup="true"
-            aria-expanded="true"
-          >
-            {selectedItem || 'Select an item'}
-            {/* Icon dropdown ở đây */}
-            <svg
-              className="-mr-1 ml-2 h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 11.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-        </div>
-  
-        {/* Dropdown menu */}
-        {isOpen && (
-          <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-            <div
-              className="py-1"
-              role="menu"
-              aria-orientation="vertical"
-              aria-labelledby="options-menu"
-            >
-              {/* Search input */}
-              <input
-                type="text"
-                className="p-2 w-full border-b border-gray-300"
-                placeholder="Search..."
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-  
-              {/* Filtered items */}
-              {filteredItems.map((item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  role="menuitem"
-                  onClick={() => handleItemClick(item)}
+        <div className={`relative inline-block text-left`}>
+            <div>
+                <button
+                    onClick={toggleDropdown}
+                    type="button"
+                    className="inline-flex justify-between items-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 
+                    bg-white text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2
+                     focus:[#9431C6]"
+                    id="options-menu"
+                    aria-haspopup="true"
+                    aria-expanded="true"
                 >
-                  {item}
-                </a>
-              ))}
+                    {selectedItems.length === 0
+                        ? 'Danh sách'
+                        : selectedItems.join(', ')}
+                    {/* Icon dropdown ở đây */}
+                    <FaAngleDown />
+                </button>
             </div>
-          </div>
-        )}
-      </div>
+
+            {/* Dropdown menu */}
+            {isOpen && (
+                <div className="h-[300px] origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-y-auto">
+                    <div
+                        className="py-1"
+                        role="menu"
+                        aria-orientation="vertical"
+                        aria-labelledby="options-menu"
+                    >
+                        {/* Search input */}
+                        <input
+                            type="text"
+                            className="p-2 w-full border-b border-gray-300"
+                            placeholder="Search..."
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+
+                        {/* Filtered items */}
+                        {filteredItems.map((item) => (
+                            <div
+                                key={item?.id}
+                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                role="menuitem"
+                                onClick={() => handleItemClick(item)}
+                            >
+                                <input
+                                    type="checkbox"
+                                    className="mr-2"
+                                    checked={selectedItems.includes(item?.name ? item?.name : item?.title)}
+                                    readOnly
+                                />
+                                <span>{item?.name ? item?.name : item?.title}</span>
+                            </div>
+                        ))}
+                        <div className='flex flex-row-reverse px-4 py-2 cursor-pointer'>
+                            <div className='flex gap-2'>
+                            {pageId > 1 && <GoArrowLeft onClick={() => setSongPageId(pageId - 1)}/>}
+                            {pageId < lastPage - 1 && <GoArrowRight onClick={() => setSongPageId(pageId + 1)} />}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 }
 

@@ -2,10 +2,12 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { LeftSideBar, RightSideBar, Player, Header } from '../../components';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const Public = () => {
 
   const [openRightSideBar, setOpenRightSideBar] = useState(false);
+  const { curSongId } = useSelector(state => state.music);
 
   return (
     <div className='w-full h-screen relative flex flex-col bg-main-300'>
@@ -28,9 +30,9 @@ const Public = () => {
         }
       </div>
       
-      <div className='fixed bottom-0 left-0 right-0 h-[90px]'>
+      {curSongId && <div className='fixed bottom-0 left-0 right-0 h-[90px]'>
         <Player setOpenRightSideBar={setOpenRightSideBar} openRightSideBar={openRightSideBar}/>
-      </div>
+      </div>}
     </div>
   )
 }

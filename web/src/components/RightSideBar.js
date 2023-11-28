@@ -58,7 +58,7 @@ const RightSideBar = () => {
           </span>
         </div>
       </div>
-      {recent && <div>
+      {recent && curPlaylistId && <div>
         <div>
           <NewReleaseItem data={curSongData} style={'bg-[#9431C6] text-white'} sm={true} time={false} />
         </div>

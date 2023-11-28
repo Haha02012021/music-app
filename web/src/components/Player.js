@@ -51,23 +51,6 @@ const Player = ({setOpenRightSideBar, openRightSideBar}) => {
         setPlayingTime(0);
         thumref.current.style.cssText = `right: 100%`;
       }
-      // if (res1.data.err === 0 ) {
-      //   setSongInfo(res1?.data?.data);
-      //   dispatch(actions.setCurSongData(res1?.data?.data));
-      // } 
-      // if (res2?.data?.err === 0) {
-      //   audio.pause();
-      //   setAudio(new Audio(res2?.data?.data[128]));
-      // } else {
-      //   audio.pause();
-      //   intervalId && clearInterval(intervalId);
-      //   dispatch(actions.playSong(false));
-      //   toast.warn(res2?.data?.msg);
-      //   audio.currentTime = 0;
-      //   setPlayingTime(0);
-      //   thumref.current.style.cssText = `right: 100%`;
-
-      // }
     }
 
     fetchInfoSong();

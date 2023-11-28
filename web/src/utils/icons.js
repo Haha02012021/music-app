@@ -8,7 +8,7 @@ import { TbChartArcs, TbPlayerPlayFilled, TbPlayerPauseFilled, TbIcons, TbUserPl
 import { LuDot } from 'react-icons/lu';
 import { SlVolume2, SlVolumeOff } from 'react-icons/sl';
 import { TfiAlarmClock } from 'react-icons/tfi';
-import { FaRegCircleUser, FaRegStar, FaCheck, FaIcons } from 'react-icons/fa6';
+import { FaRegCircleUser, FaRegStar, FaCheck, FaIcons, FaAngleDown } from 'react-icons/fa6';
 import { IoRemoveOutline } from 'react-icons/io5';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { RiPlayListAddFill } from 'react-icons/ri';
@@ -48,6 +48,7 @@ const icons = {
     FaRegStar,
     FaCheck,
     FaIcons,
+    FaAngleDown,
     IoRemoveOutline,
     IoIosCloseCircleOutline,
     RiPlayListAddFill,

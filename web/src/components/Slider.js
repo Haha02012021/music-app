@@ -69,7 +69,7 @@ const Slider = ({banner}) => {
                             <div className='flex flex-col'>
                                 <span className='text-base font-medium'>{item?.name}</span>
                                 <span className='text-xs text-gray-400'>
-                                    {item?.singers?.map(item => item.name + ' ')}
+                                    {item?.singers?.map((item, index) =>  (index > 0 ? ', ' : '') + item?.name)}
                                 </span>
                             </div>
                             <div className='flex flex-row justify-between items-end'>

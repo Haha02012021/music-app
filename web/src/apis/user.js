@@ -18,7 +18,7 @@ export const apiGetInfo = () => new Promise (async( resolve, reject) => {
     }
 })
 
-export const apiGetLatestListenedSong = (songId) => new Promise (async( resolve, reject) => {
+export const apiGetLatestListenedSong = () => new Promise (async( resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
 

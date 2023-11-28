@@ -3,19 +3,32 @@ import * as apis from '../../apis';
 import icons from '../../utils/icons';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { Dropdown } from '../../components';
 
 const { BsPlusLg, IoIosCloseCircleOutline } = icons;
 
 const CreateAlbum = () => {
 
     const [pageId, setPageId] = useState(1);
+    const [songPageId, setSongPageId] = useState(1);
+    const [lastSongPage, setLastSongPage] = useState(1);
     const [data, setData] = useState([]);
     const [lastPage, setLastPage] = useState(1);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [formData, setFormData] = useState({});
     const [songs, setSongs] = useState([]);
+    const [allSongs, setAllSongs] = useState([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+      const fetchSongData = async () => {
+        const res = await apis.apiGetAllSongs(songPageId, 20);
+        setAllSongs(res?.data?.data?.data);
+        setLastSongPage(res?.data?.data?.last_page);
+      }
+      fetchSongData();
+    }, [songPageId])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,15 +57,10 @@ const CreateAlbum = () => {
     
       const handleInputChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'song_ids') {
-            const ids = value.split(',').map(item => parseInt(item.trim(), 10));
-            setSongs(ids);
-        }
-        else {setFormData({
+        setFormData({
             ...formData,
             [name]: value,
-            })
-        }
+        })
       }
     
       const handleSubmit = (e) => {
@@ -77,7 +85,7 @@ const CreateAlbum = () => {
         });
         
       }
-      //console.log(formData);
+      console.log(songs);
     
       return (
         <div className='relative w-full mb-36'>
@@ -97,8 +105,8 @@ const CreateAlbum = () => {
               <IoIosCloseCircleOutline size={24} />
             </span>
             <form className='w-[75%] bg-white rounded-md flex flex-col p-6 gap-5 mx-auto' onSubmit={handleSubmit}>
-              <label htmlFor="name" className='text-base font-semibold'>Tên Album:</label>
-              <input type="text" id="name" name="name" onChange={handleInputChange} 
+              <label htmlFor="title" className='text-base font-semibold'>Tên Album:</label>
+              <input type="text" id="title" name="title" onChange={handleInputChange} 
               className='p-2 border-gray-300 border-[2px] rounded-sm mx-5'
               />  
               <label htmlFor="thumbnail" className='text-base font-semibold'>Ảnh: </label>
@@ -108,10 +116,8 @@ const CreateAlbum = () => {
                       <img src={URL.createObjectURL(selectedImage)} alt="Preview" className='w-[200px] h-[200px] rounded-md' />
                   </div>
               )}
-              <label htmlFor="song_ids" className='text-base font-semibold'>Danh sách id bài hát:</label>
-              <input type="text" id="song_ids" name="song_ids" onChange={handleInputChange} 
-              className='p-2 border-gray-300 border-[2px] rounded-sm mx-5'
-              />
+              <label htmlFor="song_ids" className='text-base font-semibold'>Danh sách bài hát:</label>
+              <Dropdown setSongs={setSongs} data={allSongs} setSongPageId={setSongPageId} pageId={songPageId} lastPage={lastSongPage} />
               <label htmlFor="description" className='text-base font-semibold'>Lời tựa:</label>
               <textarea id="description" name="description" onChange={handleInputChange} 
               className='p-2 border-gray-300 h-[200px] border-[1px] rounded-sm mx-5'

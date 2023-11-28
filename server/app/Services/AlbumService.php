@@ -168,23 +168,28 @@ class AlbumService
 
         $outstandingAlbums = Album::where('type', 'like', AlbumType::TOP100.'%')
                                     ->with('singers')
+                                    ->with('songs')
                                     ->withCount(['actions' => function ($query) use ($firstDateOfMonth, $lastDateOfMonth) {
                                         $query->whereBetween('actions.created_at', [$firstDateOfMonth, $lastDateOfMonth]);
                                     }])
                                     ->orderByDesc('released_at')
                                     ->get()
-                                    ->map(function ($album) use ($authId) {
-                                        $songs = $album->songs($authId)->get();
-                                        $album->songs_count = $songs->count();
-                                        $album->songs_actions_count = $songs->sum('actions_count');
-                                        return $album;
-                                    })
                                     ->sortByDesc(function ($album) {
-                                        if ($album->songs_count !== 0)
-                                            return ($album['songs_actions_count'] + $album['actions_count']) / $album->songs_count;
+                                        $songs = $album['songs'];
+                                        $songs_count = $songs->count();
+                                        $songs_actions_count = $songs->sum('actions_count');
+                                        if ($songs_count !== 0)
+                                            return ($songs_actions_count + $album['actions_count']) / $songs_count;
                                         return 0;
                                     })
                                     ->take(4)
+                                    ->map(function ($album) {
+                                        unset($album['songs']);
+                                        if (!str_contains($album->thumbnail, 'https')) {
+                                            $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR);
+                                        }
+                                        return $album;
+                                    })
                                     ->flatten(1);
 
         return $outstandingAlbums;

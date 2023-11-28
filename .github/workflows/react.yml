@@ -5,6 +5,7 @@ on:
     branches: [ 'master' ]
     paths:
       - web/**
+      - .github/workflows/react.yml
 
 env:
   PROJECT_ID: ${{ secrets.CLOUD_RUN_PROJECT_NAME }}
@@ -47,6 +48,7 @@ jobs:
       - name: Deploy
         run: |-
           gcloud run deploy $REPO_NAME \
+          --port=80
           --project=$PROJECT_ID \
           --region=$REGION \
           --image=gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA \

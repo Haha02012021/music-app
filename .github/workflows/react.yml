@@ -48,7 +48,7 @@ jobs:
       - name: Deploy
         run: |-
           gcloud run deploy $REPO_NAME \
-          --port=80
+          --port=80 \
           --project=$PROJECT_ID \
           --region=$REGION \
           --image=gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA \

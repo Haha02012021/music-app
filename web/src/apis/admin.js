@@ -136,3 +136,21 @@ export const apiCreateAlbum = (formData) => new Promise(async (resolve, reject) 
       reject(error);
     }
   });
+
+  export const apiDelete = (model, id) => new Promise (async( resolve, reject) => {
+    try {
+        const accessToken = localStorage.getItem('accessToken');
+
+        const response = await axios ({
+            url: `/${model}/${id}`,
+            method: 'delete',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+        });
+        resolve(response);
+    } catch (error) {
+        reject(error);
+    }
+})

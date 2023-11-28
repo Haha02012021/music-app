@@ -12,6 +12,7 @@ import { FaRegCircleUser, FaRegStar, FaCheck, FaIcons, FaAngleDown } from 'react
 import { IoRemoveOutline } from 'react-icons/io5';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { RiPlayListAddFill } from 'react-icons/ri';
+import { CiEdit } from 'react-icons/ci';
 
 const icons = {
     MdOutlineLibraryMusic,
@@ -52,6 +53,7 @@ const icons = {
     IoRemoveOutline,
     IoIosCloseCircleOutline,
     RiPlayListAddFill,
+    CiEdit,
 }
 
 export default icons;

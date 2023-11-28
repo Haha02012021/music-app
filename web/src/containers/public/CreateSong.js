@@ -8,12 +8,13 @@ import icons from '../../utils/icons';
 import { Dropdown } from '../../components';
 import moment from 'moment';
 
-const { BsPlusLg, IoIosCloseCircleOutline } = icons;
+const { BsPlusLg, IoIosCloseCircleOutline, AiOutlineDelete, CiEdit } = icons;
 
 const songsPerPage = 20;
 
 const CreateSong = () => {
     const [pageId, setPageId] = useState(1);
+    const [deleteId, setDeleteId] = useState(0);
     const [lastPage, setLastPage] = useState(1);
     const [singerPage, setSingerPage] = useState(1);
     const [lastSingerPage, setLastSingerPage] = useState(1);
@@ -47,7 +48,7 @@ const CreateSong = () => {
             }
         }
         fetchData();
-    }, [pageId]);
+    }, [pageId, deleteId]);
 
     useEffect(() => {
         const released_at = moment().format("YYYY-MM-DD");
@@ -118,6 +119,19 @@ const CreateSong = () => {
         });
     }
 
+    const handleDelete = (e, item) => {
+        e.stopPropagation();
+        const deleteModel = async () => {
+          const res = await apis.apiDelete('song', item?.id);
+          if (res?.data?.success === true) {
+            toast.success(res?.data?.message);
+            if (data?.length === 1) setPageId(pageId - 1);
+            else setDeleteId(item?.id);
+          }
+        }
+        deleteModel();
+      }
+
     return (
         <div className='mb-36 relative flex flex-col gap-7'>
             <div className='flex justify-between items-center'>
@@ -179,6 +193,7 @@ const CreateSong = () => {
                             <th className="py-2 px-4 border-b">Tên bài hát</th>
                             <th className="py-2 px-4 border-b">Tên ca sĩ</th>
                             <th className="py-2 px-4 border-b">Ảnh bìa</th>
+                            <th className="py-2 px-4 border-b">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -191,6 +206,12 @@ const CreateSong = () => {
                                 </td>
                                 <td className="py-2 px-4 border-b text-center">
                                     <img src={item?.thumbnail} alt='thumbnail' className='w-[80px] h[80px]'/>
+                                </td>
+                                <td className="py-2 px-4 border-b text-center">
+                                    <div className='w-full flex gap-7 justify-center items-center cursor-pointer'>
+                                        <CiEdit size={16}/>
+                                        <AiOutlineDelete size={16} onClick={(event) => handleDelete(event, item)} />
+                                    </div>
                                 </td>
                             </tr>
                         ))}

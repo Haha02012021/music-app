@@ -4,13 +4,14 @@ import * as apis from '../../apis';
 import icons from '../../utils/icons';
 import { toast } from 'react-toastify';
 
-const { BsPlusLg, IoIosCloseCircleOutline } = icons;
+const { BsPlusLg, IoIosCloseCircleOutline, AiOutlineDelete, CiEdit } = icons;
 
 const CreateSinger = () => {
 
   const [pageId, setPageId] = useState(1);
   const [data, setData] = useState([]);
   const [lastPage, setLastPage] = useState(1);
+  const [deleteId, setDeleteId] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [formData, setFormData] = useState({});
@@ -23,7 +24,7 @@ const CreateSinger = () => {
       setData(res?.data?.data?.data);
     }
     fetchData();
-  }, [pageId])
+  }, [pageId, deleteId])
 
   const handleChangePageId = (e) => {
     setPageId(e.target.value);
@@ -68,7 +69,19 @@ const CreateSinger = () => {
     });
     
   }
-  //console.log(formData);
+  
+  const handleDelete = (e, item) => {
+    e.stopPropagation();
+    const deleteModel = async () => {
+      const res = await apis.apiDelete('singer', item?.id);
+      if (res?.data?.success === true) {
+        toast.success(res?.data?.message);
+        if (data?.length === 1) setPageId(pageId - 1);
+        else setDeleteId(item?.id);
+      }
+    }
+    deleteModel();
+  }
 
   return (
     <div className='relative w-full mb-36'>
@@ -108,7 +121,7 @@ const CreateSinger = () => {
           </div>
         </form>
       </div>}
-      <div className='w-full flex flex-wrap justify-between items-center'>
+      <div className='w-full flex flex-wrap justify-start items-center gap-4'>
         {data?.map(item => (
           <div key={item?.id} className='w-[20%] flex flex-col justify-center items-center px-4 py-6 m-5 shadow-md gap-4 rounded-md cursor-pointer'
             onClick={() => {
@@ -118,6 +131,12 @@ const CreateSinger = () => {
           >
             <img src={item?.thumbnail} alt='thumbnail' className='rounded-full'></img>
             <span className='text-lg font-semibold'>{item?.name}</span>
+            <span className='flex justify-between w-[60%]'>
+              <CiEdit size={16}/>
+              <AiOutlineDelete size={16} onClick={(event) => {
+                handleDelete(event, item)
+                }} />
+            </span>
           </div>
         ))}
       </div>

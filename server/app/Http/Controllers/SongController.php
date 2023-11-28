@@ -189,6 +189,7 @@ class SongController extends Controller
 
     public function getAllSongs(Request $request) {
         $limit = $request->limit;
+        $keyword = $request->keyword ?? "";
         if (!$limit) {
             $limit = PAGE_LENGTH;
         }
@@ -199,6 +200,7 @@ class SongController extends Controller
                         'duration',
                         'released_at',
                     ])
+                    ->where('name', 'like', '%'.$keyword.'%')
                     ->with('singers', 'genres')
                     ->withExists('actions as is_liked', function ($query) use ($request) {
                         $authAccount = $request->authAccount();

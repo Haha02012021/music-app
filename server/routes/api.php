@@ -59,7 +59,6 @@ Route::middleware('auth.api')->group(function () {
 
     // Only role admin
     Route::middleware('role.admin')->group(function () {
-        Route::get('songs', [SongController::class, 'getAllSongs'])->name('song.all');
         Route::delete('song/{id}', [SongController::class, 'delete'])->name('song.delete');
         Route::get('albums', [AlbumController::class, 'getAllAlbums'])->name('album.all');
         Route::delete('album/{id}', [AlbumController::class, 'delete'])->name('album.delete');
@@ -76,6 +75,7 @@ Route::middleware('auth.api')->group(function () {
     });
 });
 
+Route::get('songs', [SongController::class, 'getAllSongs'])->name('song.all');
 Route::prefix('song')->name('song.')->group(function () {
     Route::get('top', [SongController::class, 'getTopNewSongs'])->name('song');
     Route::get('lastest/{isVietNamese?}', [SongController::class, 'getNewLastestSongs'])->name('newLastest');

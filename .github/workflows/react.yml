@@ -1,4 +1,4 @@
-name: Deploy laravel to Google Cloud
+name: Deploy React to Google Cloud
 
 on:
   push:

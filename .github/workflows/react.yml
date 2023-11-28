@@ -2,8 +2,7 @@ name: Deploy React to Google Cloud
 
 on:
   push:
-    branches:
-      - master
+    branches: [ 'master' ]
     paths:
       - web/**
 

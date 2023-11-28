@@ -402,10 +402,15 @@ class AlbumController extends Controller
                 $albumsList = $albums->groupBy(function ($album) {
                                     return substr($album['type'], 2);
                                 })
-                                ->map(function ($item, $title) {
+                                ->map(function ($items, $title) {
                                     $box = [];
                                     $box['title'] = 'Nhạc '.$title;
-                                    $box['albums'] = $item;
+                                    $box['albums'] = collect($items)->map(function ($item) {
+                                        if (!str_contains($item->thumbnail, 'https')) {
+                                            $item->thumbnail = $this->fileService->getFileUrl($item->thumbnail, THUMBNAILS_DIR);
+                                        }
+                                        return $item;
+                                    });
                                     return $box;
                                 })
                                 ->values()

@@ -38,7 +38,7 @@ class Album extends Model
                     ->withTimestamps();
     }
 
-    public function songs($authId) {
+    public function songs(?int $authId = 0) {
         return $this->belongsToMany(Song::class, 'albums_songs', 'album_id', 'song_id')
                     ->with('singers')
                     ->select(['songs.id', 'name', 'duration', 'released_at', 'thumbnail'])

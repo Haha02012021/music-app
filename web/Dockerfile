@@ -1,5 +1,5 @@
-# base image
-FROM node:18.18-buster-slim
+# Stage 0 - Build Frontend Assets
+FROM node:18.18-alpine as build
 
 WORKDIR /app
 COPY package*.json ./
@@ -14,5 +14,5 @@ WORKDIR /etc/nginx
 ADD nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=build /app/build /usr/share/nginx/html
-EXPOSE 443
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

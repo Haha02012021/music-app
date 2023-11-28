@@ -8,6 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="zalo-platform-site-verification" content="SEE7SPVML4TXeUzZvjzePZpfkb_GdsW0CZ4v" />
     <title>Login successfully</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

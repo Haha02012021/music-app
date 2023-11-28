@@ -1,5 +1,5 @@
 # base image
-FROM node:18.18-buster-slim
+FROM node:18.18-alpine
 
 WORKDIR /app
 COPY package*.json ./

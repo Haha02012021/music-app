@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - server/*
+      - server
 
 env:
   PROJECT_ID: ${{ secrets.CLOUD_RUN_PROJECT_NAME }}

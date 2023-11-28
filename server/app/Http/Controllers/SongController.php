@@ -317,6 +317,7 @@ class SongController extends Controller
         ]);
     }
 
+    // Get 100 top new songs 
     public function getTopNewSongs(CustomRequest $request) {
         $first_date = date('Y-m-d',strtotime('first day of this month'));
         $last_date = date('Y-m-d',strtotime('last day of this month'));

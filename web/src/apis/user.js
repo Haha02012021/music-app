@@ -214,4 +214,20 @@ export const apiCreateSong = (formData) => new Promise(async (resolve, reject) =
     }
   });
 
+  export const apiGetUploadedSongs = () => new Promise (async( resolve, reject) => {
+    try {
+        const accessToken = localStorage.getItem('accessToken');
 
+        const response = await axios ({
+            url: `/song/uploaded`,
+            method: 'get',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+        });
+        resolve(response);
+    } catch (error) {
+        reject(error);
+    }
+})

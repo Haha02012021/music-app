@@ -24,7 +24,7 @@ const ListItem = ({songData, index, release, is_liked, setIsAdd, setAddItem, myM
     }
 
     return (
-        <div className='flex justify-between items-center p-[10px] border-t border-gray-300 hover:bg-gray-100'
+        liked && <div className='flex justify-between items-center p-[10px] border-t border-gray-300 hover:bg-gray-100'
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
         >
@@ -59,16 +59,17 @@ const ListItem = ({songData, index, release, is_liked, setIsAdd, setAddItem, myM
             {!hover && <div className='flex-1 flex justify-end'>
                 {moment.utc(songData?.duration * 1000).format("mm:ss")}
             </div>}
-            {hover && !myMusic && <div className='flex-1 flex justify-end gap-7 cursor-pointer'>
+            {hover && <div className='flex-1 flex justify-end gap-7 cursor-pointer'>
                 <div onClick={handleLikeSong}>
-                    {liked ? <AiFillHeart title='Thêm vào thư viện' size={16}/> : <AiOutlineHeart title='Thêm vào thư viện' size={16} />}
+                    {liked ? <AiFillHeart title='Xóa khỏi thư viện' size={16}/> : <AiOutlineHeart title='Thêm vào thư viện' size={16} />}
                 </div>
-                <BsPlusLg size={16} title='Thêm vào playlist' onClick={() => {
+                {!myMusic && <BsPlusLg size={16} title='Thêm vào playlist' onClick={() => {
                     setIsAdd(true); 
                     setAddItem(songData)
-                }} />
+                }} />}
             </div>}
         </div>
+        
     )
 }
 

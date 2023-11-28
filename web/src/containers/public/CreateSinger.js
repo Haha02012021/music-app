@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as apis from '../../apis';
 import icons from '../../utils/icons';
+import { toast } from 'react-toastify';
 
 const { BsPlusLg, IoIosCloseCircleOutline } = icons;
 
@@ -31,7 +32,6 @@ const CreateSinger = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
-    // Kiểm tra nếu file được chọn
     if (file) {
         setSelectedImage(file);
         setFormData({
@@ -51,12 +51,22 @@ const CreateSinger = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const createSinger = async () => {
-      const res = await apis.apiCreateSinger(formData);
-      console.log(res);
-      if (res?.data?.success) setIsOpen(false);
-    }
-    createSinger();
+
+    const data = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      data.append(key, value);
+    });
+
+    apis.apiCreateSinger(data)
+    .then(response => {
+        console.log('Response from server:', response.data);
+        setIsOpen(false);
+        toast.success(response?.data?.message);
+    })
+    .catch(error => {
+        console.error('Error creating song:', error);
+    });
+    
   }
   //console.log(formData);
 
@@ -71,7 +81,7 @@ const CreateSinger = () => {
         </span>
       </div>
       {isOpen && 
-      <div className='absolute w-full h-full bg-gray-400'>
+      <div className='absolute w-full pb-36 bg-gray-400'>
         <span className='w-full flex flex-row-reverse cursor-pointer p-4'
                 onClick={() => setIsOpen(false)}
         >

@@ -3,6 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import * as apis from '../apis';
 import icons from '../utils/icons';
 import moment from 'moment';
+import { toast } from 'react-toastify';
 
 const { IoIosCloseCircleOutline } = icons;
 
@@ -69,6 +70,7 @@ const AudioUpload = ({setIsCreate}) => {
         .then(response => {
             console.log('Response from server:', response.data);
             setIsCreate(false);
+            toast.success(response?.data?.message);
         })
         .catch(error => {
             console.error('Error creating song:', error);

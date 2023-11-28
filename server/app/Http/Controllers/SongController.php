@@ -187,6 +187,7 @@ class SongController extends Controller
         ]);
     }
 
+    // Get all songs
     public function getAllSongs(Request $request) {
         $limit = $request->limit;
         $keyword = $request->keyword ?? "";

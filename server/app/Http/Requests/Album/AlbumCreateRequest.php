@@ -28,7 +28,7 @@ class AlbumCreateRequest extends CustomRequest
             'song_ids' => ['array'],
             'thumbnail' => ['file'],
             'audio' => ['file'],
-            'description' => ['string', 'maxlength:255'],
+            'description' => ['string', 'max:255'],
         ];
     }
 }

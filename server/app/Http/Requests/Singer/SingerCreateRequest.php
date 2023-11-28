@@ -25,7 +25,7 @@ class SingerCreateRequest extends CustomRequest
             'name' => ['required', 'string', 'max:60'],
             'thumbnail' => ['file', 'mimes:png,jpg,jpeg'],
             'name' => ['string', 'max:60'],
-            'bio' => ['text'],
+            'bio' => ['string'],
         ];
     }
 }

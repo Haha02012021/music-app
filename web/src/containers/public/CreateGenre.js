@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as apis from '../../apis';
 import icons from '../../utils/icons';
+import { toast } from 'react-toastify';
 
 const { BsPlusLg, IoIosCloseCircleOutline } = icons;
 
@@ -34,12 +35,15 @@ const CreateGenre = () => {
     }
 
     const handleSubmit = (e) => {
-       e.preventDefault();
-       const createGenre = async () => {
-        const res = await apis.apiCreateGenre(formData);
-        console.log(res);
-        if (res?.data?.success === true) setIsOpen(false);
-       }
+        e.preventDefault();
+        const createGenre = async () => {
+            const res = await apis.apiCreateGenre(formData);
+            console.log(res);
+            if (res?.data?.success === true) {
+                setIsOpen(false);
+                toast.warn(res?.success?.message);
+            }
+        }
        createGenre();
     }
 
@@ -54,7 +58,7 @@ const CreateGenre = () => {
                 </span>
             </div>
             {isOpen && 
-            <div className='absolute w-full h-full bg-gray-400'>
+            <div className='absolute w-full pb-36 bg-gray-400'>
                 <span className='w-full flex flex-row-reverse cursor-pointer p-4'
                         onClick={() => setIsOpen(false)}
                 >

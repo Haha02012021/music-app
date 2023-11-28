@@ -15,6 +15,7 @@ const Mymusic = () => {
 
   const [data, setData] = useState([]);
   const [likedSongData, setLikedSongData] = useState([]);
+  const [uploadedSongData, setUploadedSongData] = useState([]);
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [type, setType] = useState(1);
   const [isCreate, setIsCreate] = useState(false);
@@ -44,6 +45,13 @@ const Mymusic = () => {
         dispatch(actions.getLogin(false))
       } else {
         setData([...res3?.data?.data, ...res?.data?.data]);
+      }
+      const res4 = await apis.apiGetUploadedSongs();
+      if (res4?.data?.success === false) {
+        toast.warn(res3?.data?.message);
+        dispatch(actions.getLogin(false))
+      } else {
+        setUploadedSongData(res4?.data?.data);
       }
   }
   getLiked();
@@ -117,9 +125,14 @@ const Mymusic = () => {
           </div>
         ))}
         </div>}
-        {type === 0 && <div className='w-full'>
+        {type === 0 && <div className='w-full flex flex-col gap-7'>
           <span className='cursor-pointer mt-4' onClick={() => setIsCreate(prev => !prev)} ><BsPlusLg className='p-1 rounded-full bg-gray-200' size={24} /></span>
           {isCreate === true && <AudioUpload setIsCreate={setIsCreate} />}
+          {uploadedSongData?.map(item => (
+            <div key={item?.id}>
+              <ListItem songData={item} is_liked={true} myMusic={true} />
+            </div>
+          ))}
         </div>
         }
       </div>

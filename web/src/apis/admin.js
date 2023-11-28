@@ -19,29 +19,23 @@ export const apiGetAllSingers = (pageId) => new Promise (async( resolve, reject)
     }
 })
 
-export const apiCreateSinger = (formData) => new Promise (async( resolve, reject) => {
+export const apiCreateSinger = (formData) => new Promise(async (resolve, reject) => {
     try {
-        const accessToken = localStorage.getItem('accessToken');
-
-        const response = await axios ({
-            url: '/singer/create',
-            method: 'post',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'multipart/form-data'
-            },
-            data: {
-                'name': formData?.name,
-                'thumbnail': formData?.thumbnail,
-                'bio': formData?.bio
-
-            }
-        });
-        resolve(response);
+      const accessToken = localStorage.getItem('accessToken');
+  
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+  
+      const response = await axios.post(`/singer/create`, formData, config);
+      resolve(response);
     } catch (error) {
-        reject(error);
+      reject(error);
     }
-})
+  });
 
 export const apiGetAllGenres = (pageId) => new Promise (async( resolve, reject) => {
     try {
@@ -108,15 +102,15 @@ export const apiGetAllSongs = (pageId, limit) => new Promise (async( resolve, re
         const accessToken = localStorage.getItem('accessToken');
 
         const response = await axios ({
-            url: '/albums',
+            url: '/songs',
             method: 'get',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
             },
             params: {
-                page: pageId,
                 limit: limit,
+                page: pageId,
             }
         });
         resolve(response);
@@ -124,3 +118,21 @@ export const apiGetAllSongs = (pageId, limit) => new Promise (async( resolve, re
         reject(error);
     }
 })
+
+export const apiCreateAlbum = (formData) => new Promise(async (resolve, reject) => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+  
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+  
+      const response = await axios.post(`/album/create`, formData, config);
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });

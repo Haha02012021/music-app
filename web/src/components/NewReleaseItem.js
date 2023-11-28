@@ -35,7 +35,7 @@ const NewReleaseItem = ({data, order, percent, style, sm, time, setIsAdd, setAdd
             }>
                 {order}
             </span> }
-            <img src={data.thumbnail} alt='thumbnail'
+            <img src={data?.thumbnail} alt='thumbnail'
                 className={`${sm  ? 'w-[40px] h-[40px]' : 'w-[60px] h-[60px]'} rounded-sm cursor-pointer `}
                 onClick={() => {
                     dispatch(actions.setCurSongId(data?.id));

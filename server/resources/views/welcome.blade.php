@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="zalo-platform-site-verification" content="SEE7SPVML4TXeUzZvjzePZpfkb_GdsW0CZ4v" />
 
         <title>Laravel</title>
 

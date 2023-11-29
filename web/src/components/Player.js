@@ -41,9 +41,10 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
   const thumref = useRef();
   const trackref = useRef();
   const dispatch = useDispatch();
-  console.log(openRightSideBar);
 
   useEffect(() => {
+    audio.pause();
+    audio.currentTime = 0;
     const fetchInfoSong = async () => {
       setIsLoaded(false);
       const res = await apis.apiGetSong(curSongId);
@@ -53,6 +54,7 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
         setLiked(res?.data?.data?.is_liked);
         dispatch(actions.setCurSongData(res?.data?.data));
         audio.pause();
+        intervalId && clearInterval(intervalId);
         const listRes = await apis.apiListenMusic(
           res?.data?.data?.id,
           res?.data?.data?.album_id,
@@ -73,9 +75,12 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
   }, [curSongId]);
 
   useEffect(() => {
-    intervalId && clearInterval(intervalId);
+    audio.load();
+  }, [audio])
+
+  useEffect(() => {
+    // intervalId && clearInterval(intervalId);
     if (isPlaying) {
-      audio.load();
       audio.play();
       intervalId = setInterval(() => {
         var per =
@@ -84,7 +89,7 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
         setPlayingTime(Math.round(audio.currentTime));
       }, 200);
     }
-  }, [audio]);
+  }, [audio, isPlaying]);
 
   useEffect(() => {
     const endSong = () => {
@@ -107,8 +112,8 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
 
   const handleTogglePlayMusic = () => {
     if (isPlaying) {
-      audio.pause();
       dispatch(actions.playSong(false));
+      audio.pause();
     } else {
       audio.play();
       dispatch(actions.playSong(true));

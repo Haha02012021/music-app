@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 
 const { BsChevronRight, IoIosCloseCircleOutline } = icons;
 
-const NewRelease = () => {
+const NewRelease = ({setLoading}) => {
 
     const [type, setType] = useState(1);
     const [songData, setSongData] = useState([]);
@@ -20,6 +20,7 @@ const NewRelease = () => {
     useEffect(() => {
         const fetchData = async () => {
             const response = await apis.getNewRelease(type);
+            setLoading(prev => prev + 1);
             setSongData(response?.data?.data);
         }
         fetchData();

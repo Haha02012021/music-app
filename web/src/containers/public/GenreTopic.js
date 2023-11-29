@@ -14,7 +14,7 @@ const GenreTopic = () => {
     }, [])
 
     return (
-        <div>
+        <div className='mb-36'>
             {data?.map(item => (
                 <HomeSection key={item?.id} name={item?.name} gid={item?.id} />
             ))}

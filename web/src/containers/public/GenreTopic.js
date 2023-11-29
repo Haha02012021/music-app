@@ -12,11 +12,12 @@ const GenreTopic = () => {
         }
         fetchData();
     }, [])
+    console.log(data);
 
     return (
         <div className='mb-36'>
             {data?.map(item => (
-                <HomeSection key={item?.id} name={item?.name} gid={item?.id} />
+                item?.albums_slice?.length > 0 && <HomeSection key={item?.id} name={item?.name} gid={item?.id} />
             ))}
         </div>
     )

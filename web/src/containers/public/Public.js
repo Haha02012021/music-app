@@ -24,7 +24,7 @@ const Public = () => {
         </div>
 
         { openRightSideBar && 
-          <div className='w-[329px] hidden 1600:flex flex-none animate-slide-left'>
+          <div className='w-[329px] 1600:flex flex-none animate-slide-left'>
             <RightSideBar />
           </div>
         }

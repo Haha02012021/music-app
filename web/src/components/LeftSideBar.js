@@ -11,7 +11,7 @@ const active = 'py-2 px-[25px] font-semibold text-[#8D22C3] flex gap-[12px] item
 
 const LeftSideBar = () => {
   const navigate = useNavigate();
-  const { login } = useSelector(state => state.user);
+  const { login, info } = useSelector(state => state.user);
 
   return (
     <div className='bg-main-100 h-full flex flex-col'>
@@ -24,7 +24,7 @@ const LeftSideBar = () => {
       <div className='flex flex-col'>
         {sidebarMenu.map((item, index) => (
           <div key={item.path}>
-            {index !== 1 &&
+            {(index < 1 || (index > 1 && index < 5) || (index >= 5 && info.role === 2)) &&
               <NavLink to={item.path}
                 end={item.end}
                 className={({ isActive }) => isActive ? active : noneActive}

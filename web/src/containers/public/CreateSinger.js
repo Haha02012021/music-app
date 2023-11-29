@@ -131,7 +131,7 @@ const CreateSinger = () => {
           </div>
         </form>
       </div>}
-      <div className='w-full flex flex-wrap justify-start items-center gap-4'>
+      <div className='w-full flex flex-wrap justify-start items-center gap-7'>
         {data?.map(item => (
           <div key={item?.id} className='w-[20%] flex flex-col justify-center items-center px-4 py-6 m-5 shadow-md gap-4 rounded-md cursor-pointer'
             onClick={() => {
@@ -139,7 +139,7 @@ const CreateSinger = () => {
               navigate(`/singer/${link}/${item?.id}`)
             }}
           >
-            <img src={item?.thumbnail} alt='thumbnail' className='rounded-full'></img>
+            <img src={item?.thumbnail} alt='thumbnail' className='rounded-full w-[150px]'></img>
             <span className='text-lg font-semibold'>{item?.name}</span>
             <span className='flex justify-between w-[60%]'>
               <CiEdit size={16} onClick={(event) => handleEdit(event, item)}/>

@@ -13,6 +13,7 @@ const ListItem = ({songData, index, release, is_liked, setIsAdd, setAddItem, myM
     const [hover, setHover] = useState(false);
     const [liked, setLiked] = useState(is_liked);
     const { nearlyListenSongs } = useSelector(state => state.music);
+    const { login } = useSelector(state => state.user);
     console.log(songData);
 
     const handleLikeSong = (e) => {
@@ -60,7 +61,7 @@ const ListItem = ({songData, index, release, is_liked, setIsAdd, setAddItem, myM
             {!hover && <div className='flex-1 flex justify-end'>
                 {moment.utc(songData?.duration * 1000).format("mm:ss")}
             </div>}
-            {hover && <div className='flex-1 flex justify-end gap-7 cursor-pointer'>
+            {hover && login && <div className='flex-1 flex justify-end gap-7 cursor-pointer'>
                 <div onClick={handleLikeSong}>
                     {liked ? <AiFillHeart title='Xóa khỏi thư viện' size={16}/> : <AiOutlineHeart title='Thêm vào thư viện' size={16} />}
                 </div>

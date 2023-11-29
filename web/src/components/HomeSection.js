@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import HomeSectionItem from './HomeSectionItem';
 import * as apis from '../apis';
 
-const HomeSection = ({id, name, gid}) => {
+const HomeSection = ({id, name, gid, setLoading}) => {
 
     const navigate = useNavigate();
     const [data, setData] = useState([]);
@@ -12,6 +12,7 @@ const HomeSection = ({id, name, gid}) => {
         const fetchData = async () => {
             if (id === 1) {
                 const response = await apis.getTop100();
+                setLoading(prev => prev + 1);
                 const dataTop100 = response?.data?.data;
                 var index = 0;
                 const dataFake = [];
@@ -26,13 +27,14 @@ const HomeSection = ({id, name, gid}) => {
                 setData(dataFake);
             } else if (id === 2) {
                 const response = await apis.getTopSinger();
+                setLoading(prev => prev + 1);
                 setData(response?.data?.data);
             } else if (id === 3) {
                 const response = await apis.getAlbumTop();
+                setLoading(prev => prev + 1);
                 setData(response?.data?.data);
             } else if (gid) {
-                const response = await apis.apiGetGenreAlbum(gid);
-                setData(response?.data?.data);
+                setData(gid);
             }
             
         }

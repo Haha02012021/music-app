@@ -20,7 +20,7 @@ const Public = () => {
           <LeftSideBar />
         </div>
 
-        <div className='flex-auto px-[59px] overflow-auto'>
+        <div className='relative flex-auto px-[59px] overflow-auto'>
           <div className='h-[70px] flex items-center mb-5'>
             <Header />
           </div>

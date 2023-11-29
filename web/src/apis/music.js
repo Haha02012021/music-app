@@ -36,11 +36,12 @@ export const apiGetTopNewReleaseSongs = () => new Promise (async( resolve, rejec
     }
 })
 
-export const apiGenre = () => new Promise (async( resolve, reject) => {
+export const apiGenre = (pid) => new Promise (async( resolve, reject) => {
     try {
         const response = await axios ({
             url: `/genre/all`,
             method: 'get',
+            params: {page: pid}
         });
         resolve(response);
     } catch (error) {

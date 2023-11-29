@@ -140,7 +140,9 @@ const CreateSinger = () => {
             }}
           >
             <img src={item?.thumbnail} alt='thumbnail' className='rounded-full w-[150px]'></img>
-            <span className='text-lg font-semibold'>{item?.name}</span>
+            <span className='text-lg font-semibold'>
+              {item?.name?.length > 18 ? `${item?.name?.slice(0, 18)}...` : item?.name}  
+            </span>
             <span className='flex justify-between w-[60%]'>
               <CiEdit size={16} onClick={(event) => handleEdit(event, item)}/>
               <AiOutlineDelete size={16} onClick={(event) => {

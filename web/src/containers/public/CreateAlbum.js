@@ -155,7 +155,9 @@ const CreateAlbum = () => {
                 }}
               >
                 <img src={item?.thumbnail} alt='thumbnail' className='rounded-full w-[150px]'></img>
-                <span className='text-lg font-semibold'>{item?.title}</span>
+                <span className='text-lg font-semibold'>
+                  {item?.title?.length > 18 ? `${item?.title?.slice(0, 18)}...` : item?.title}
+                </span>
                 <span className='text-sm text-gray-500'>{item?.songs_count} bài hát</span>
                 <span className='flex justify-between w-[60%]'>
                   <CiEdit size={16} onClick={(event) => {

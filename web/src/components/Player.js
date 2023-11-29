@@ -208,13 +208,14 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
         <div className="flex gap-8 items-center">
           <span
             onClick={() => {
-              if (!isShuffle) setIsRepeat(0);
-              setIsShuffle((prev) => !prev);
+              if (id !== null) {
+                if (!isShuffle) setIsRepeat(0);
+                setIsShuffle((prev) => !prev);
+              }
             }}
-            className={`${isShuffle ? "text-[#9431C6]" : "text-gray-800"}`}
+            className={`${id === null ? 'text-gray-400' : isShuffle ? "text-[#9431C6] cursor-pointer" : "text-gray-800 cursor-pointer"}`}
           >
             <PiShuffleLight
-              className="cursor-pointer"
               title="Bộ phát ngẫu nhiên"
               size={20}
             />
@@ -250,9 +251,11 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
           </span>
           <span
             onClick={() => {
-              if (!isRepeat) setIsShuffle(false);
-              if (isRepeat < 2) setIsRepeat(isRepeat + 1);
-              else setIsRepeat(0);
+              if (id !== null) {
+                if (!isRepeat) setIsShuffle(false);
+                if (isRepeat < 2) setIsRepeat(isRepeat + 1);
+                else setIsRepeat(0);
+              }
             }}
           >
             {isRepeat === 2 && (
@@ -271,7 +274,7 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
             )}
             {isRepeat === 0 && (
               <PiRepeatLight
-                className="cursor-pointer text-gray-800"
+                className={`cursor-pointer ${id === null ? 'text-gray-400' : 'text-gray-800'}`}
                 title="Bật bộ phát lại tất cả"
                 size={20}
               />

@@ -28,13 +28,13 @@ const Public = () => {
         </div>
 
         { openRightSideBar && 
-          <div className='w-[329px] absolute top-0 right-0 bg-white border-l-2 1600:flex flex-none animate-slide-left'>
+          <div className='w-[329px] z-20 absolute top-0 right-0 bg-white border-l-2 1600:flex flex-none animate-slide-left'>
             <RightSideBar />
           </div>
         }
       </div>
       
-      {curSongId && <div className='fixed bottom-0 left-0 right-0 h-[90px]'>
+      {curSongId && <div className='fixed z-30 bottom-0 left-0 right-0 h-[90px]'>
         <Player setOpenRightSideBar={handleOpenSidebar} openRightSideBar={openRightSideBar}/>
       </div>}
     </div>

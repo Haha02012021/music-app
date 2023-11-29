@@ -29,6 +29,7 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
   const { curSongId, isPlaying, id, songs } = useSelector(
     (state) => state.music,
   );
+  const { login } = useSelector(state => state.user);
   const [songInfo, setSongInfo] = useState(null);
   const [playingTime, setPlayingTime] = useState(0);
   const [audio, setAudio] = useState(new Audio());
@@ -187,7 +188,7 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
           <span className="text-gray-500">{songInfo?.singers[0]?.name}</span>
         </div>
 
-        <div className="flex">
+       {login && <div className="flex">
           <span
             className="p-2 mx-[2px] cursor-pointer"
             onClick={handleLikeSong}
@@ -201,7 +202,7 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
           <span className="p-2 mx-[2px] cursor-pointer">
             <BsPlusLg title="Thêm vào playlist" size={16} />
           </span>
-        </div>
+        </div>}
       </div>
 
       <div className="flex flex-col flex-auto justify-center items-center">

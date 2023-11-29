@@ -44,7 +44,7 @@ const Slider = ({banner}) => {
     }, [banner])
 
     return (
-        <div>
+        <div className='block z-10'>
             <div className='flex flex-row justify-between items-center'>
                 <span className='text-xl font-bold'>BXH Nhạc Mới</span>
                 <div className='flex gap-2 text-gray-500 justify-center items-center cursor-pointer'

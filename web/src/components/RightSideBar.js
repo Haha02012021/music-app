@@ -32,7 +32,7 @@ const RightSideBar = () => {
   }, [curPlaylistId])
 
   return (
-    <div className='w-full h-screen z-30 flex flex-col text-[13px] font-medium cursor-pointer px-2 mb-36'>
+    <div className='w-full h-screen z-50 flex flex-col text-[13px] font-medium cursor-pointer px-2 mb-36'>
       <div className='h-[70px] py-[14px] px-2 flex-none flex items-center justify-between gap-1'>
         <div className='flex flex-row bg-gray-100 rounded-r-full rounded-l-full py-1 px-2'>
           <span className={`${recent && 'bg-white text-[#7F1FAF]'} rounded-r-full rounded-l-full py-1 px-2`}

@@ -49,7 +49,7 @@ const Singer = () => {
           <TriangleLoading />
         </div>
       </div>}
-      <div className='flex flex-col mb-36'>
+      {!loading && <div className='flex flex-col mb-36'>
         <div className='relative w-full h-[300px] bg-[#F1E6E1] bg-opacity-50 rounded-3xl mb-10'>
           <div className='absolute bottom-6 left-5 flex gap-7 justify-center items-center'>
             <img src={data?.thumbnail} alt='avatar' className='w-[140px] h-[140px] rounded-full border-black' />
@@ -124,7 +124,7 @@ const Singer = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   )
 }

@@ -22,18 +22,6 @@ export const sidebarMenu = [
     },
 
     {
-        path: 'zing-chart',
-        text: '#zingchart',
-        icon: <TbChartArcs size={24} />
-    },
-
-    {
-        path: 'follow',
-        text: 'Theo dõi',
-        icon: <MdOutlineFeed size={24} />
-    },
-
-    {
         path: 'mymusic',
         text: 'Thư viện',
         icon: <MdOutlineLibraryMusic size={24} />

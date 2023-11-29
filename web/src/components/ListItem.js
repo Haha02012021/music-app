@@ -13,6 +13,7 @@ const ListItem = ({songData, index, release, is_liked, setIsAdd, setAddItem, myM
     const [hover, setHover] = useState(false);
     const [liked, setLiked] = useState(is_liked);
     const { nearlyListenSongs } = useSelector(state => state.music);
+    console.log(songData);
 
     const handleLikeSong = (e) => {
         e.stopPropagation();
@@ -24,7 +25,7 @@ const ListItem = ({songData, index, release, is_liked, setIsAdd, setAddItem, myM
     }
 
     return (
-        liked && <div className='flex justify-between items-center p-[10px] border-t border-gray-300 hover:bg-gray-100'
+        <div className='flex justify-between items-center p-[10px] border-t border-gray-300 hover:bg-gray-100'
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
         >

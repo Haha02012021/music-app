@@ -4,6 +4,7 @@ import NewReleaseItem from './NewReleaseItem';
 import * as apis from '../apis';
 import path from '../utils/path';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const { BsChevronRight, IoIosCloseCircleOutline } = icons;
 
@@ -35,18 +36,14 @@ const NewRelease = () => {
 
     const handleAddPlaylist = (playlistData) => {
         const formData = new FormData();
-        var songs = playlistData?.song_ids;
-        songs = [...songs, addItem?.id];
-        console.log(playlistData?.id);
-        songs.forEach((item, index) => {
-            formData.append(`song_ids[${index}]`, item);
-          });
+        formData.append(`song_ids[0]`, addItem?.id);
         formData.append('id', playlistData?.id);
         const updateAlbum = async () => {
             const res = await apis.apiUpdateAlbum(formData);
             if(res?.data?.success === true) {
                 console.log(res);
                 setIsAdd(false);
+                toast.success('Thêm vào playlist thành công');
             }
         }
         updateAlbum();

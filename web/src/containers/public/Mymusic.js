@@ -55,7 +55,7 @@ const Mymusic = () => {
       }
   }
   getLiked();
-  }, [isOpenPopup]);
+  }, [isOpenPopup, isCreate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

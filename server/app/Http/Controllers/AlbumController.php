@@ -297,6 +297,8 @@ class AlbumController extends Controller
         $authAccount = $request->authAccount();
         $authId = $authAccount ? $authAccount->id : null;
         $albums = Album::where('type', AlbumType::ALBUM)
+                ->has('songs')
+                ->with('songs')
                 ->orWhere('type', AlbumType::PLAYLIST)
                 ->whereNotNull('thumbnail')
                 ->withExists('actions as is_liked', function ($query) use ($request) {
@@ -309,19 +311,17 @@ class AlbumController extends Controller
                 ->withCount('actions')
                 ->orderByDesc('released_at')
                 ->get()
-                ->map(function ($album) use ($authId) {
-                    $songs = $album->songs($authId)->get();
-                    $album->songs_count = $songs->count();
-                    $album->songs_actions_count = $songs->sum('actions_count');
-                    return $album;
-                })
                 ->sortByDesc(function ($album) {
-                    if ($album->songs_count)
-                        return ($album['songs_actions_count'] + $album['actions_count']) / $album->songs_count;
+                    $songs = $album['songs'];
+                    $songs_count = $songs->count();
+                    $songs_actions_count = $songs->sum('actions_count');
+                    if ($songs_count)
+                        return ($songs_actions_count + $album['actions_count']) / $songs_count;
                     return 0;
                 })
                 ->take(20)
                 ->map(function ($album) {
+                    unset($album['songs']);
                     if (!str_contains($album->thumbnail, 'https')) {
                         $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR);
                     }
@@ -402,10 +402,15 @@ class AlbumController extends Controller
                 $albumsList = $albums->groupBy(function ($album) {
                                     return substr($album['type'], 2);
                                 })
-                                ->map(function ($item, $title) {
+                                ->map(function ($items, $title) {
                                     $box = [];
                                     $box['title'] = 'Nhạc '.$title;
-                                    $box['albums'] = $item;
+                                    $box['albums'] = collect($items)->map(function ($item) {
+                                        if (!str_contains($item->thumbnail, 'https')) {
+                                            $item->thumbnail = $this->fileService->getFileUrl($item->thumbnail, THUMBNAILS_DIR);
+                                        }
+                                        return $item;
+                                    });
                                     return $box;
                                 })
                                 ->values()

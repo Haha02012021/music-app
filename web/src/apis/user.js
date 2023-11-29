@@ -1,10 +1,10 @@
 import axios from '../axios';
 
-export const apiGetInfo = () => new Promise (async( resolve, reject) => {
+export const apiGetInfo = () => new Promise(async (resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = await axios ({
+        const response = await axios({
             url: '/auth/user',
             method: 'get',
             headers: {
@@ -18,11 +18,11 @@ export const apiGetInfo = () => new Promise (async( resolve, reject) => {
     }
 })
 
-export const apiGetLatestListenedSong = () => new Promise (async( resolve, reject) => {
+export const apiGetLatestListenedSong = () => new Promise(async (resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = await axios ({
+        const response = await axios({
             url: `/action/listen/lastest-song`,
             method: 'get',
             headers: {
@@ -36,10 +36,10 @@ export const apiGetLatestListenedSong = () => new Promise (async( resolve, rejec
     }
 })
 
-export const apiListenMusic = (songId, album_id) => new Promise (async( resolve, reject) => {
+export const apiListenMusic = (songId, album_id) => new Promise(async (resolve, reject) => {
     try {
         if (album_id) {
-            const response = await axios ({
+            const response = await axios({
                 url: '/action/listen',
                 method: 'post',
                 data: {
@@ -49,7 +49,7 @@ export const apiListenMusic = (songId, album_id) => new Promise (async( resolve,
             });
             resolve(response);
         } else {
-            const response = await axios ({
+            const response = await axios({
                 url: '/action/listen',
                 method: 'post',
                 data: {
@@ -63,11 +63,11 @@ export const apiListenMusic = (songId, album_id) => new Promise (async( resolve,
     }
 })
 
-export const apiFollowSinger = (sId) => new Promise (async( resolve, reject) => {
+export const apiFollowSinger = (sId) => new Promise(async (resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = await axios ({
+        const response = await axios({
             url: `/follow/singer/${sId}`,
             method: 'post',
             headers: {
@@ -81,11 +81,11 @@ export const apiFollowSinger = (sId) => new Promise (async( resolve, reject) => 
     }
 })
 
-export const apiLikeSong = (sId, type) => new Promise (async( resolve, reject) => {
+export const apiLikeSong = (sId, type) => new Promise(async (resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = await axios ({
+        const response = await axios({
             url: `/action/like`,
             method: 'post',
             headers: {
@@ -103,11 +103,11 @@ export const apiLikeSong = (sId, type) => new Promise (async( resolve, reject) =
     }
 })
 
-export const apiGetLikedAlbums = () => new Promise (async( resolve, reject) => {
+export const apiGetLikedAlbums = () => new Promise(async (resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = await axios ({
+        const response = await axios({
             url: `/action/like/albums`,
             method: 'get',
             headers: {
@@ -121,11 +121,11 @@ export const apiGetLikedAlbums = () => new Promise (async( resolve, reject) => {
     }
 })
 
-export const apiGetLikedSongs = () => new Promise (async( resolve, reject) => {
+export const apiGetLikedSongs = () => new Promise(async (resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = await axios ({
+        const response = await axios({
             url: `/action/like/songs`,
             method: 'get',
             headers: {
@@ -139,11 +139,11 @@ export const apiGetLikedSongs = () => new Promise (async( resolve, reject) => {
     }
 })
 
-export const apiCreatePlaylist = (title) => new Promise (async( resolve, reject) => {
+export const apiCreatePlaylist = (title) => new Promise(async (resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = await axios ({
+        const response = await axios({
             url: '/playlist/create',
             method: 'post',
             headers: {
@@ -160,11 +160,11 @@ export const apiCreatePlaylist = (title) => new Promise (async( resolve, reject)
     }
 })
 
-export const apiGetPlaylist = () => new Promise (async( resolve, reject) => {
+export const apiGetPlaylist = () => new Promise(async (resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = await axios ({
+        const response = await axios({
             url: `/playlist/all`,
             method: 'get',
             headers: {
@@ -180,45 +180,28 @@ export const apiGetPlaylist = () => new Promise (async( resolve, reject) => {
 
 export const apiCreateSong = (formData) => new Promise(async (resolve, reject) => {
     try {
-      const accessToken = localStorage.getItem('accessToken');
-  
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      };
-  
-      const response = await axios.post(`/song/create`, formData, config);
-      resolve(response);
-    } catch (error) {
-      reject(error);
-    }
-  });
+        const accessToken = localStorage.getItem('accessToken');
 
-  export const apiUpdateAlbum = (formData) => new Promise(async (resolve, reject) => {
-    try {
-      const accessToken = localStorage.getItem('accessToken');
-  
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      };
-  
-      const response = await axios.post(`/album/update`, formData, config);
-      resolve(response);
-    } catch (error) {
-      reject(error);
-    }
-  });
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'multipart/form-data',
+            },
+        };
 
-  export const apiGetUploadedSongs = () => new Promise (async( resolve, reject) => {
+        const response = await axios.post(`/song/create`, formData, config);
+        resolve(response);
+    } catch (error) {
+        reject(error);
+    }
+});
+
+
+export const apiGetUploadedSongs = () => new Promise(async (resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = await axios ({
+        const response = await axios({
             url: `/song/uploaded`,
             method: 'get',
             headers: {

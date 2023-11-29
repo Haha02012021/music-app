@@ -8,9 +8,11 @@ const { BsPlusLg, IoIosCloseCircleOutline, AiOutlineDelete, CiEdit } = icons;
 const CreateGenre = () => {
     const [pageId, setPageId] = useState(1);
     const [deleteId, setDeleteId] = useState(0);
+    const [updateItem, setUpdateItem] = useState({});
     const [data, setData] = useState([]);
     const [lastPage, setLastPage] = useState(1);
     const [isOpen, setIsOpen] = useState(false);
+    const [isUpdate, setIsUpdate] = useState(false);
     const [formData, setFormData] = useState({});
 
     useEffect(() => {
@@ -37,26 +39,35 @@ const CreateGenre = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const createGenre = async () => {
-            const res = await apis.apiCreateGenre(formData);
-            console.log(res);
-            if (res?.data?.success === true) {
-                setIsOpen(false);
-                toast.warn(res?.success?.message);
+        if (isOpen) {
+            const createGenre = async () => {
+                const res = await apis.apiCreateGenre(formData);
+                console.log(res);
+                if (res?.data?.success === true) {
+                    setIsOpen(false);
+                    toast.warn(res?.success?.message);
+                }
             }
+        createGenre();
         }
-       createGenre();
+        if (isUpdate) {
+            const updateGenre = async () => {
+                const res = await apis.apiUpdateGenre(formData);
+                console.log(res);
+            }
+            updateGenre();
+        }
     }
 
     const handleDelete = (e, item) => {
         e.stopPropagation();
         const deleteModel = async () => {
-          const res = await apis.apiDelete('genre', item?.id);
-          if (res?.data?.success === true) {
+        const res = await apis.apiDelete('genre', item?.id);
+        if (res?.data?.success === true) {
             toast.success(res?.data?.message);
             if (data?.length === 1) setPageId(pageId - 1);
             else setDeleteId(item?.id);
-          }
+        }
         }
         deleteModel();
       }
@@ -66,25 +77,28 @@ const CreateGenre = () => {
             <div className='flex justify-between items-center'>
                 <span className='text-[40px] font-semibold'>Thể loại</span>
                 <span className='mr-5 p-2 rounded-full bg-gray-300 cursor-pointer'
-                    onClick={() => setIsOpen(true)}
+                    onClick={() => {
+                        setIsOpen(true);
+                        setIsUpdate(false);
+                    }}
                 >
                     <BsPlusLg />
                 </span>
             </div>
-            {isOpen && 
+            {(isOpen || isUpdate) && 
             <div className='absolute w-full pb-36 bg-gray-400'>
                 <span className='w-full flex flex-row-reverse cursor-pointer p-4'
-                        onClick={() => setIsOpen(false)}
+                        onClick={() => isOpen ? setIsOpen(false) : setIsUpdate(false)}
                 >
                     <IoIosCloseCircleOutline size={24} />
                 </span>
                 <form className='w-[75%] bg-white rounded-md flex flex-col p-6 gap-5 mx-auto' onSubmit={handleSubmit}>
                     <label htmlFor="name" className='text-base font-semibold'>Tên thể loại:</label>
-                    <input type="text" id="name" name="name" onChange={handleInputChange} 
+                    <input type="text" id="name" name="name" onChange={handleInputChange} defaultValue={isUpdate ? updateItem?.name : ''}
                     className='p-2 border-gray-300 border-[2px] rounded-sm mx-5'
                     />  
                     <label htmlFor="title" className='text-base font-semibold'>Tiêu đề:</label>
-                    <input type="text" id="title" name="title" onChange={handleInputChange} 
+                    <input type="text" id="title" name="title" onChange={handleInputChange} defaultValue={isUpdate ? updateItem?.title : ''}
                     className='p-2 border-gray-300 border-[2px] rounded-sm mx-5'
                     />
                     <div className='flex flex-row-reverse mr-5'>
@@ -104,15 +118,23 @@ const CreateGenre = () => {
                     </tr>
                     </thead>
                     <tbody>
-                        {data?.map(item => (
+                        {data?.map((item, index) => (
                             <tr key={item?.id}>
-                                <td className="py-2 px-4 border-b text-center">{item?.id}</td>
+                                <td className="py-2 px-4 border-b text-center">{index + 1}</td>
                                 <td className="py-2 px-4 border-b text-center">{item?.title}</td>
                                 <td className="py-2 px-4 border-b text-center">{item?.albums_count}</td>
                                 <td className="py-2 px-4 border-b text-center">{item?.songs_count}</td>
                                 <td className="py-2 px-4 border-b text-center">
                                     <div className='w-full flex gap-7 justify-center items-center cursor-pointer'>
-                                        <CiEdit size={16}/>
+                                        <CiEdit size={16} onClick={() => {
+                                            setIsUpdate(true);
+                                            setIsOpen(false)
+                                            setUpdateItem(item);
+                                            setFormData({
+                                                name: item?.name,
+                                                title: item?.title,
+                                            })
+                                        }}/>
                                         <AiOutlineDelete size={16} onClick={(event) => handleDelete(event, item)} />
                                     </div>
                                 </td>

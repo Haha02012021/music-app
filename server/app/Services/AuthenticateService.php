@@ -33,7 +33,7 @@ class AuthenticateService
             $refreshToken = $newToken->refresh_token;
             $existsToken->delete();
         } else {
-            $account = Account::where('uid', $user->id)->select('id', 'username', 'avatar')->first();
+            $account = Account::where('uid', $user->id)->select('id', 'username', 'avatar', 'role')->first();
         }
         
         if (!$account) {

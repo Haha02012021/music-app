@@ -14,6 +14,7 @@ const NewReleaseItem = ({data, order, percent, style, sm, time, setIsAdd, setAdd
     const [hover, setHover] = useState(false);
     const [liked, setLiked] = useState(data?.is_liked);
     const { nearlyListenSongs } = useSelector(state => state.music);
+    const { login } = useSelector(state => state.user);
     
     const handleLikeSong = (e) => {
         e.stopPropagation();
@@ -63,7 +64,7 @@ const NewReleaseItem = ({data, order, percent, style, sm, time, setIsAdd, setAdd
                 }
             </div>
         </div>
-        {hover && <div className='flex gap-5'>
+        {hover && login && <div className='flex gap-5'>
             <span className='mr-5 text-gray-600 cursor-pointer' onClick={handleLikeSong}> 
             {liked ? <AiFillHeart title='Xóa khỏi thư viện' size={16} /> : <AiOutlineHeart title='Thêm vào thư viện' size={16} /> }
             </span>

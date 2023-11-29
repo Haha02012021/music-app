@@ -3,7 +3,7 @@ import * as apis from '../../apis';
 import icons from '../../utils/icons';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { Dropdown } from '../../components';
+import { Dropdown, UpdateAlbum } from '../../components';
 
 const { BsPlusLg, IoIosCloseCircleOutline, AiOutlineDelete, CiEdit } = icons;
 
@@ -11,11 +11,14 @@ const CreateAlbum = () => {
 
     const [pageId, setPageId] = useState(1);
     const [deleteId, setDeleteId] = useState(0);
+    const [updateId, setUpdateId] = useState(0);
     const [songPageId, setSongPageId] = useState(1);
     const [lastSongPage, setLastSongPage] = useState(1);
     const [data, setData] = useState([]);
     const [lastPage, setLastPage] = useState(1);
     const [isOpen, setIsOpen] = useState(false);
+    const [isUpdate, setIsUpdate] = useState(false);
+    const [updateAlbumId, setUpdateAlbumId] = useState({});
     const [selectedImage, setSelectedImage] = useState(null);
     const [formData, setFormData] = useState({});
     const [songs, setSongs] = useState([]);
@@ -38,7 +41,7 @@ const CreateAlbum = () => {
             setData(res?.data?.data?.data);
         }
         fetchData();
-    }, [pageId, deleteId])
+    }, [pageId, deleteId, updateId])
 
     const handleChangePageId = (e) => {
         setPageId(e.target.value);
@@ -99,7 +102,7 @@ const CreateAlbum = () => {
         }
         deleteModel();
       }
-    
+
       return (
         <div className='relative w-full mb-36'>
           <div className='flex justify-between items-center'>
@@ -119,18 +122,21 @@ const CreateAlbum = () => {
             </span>
             <form className='w-[75%] bg-white rounded-md flex flex-col p-6 gap-5 mx-auto' onSubmit={handleSubmit}>
               <label htmlFor="title" className='text-base font-semibold'>Tên Album:</label>
-              <input type="text" id="title" name="title" onChange={handleInputChange} 
+              <input type="text" id="title" name="title" onChange={handleInputChange}
               className='p-2 border-gray-300 border-[2px] rounded-sm mx-5'
               />  
               <label htmlFor="thumbnail" className='text-base font-semibold'>Ảnh: </label>
               <input type="file" accept="image/*" onChange={handleImageChange} id="thumbnail" name="thumbnail" />
               {selectedImage && (
                   <div>
-                      <img src={URL.createObjectURL(selectedImage)} alt="Preview" className='w-[200px] h-[200px] rounded-md' />
+                      <img src={URL.createObjectURL(selectedImage)} alt="Preview" 
+                      className='w-[200px] h-[200px] rounded-md' />
                   </div>
               )}
               <label htmlFor="song_ids" className='text-base font-semibold'>Danh sách bài hát:</label>
-              <Dropdown setSongs={setSongs} data={allSongs} setSongPageId={setSongPageId} pageId={songPageId} lastPage={lastSongPage} />
+              <Dropdown setSongs={setSongs} data={allSongs} setSongPageId={setSongPageId} 
+                pageId={songPageId} lastPage={lastSongPage}
+              />
               <label htmlFor="description" className='text-base font-semibold'>Lời tựa:</label>
               <textarea id="description" name="description" onChange={handleInputChange} 
               className='p-2 border-gray-300 h-[200px] border-[1px] rounded-sm mx-5'
@@ -144,7 +150,7 @@ const CreateAlbum = () => {
             {data?.map(item => (
               <div key={item?.id} className='w-[20%] flex flex-col justify-center items-center px-4 py-6 m-5 shadow-md gap-4 rounded-md cursor-pointer'
                 onClick={() => {
-                  const link = item?.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll(' ', '-');
+                  const link = item?.title?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll(' ', '-');
                   navigate(`/album/${link}/${item?.id}`)
                 }}
               >
@@ -152,7 +158,11 @@ const CreateAlbum = () => {
                 <span className='text-lg font-semibold'>{item?.title}</span>
                 <span className='text-sm text-gray-500'>{item?.songs_count} bài hát</span>
                 <span className='flex justify-between w-[60%]'>
-                  <CiEdit size={16}/>
+                  <CiEdit size={16} onClick={(event) => {
+                    event.stopPropagation();
+                    setIsUpdate(true);
+                    setUpdateAlbumId(item?.id);
+                  }}/>
                   <AiOutlineDelete size={16} onClick={(event) => {
                     handleDelete(event, item)
                     }} />
@@ -178,6 +188,9 @@ const CreateAlbum = () => {
               </span>
             </div>
           </div>
+          {isUpdate && <div className='absolute top-0 right-0 left-0 bottom-0'>
+            <UpdateAlbum setIsUpdate={setIsUpdate} albumId={updateAlbumId} setUpdateId={setUpdateId}/>
+          </div>}
         </div>
       )
     }

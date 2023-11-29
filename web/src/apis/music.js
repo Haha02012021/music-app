@@ -12,25 +12,6 @@ export const apiGetSong = (songId) => new Promise (async( resolve, reject) => {
     }
 })
 
-export const apiGetInfoSong = (songId) => new Promise (async( resolve, reject) => {
-    try {
-        const accessToken = localStorage.getItem('accessToken');
-
-        const response = await axios ({
-            url: '/infosong',
-            method: 'get',
-            params: { id: songId },
-            headers: {
-                'Authorization': accessToken ? `Bearer ${accessToken}` : '',
-                'Content-Type': 'application/json'
-            }
-        });
-        resolve(response);
-    } catch (error) {
-        reject(error);
-    }
-})
-
 export const apiGetDetailPlaylist = (pid) => new Promise (async( resolve, reject) => {
     try {
         const response = await axios ({

@@ -3,12 +3,13 @@ import icons from '../utils/icons';
 
 const { FaAngleDown, GoArrowLeft, GoArrowRight } = icons;
 
-const Dropdown = ({setSongs, data, setSongPageId, pageId, lastPage}) => {
+const Dropdown = ({setSongs, data, setSongPageId, pageId, lastPage, songNames, songIds}) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedItems, setSelectedItems] = useState([]);
-    const [selectedIds, setSelectedIds] = useState([]);
+    const [selectedItems, setSelectedItems] = useState(songNames !== null ? songNames : []);
+    const [selectedIds, setSelectedIds] = useState(songIds !== null ? songIds : []);
     const [searchTerm, setSearchTerm] = useState('');
-    console.log(data);
+    console.log(selectedItems);
+
     const filteredItems = data.filter((item) =>
         (item?.name ? item?.name : item?.title)?.toLowerCase().includes(searchTerm.toLowerCase())
     );

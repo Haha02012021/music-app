@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import * as apis from '../../apis';
 import icons from '../../utils/icons';
 import { toast } from 'react-toastify';
+import { UpdateSinger } from '../../components';
 
 const { BsPlusLg, IoIosCloseCircleOutline, AiOutlineDelete, CiEdit } = icons;
 
@@ -12,7 +13,10 @@ const CreateSinger = () => {
   const [data, setData] = useState([]);
   const [lastPage, setLastPage] = useState(1);
   const [deleteId, setDeleteId] = useState(0);
+  const [updateId, setUpdateId] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [updateSingerId, setUpdateSingerId] = useState({});
   const [selectedImage, setSelectedImage] = useState(null);
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
@@ -24,7 +28,7 @@ const CreateSinger = () => {
       setData(res?.data?.data?.data);
     }
     fetchData();
-  }, [pageId, deleteId])
+  }, [pageId, deleteId, updateId])
 
   const handleChangePageId = (e) => {
     setPageId(e.target.value);
@@ -83,6 +87,12 @@ const CreateSinger = () => {
     deleteModel();
   }
 
+  const handleEdit = (e, item) => {
+    e.stopPropagation();
+    setIsUpdate(true);
+    setUpdateSingerId(item?.id)
+  }
+
   return (
     <div className='relative w-full mb-36'>
       <div className='flex justify-between items-center'>
@@ -132,7 +142,7 @@ const CreateSinger = () => {
             <img src={item?.thumbnail} alt='thumbnail' className='rounded-full'></img>
             <span className='text-lg font-semibold'>{item?.name}</span>
             <span className='flex justify-between w-[60%]'>
-              <CiEdit size={16}/>
+              <CiEdit size={16} onClick={(event) => handleEdit(event, item)}/>
               <AiOutlineDelete size={16} onClick={(event) => {
                 handleDelete(event, item)
                 }} />
@@ -158,6 +168,9 @@ const CreateSinger = () => {
           </span>
         </div>
       </div>
+      {isUpdate && <div className='absolute top-0 bottom-0 left-0 right-0'>
+        <UpdateSinger setIsUpdate={setIsUpdate} singerId={updateSingerId} setUpdateId={setUpdateId} />
+      </div>}
     </div>
   )
 }

@@ -5,7 +5,7 @@ import * as actions from '../../store/actions';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import icons from '../../utils/icons';
-import { Dropdown } from '../../components';
+import { Dropdown, UpdateSong } from '../../components';
 import moment from 'moment';
 
 const { BsPlusLg, IoIosCloseCircleOutline, AiOutlineDelete, CiEdit } = icons;
@@ -15,6 +15,7 @@ const songsPerPage = 20;
 const CreateSong = () => {
     const [pageId, setPageId] = useState(1);
     const [deleteId, setDeleteId] = useState(0);
+    const [updateId, setUpdateId] = useState(0);
     const [lastPage, setLastPage] = useState(1);
     const [singerPage, setSingerPage] = useState(1);
     const [lastSingerPage, setLastSingerPage] = useState(1);
@@ -22,6 +23,8 @@ const CreateSong = () => {
     const [singers, setSingers] = useState([]);
     const [data, setData] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
+    const [isUpdate, setIsUpdate] = useState(false);
+    const [updateItem, setUpdateItem] = useState({});
     const [formData, setFormData] = useState({});
     const [selectedAudio, setSelectedAudio] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -39,6 +42,7 @@ const CreateSong = () => {
     useEffect(() => {
         const fetchData = async () => {
             const res = await apis.apiGetAllSongs(pageId, songsPerPage);
+            console.log(res);
             if (res?.data?.success === false) {
                 dispatch(actions.getLogin(false));
                 toast.warn(res?.data?.message);
@@ -48,7 +52,7 @@ const CreateSong = () => {
             }
         }
         fetchData();
-    }, [pageId, deleteId]);
+    }, [pageId, deleteId, updateId]);
 
     useEffect(() => {
         const released_at = moment().format("YYYY-MM-DD");
@@ -61,7 +65,11 @@ const CreateSong = () => {
         
     }, [selectedAudio])
 
-  // Xử lý khi người dùng chọn một file
+    const handleChangePageId = (e) => {
+        setPageId(e.target.value);
+    }
+
+    // Xử lý khi người dùng chọn một file
     const handleImageChange = (e) => {
         const file = e.target.files[0];
 
@@ -85,10 +93,6 @@ const CreateSong = () => {
         onDrop,
         accept: 'audio/*', // Chỉ chấp nhận các tệp âm thanh
     });
-
-    const handleChangePageId = (e) => {
-        setPageId(e.target.value);
-    }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -197,9 +201,9 @@ const CreateSong = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.map(item => (
+                        {data?.map((item, index) => (
                             <tr key={item?.id}>
-                                <td className="py-2 px-4 border-b text-center">{item?.id}</td>
+                                <td className="py-2 px-4 border-b text-center">{index + 1}</td>
                                 <td className="py-2 px-4 border-b text-center">{item?.name}</td>
                                 <td className={`py-2 px-4 border-b text-center ${item?.singers?.length === 0 && 'text-gray-400'}`}>
                                     {item?.singers?.length > 0 ? item?.singers?.map((singer, index) => (index > 0 ? ', ' : '') + singer?.name) : 'Chưa có thông tin ca sĩ'}
@@ -209,7 +213,10 @@ const CreateSong = () => {
                                 </td>
                                 <td className="py-2 px-4 border-b text-center">
                                     <div className='w-full flex gap-7 justify-center items-center cursor-pointer'>
-                                        <CiEdit size={16}/>
+                                        <CiEdit size={16} onClick={() => {
+                                            setIsUpdate(true);
+                                            setUpdateItem(item?.id);
+                                        }}/>
                                         <AiOutlineDelete size={16} onClick={(event) => handleDelete(event, item)} />
                                     </div>
                                 </td>
@@ -236,6 +243,9 @@ const CreateSong = () => {
                 </span>
                 </div>
             </div>
+            {isUpdate && <div className='absolute top-0 bottom-0 left-0 right-0'>
+                <UpdateSong setIsUpdate={setIsUpdate} songId={updateItem} setUpdateId={setUpdateId}/>
+            </div>}
         </div>
     )
 }

@@ -16,4 +16,7 @@ export { default as HomeSectionItem } from './HomeSectionItem';
 export { default as ZingChart } from './ZingChart';
 export { default as AudioUpload } from './AudioUpload';
 export { default as Dropdown } from './Dropdown';
+export { default as UpdateSinger } from './UpdateSinger';
+export { default as UpdateAlbum } from './UpdateAlbum';
+export { default as UpdateSong } from './UpdateSong';
 

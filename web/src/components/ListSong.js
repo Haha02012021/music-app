@@ -45,7 +45,7 @@ const ListSong = ({release}) => {
         }
         updateAlbum();
     }
-    console.log(isAdd);
+    //console.log(songs);
     return (
         <div className='relative w-full h-screen flex flex-col text-xs overflow-y-auto mb-36'>
             {!release && <div className='flex justify-between items-center font-semibold text-gray-600 p-[10px]'>
@@ -55,8 +55,8 @@ const ListSong = ({release}) => {
             <div className='p-[10px] flex flex-col'>
                 {songs?.map((item, index) => (
                     <ListItem key={item.id} songData={item} is_liked={item?.is_liked} index={index} release={release}
-                        setIsAdd={setIsAdd} setAddItem={setAddItem}
-                    />
+                    setIsAdd={setIsAdd} setAddItem={setAddItem}
+                />
                 ))}
             </div>
             <div className='border-t border-gray-300'>

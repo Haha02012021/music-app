@@ -19,7 +19,7 @@ const Playlist = () => {
         const fetchDataDetailPlaylist = async () => {
             const response = await apis.apiGetDetailPlaylist(pid);
             if (response?.status === 200) {
-                //console.log(response);
+                console.log(response);
                 setPlaylistData(response.data.data);
                 dispatch(actions.setCurPlaylistId(pid));
                 dispatch(actions.setSong(response?.data?.data?.songs));
@@ -45,7 +45,7 @@ const Playlist = () => {
                 <h3 className='text-xl font-bold text-[#32323D]'>{playlistData?.title}</h3>
                 <div className='flex flex-col gap-1 text-xs text-gray-500 text-center'>
                     <span>
-                        Cập nhật: {moment.unix(playlistData?.contentLastUpdate).format("DD/MM/YYYY")}
+                        Cập nhật: {moment(playlistData?.updated_at).format("DD/MM/YYYY")}
                     </span>
                     <span>
                         {playlistData?.artistsNames}

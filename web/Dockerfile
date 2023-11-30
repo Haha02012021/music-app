@@ -7,8 +7,12 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
-RUN chmod 777 -R /var/www/storage/ && \
-    echo "Listen 80" >> /etc/apache2/ports.conf && \
-    chown -R www-data:www-data /var/www/ && \
-    a2enmod rewrite
+# Stage 1 - Serve Frontend Assets
+FROM fholzer/nginx-brotli:v1.12.2
+
+WORKDIR /etc/nginx
+ADD nginx.conf /etc/nginx/nginx.conf
+
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

@@ -354,77 +354,32 @@ class AlbumController extends Controller
         $vietnam = 'Việt Nam';
         $usuk = 'Âu Mỹ';
 
-        $firstDate = date('Y-m-d',strtotime('this monday'));
-        $nowDate = date('Y-m-d');
         if (count($albums) !== 0) {
-            $updatedDate = date('Y-m-d', strtotime($albums->toArray()[0]['updated_at']));
-            if ($updatedDate < $firstDate) {   
-                $vietnamSongs = $this->albumService->getSongsByGenreName($vietnam);
-                $usukSongs = $this->albumService->getSongsByGenreName($usuk);
-                $asiaSongs = $this->albumService->getSongsOfAsia(); 
+            $albumsList = $albums->groupBy(function ($album) {
+                                return substr($album['type'], 2);
+                            })
+                            ->map(function ($items, $title) {
+                                $box = [];
+                                $box['title'] = 'Nhạc '.$title;
+                                $box['albums'] = collect($items)->map(function ($item) {
+                                    if (!str_contains($item->thumbnail, 'https')) {
+                                        $item->thumbnail = $this->fileService->getFileUrl($item->thumbnail, THUMBNAILS_DIR);
+                                    }
+                                    return $item;
+                                });
+                                return $box;
+                            })
+                            ->values()
+                            ->toArray();
+            $outstandingAlbumsList = [[
+                'title' => $outstanding,
+                'albums' => $this->albumService->getOutstandingAlbums($authId),
+            ]];
 
-                $newAsiaAlbums = $asiaSongs->map(function ($item) use ($authId) {
-                    return $this->albumService->updateTop100($item, $authId);
-                });
-    
-                $vietnamAlbums = $vietnamSongs->map(function ($item) use ($authId) {
-                    return $this->albumService->updateTop100($item, $authId);
-                });
-    
-                $usukAlbums = $usukSongs->map(function ($item) use ($authId) {
-                    return $this->albumService->updateTop100($item, $authId);
-                });
-    
-                $outstandingAlbums = $this->albumService->getOutstandingAlbums($authId);
-
-                return response()->json([
-                    'success' => true,
-                    'data' => [
-                            [
-                                'title' => $outstanding,
-                                'albums' => $outstandingAlbums,
-                            ],
-                            [
-                                'title' => 'Nhạc Việt Nam',
-                                'albums' => $vietnamAlbums,
-                            ],
-                            [
-                                'title' => 'Nhạc Châu Á',
-                                'albums' => $newAsiaAlbums,
-                            ],
-                            [
-                                'title' => 'Nhạc Âu Mỹ',
-                                'albums' => $usukAlbums,
-                            ]
-                        ],
-                    ]);
-            } else {
-                $albumsList = $albums->groupBy(function ($album) {
-                                    return substr($album['type'], 2);
-                                })
-                                ->map(function ($items, $title) {
-                                    $box = [];
-                                    $box['title'] = 'Nhạc '.$title;
-                                    $box['albums'] = collect($items)->map(function ($item) {
-                                        if (!str_contains($item->thumbnail, 'https')) {
-                                            $item->thumbnail = $this->fileService->getFileUrl($item->thumbnail, THUMBNAILS_DIR);
-                                        }
-                                        return $item;
-                                    });
-                                    return $box;
-                                })
-                                ->values()
-                                ->toArray();
-                $outstandingAlbumsList = [[
-                    'title' => $outstanding,
-                    'albums' => $this->albumService->getOutstandingAlbums($authId),
-                ]];
-
-                return response()->json([
-                    'success' => true,
-                    'data' => array_merge($outstandingAlbumsList, $albumsList),
-                ]);
-            }
+            return response()->json([
+                'success' => true,
+                'data' => array_merge($outstandingAlbumsList, $albumsList),
+            ]);
         } else {
             $vietnamSongs = $this->albumService->getSongsByGenreName($vietnam);
             $usukSongs = $this->albumService->getSongsByGenreName($usuk);

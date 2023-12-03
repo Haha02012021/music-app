@@ -75,6 +75,8 @@ Route::middleware('auth.api')->group(function () {
     });
 });
 
+Route::get('search', [AccountController::class, 'search']);
+
 Route::get('songs', [SongController::class, 'getAllSongs'])->name('song.all');
 Route::prefix('song')->name('song.')->group(function () {
     Route::get('top', [SongController::class, 'getTopNewSongs'])->name('song');

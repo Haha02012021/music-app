@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ActionItem;
 use App\Enums\ActionType;
+use App\Traits\FullTextSearch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,6 +13,7 @@ class Album extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use FullTextSearch;
 
     protected $fillable = [
         'title',
@@ -21,6 +23,8 @@ class Album extends Model
         'thumbnail',
         'description',
     ];
+
+    protected $searchable = ['title'];
 
     public function author() {
         return $this->belongsTo(Account::class, 'account_id', 'id');

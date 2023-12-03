@@ -158,6 +158,7 @@ class AlbumService
                                     ->exists();
         }
         $this->updateSingersSongs($songIds, $album, $authId);
+        $album->save();
 
         return $album;
     }

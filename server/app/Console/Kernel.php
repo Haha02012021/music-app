@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('app:top100-command')->weeklyOn(1, '02:00');
+        $schedule->command('app:top100-command')->weeklyOn(1, '02:15');
     }
 
     /**

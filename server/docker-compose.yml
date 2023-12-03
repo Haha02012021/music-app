@@ -7,5 +7,6 @@ services:
       - .:/var/www
     ports:
       - "8080:8080"
+    command: ["su", "webuser", "-c", "php artisan schedule:work"]
     environment:
       - APP_ENV=local

@@ -15,22 +15,18 @@ class GenreController extends Controller
             $limit = PAGE_LENGTH;
         }
         $genres = Genre::with('account')
+                    ->with('songs.albums')
                     ->paginate($limit);
-        collect($genres->items())->map(function ($genre) use ($limit) {
-            $genre->songs_slice = $genre->songs->take($limit);
-            $genre->songs_count = $genre->songs()->count();
-            $albums = $genre->songs()
-                            ->with('albums')
-                            ->get()
+        foreach ($genres->items() as $genre) {
+            $albums = $genre->songs
                             ->pluck('albums')
                             ->flatten(1)
                             ->unique('id')
                             ->values();
             $genre->albums_count = $albums->count();
             $genre->albums_slice = $albums->take($limit);
-
-            return $genre;
-        });
+            unset($genre->songs);
+        }
 
         return response()->json([
             'success' => true,

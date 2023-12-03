@@ -13,8 +13,13 @@ class CustomRequest extends FormRequest
     {
         $token = $this->bearerToken();
         if ($token) {
-            $account = AccessToken::where('access_token', $token)->first()->account;
-            return $account;
+            $accessToken = AccessToken::where('access_token', $token)->first();
+            if ($accessToken) {
+                $account = $accessToken->account;
+                return $account;
+            } else {
+                return null;
+            }
         }
         return null;
     }

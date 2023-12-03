@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ActionItem;
+use App\Traits\FullTextSearch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,6 +12,7 @@ class Song extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use FullTextSearch;
 
     protected $fillable = [
         'name',
@@ -22,6 +24,8 @@ class Song extends Model
         'audio',
         'released_at',
     ];
+
+    protected $searchable = ['name'];
 
     public function author() {
         return $this->belongsTo(Account::class, 'account_id');

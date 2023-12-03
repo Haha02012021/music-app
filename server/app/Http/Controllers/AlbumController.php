@@ -357,7 +357,7 @@ class AlbumController extends Controller
         $firstDate = date('Y-m-d',strtotime('this monday'));
         $nowDate = date('Y-m-d');
         if (count($albums) !== 0) {
-            $updatedDate = date('Y-m-d', strtotime($albums->toArray()[0]['created_at']));
+            $updatedDate = date('Y-m-d', strtotime($albums->toArray()[0]['updated_at']));
             if (strcmp($firstDate, $nowDate) === 0 && $updatedDate !== $firstDate) {   
                 $vietnamSongs = $this->albumService->getSongsByGenreName($vietnam);
                 $usukSongs = $this->albumService->getSongsByGenreName($usuk);

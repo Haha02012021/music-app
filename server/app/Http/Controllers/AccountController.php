@@ -52,12 +52,7 @@ class AccountController extends Controller
         $authId = $authAccount ? $authAccount->id : null;
         $keyword = $request->keyword ?? '';
         $songs = Song::search($keyword)
-                    ->withExists('actions as is_liked', function ($query) use ($authId) {
-                        if ($authId) {
-                            $query->where('account_id', $authId)
-                                ->where('type', ActionType::LIKE);
-                        }
-                    })
+                    ->withLiked($authId)
                     ->get()
                     ->map(function ($song) {
                         if (!str_contains($song->thumbnail, 'https')) {
@@ -66,12 +61,7 @@ class AccountController extends Controller
                         return $song;
                     });
         $albums = Album::search($keyword)
-                    ->withExists('actions as is_liked', function ($query) use ($authId) {
-                        if ($authId) {
-                            $query->where('account_id', $authId)
-                                ->where('type', ActionType::LIKE);
-                        }
-                    })
+                    ->withLiked($authId)
                     ->get()
                     ->map(function ($album) {
                         if (!str_contains($album->thumbnail, 'https')) {

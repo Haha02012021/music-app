@@ -63,6 +63,9 @@ class SongController extends Controller
     }
 
     public function getNewLastestSongs(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
+
         $isVietNamese = $request->isVietNamese;
         $songs = Song::select([
                         'songs.id', 
@@ -73,13 +76,7 @@ class SongController extends Controller
                         'songs.audio', 
                         'songs.released_at'
                     ])
-                    ->withExists('actions as is_liked', function ($query) use ($request) {
-                        $authAccount = $request->authAccount();
-                        if ($authAccount) {
-                            $query->where('account_id', $authAccount->id)
-                                ->where('type', ActionType::LIKE);
-                        }
-                    })
+                    ->withActed($authId)
                     ->with('genres')
                     ->with('singers')
                     ->orderByDesc('released_at')
@@ -124,6 +121,8 @@ class SongController extends Controller
 
     public function getSongById(CustomRequest $request) {
         $id = $request->route('id');
+        $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
         $song = Song::with('author', 'singers', 'genres')
             ->withCount([
                 'actions as listens_count' => function ($query) {
@@ -133,13 +132,7 @@ class SongController extends Controller
                     $query->where('type', ActionType::LIKE);
                 },
             ])
-            ->withExists('actions as is_liked', function ($query) use ($request) {
-                $authAccount = $request->authAccount();
-                if ($authAccount) {
-                    $query->where('account_id', $authAccount->id)
-                        ->where('type', ActionType::LIKE);
-                }
-            })
+            ->withActed($authId)
             ->find($id);
         
         if (!str_contains($song->thumbnail, 'https')) {
@@ -188,7 +181,10 @@ class SongController extends Controller
     }
 
     // Get all songs
-    public function getAllSongs(Request $request) {
+    public function getAllSongs(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
+
         $limit = $request->limit;
         $keyword = $request->keyword ?? "";
         if (!$limit) {
@@ -203,13 +199,7 @@ class SongController extends Controller
                     ])
                     ->where('name', 'like', '%'.$keyword.'%')
                     ->with('singers', 'genres')
-                    ->withExists('actions as is_liked', function ($query) use ($request) {
-                        $authAccount = $request->authAccount();
-                        if ($authAccount) {
-                            $query->where('account_id', $request->authAccount()->id)
-                                ->where('type', ActionType::LIKE);
-                        }
-                    })
+                    ->withActed($authId)
                     ->orderByDesc('released_at')
                     ->paginate($limit);
 
@@ -228,19 +218,16 @@ class SongController extends Controller
     }
 
     public function getSongsByGenreId(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
+
         $genreId = $request->genreId;
         $genre = Genre::find($genreId);
 
         if ($genre) {
             $songs = $genre->songs()
                         ->with('singers')
-                        ->withExists('actions as is_liked', function ($query) use ($request) {
-                            $authAccount = $request->authAccount();
-                            if ($authAccount) {
-                                $query->where('account_id', $request->authAccount()->id)
-                                    ->where('type', ActionType::LIKE);
-                            }
-                        })
+                        ->withActed($authId)
                         ->get()
                         ->map(function ($song) {
                             if (!str_contains($song->thumbnail, 'https')) {
@@ -260,18 +247,15 @@ class SongController extends Controller
         }
     }
 
-    public function getSongsBySingerId(Request $request) {
+    public function getSongsBySingerId(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
+
         $singerId = $request->singerId;
         $songs = Singer::find($singerId)
                         ->songs()
                         ->with('singers')
-                        ->withExists('actions as is_liked', function ($query) use ($request) {
-                            $authAccount = $request->authAccount();
-                            if ($authAccount) {
-                                $query->where('account_id', $request->authAccount()->id)
-                                    ->where('type', ActionType::LIKE);
-                            }
-                        })
+                        ->withActed($authId)
                         ->get()
                         ->map(function ($song) {
                             if (!str_contains($song->thumbnail, 'https')) {
@@ -320,6 +304,9 @@ class SongController extends Controller
 
     // Get 100 top new songs 
     public function getTopNewSongs(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
+
         $first_date = date('Y-m-d',strtotime('first day of this month'));
         $last_date = date('Y-m-d',strtotime('last day of this month'));
         $songs = Song::whereBetween('released_at', [$first_date, $last_date])
@@ -327,16 +314,10 @@ class SongController extends Controller
                     ->withCount('actions')
                     ->with('singers')
                     ->orderByDesc('created_at')
-                    ->withExists('actions as is_liked', function ($query) use ($request) {
-                        $authAccount = $request->authAccount();
-                        if ($authAccount) {
-                            $query->where('account_id', $request->authAccount()->id)
-                                ->where('type', ActionType::LIKE);
-                        }
-                    })
+                    ->orderByDesc('actions_count')
+                    ->withActed($authId)
+                    ->limit(100)
                     ->get()
-                    ->sortByDesc('actions_count')
-                    ->take(100)
                     ->map(function ($song) {
                         if (!str_contains($song->thumbnail, 'https')) {
                             $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, THUMBNAILS_DIR);

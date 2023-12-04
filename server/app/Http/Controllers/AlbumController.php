@@ -257,6 +257,9 @@ class AlbumController extends Controller
     public function delete(int $id) {
         $album = Album::find($id);
         if ($album) {
+            $album->update([
+                'name' => $album->title.'-deleted',
+            ]);
             $album->delete();
 
             return response()->json([

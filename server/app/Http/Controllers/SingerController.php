@@ -105,6 +105,9 @@ class SingerController extends Controller
     public function delete(int $id) {
         $singer = Singer::find($id);
         if ($singer) {
+            $singer->update([
+                'name' => $singer->name.'-deleted',
+            ]);
             $singer->delete();
 
             return response()->json([

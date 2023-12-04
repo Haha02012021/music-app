@@ -111,6 +111,10 @@ class GenreController extends Controller
     public function delete(int $id) {
         $genre = Genre::find($id);
         if ($genre) {
+            $genre->update([
+                'name' => $genre->name.'-deleted',
+                'title' => $genre->title.'-deleted',
+            ]);
             $genre->delete();
 
             return response()->json([

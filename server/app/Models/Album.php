@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\ActionItem;
 use App\Enums\ActionType;
+use App\Traits\FullTextSearch;
+use App\Traits\WithAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,6 +14,8 @@ class Album extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use FullTextSearch;
+    use WithAction;
 
     protected $fillable = [
         'title',
@@ -21,6 +25,8 @@ class Album extends Model
         'thumbnail',
         'description',
     ];
+
+    protected $searchable = ['title'];
 
     public function author() {
         return $this->belongsTo(Account::class, 'account_id', 'id');
@@ -44,11 +50,6 @@ class Album extends Model
                     ->select(['songs.id', 'name', 'duration', 'released_at', 'thumbnail'])
                     ->orderByDesc('released_at')
                     ->withCount('actions')
-                    ->withExists('actions as is_liked', function ($query) use ($authId) {
-                        if ($authId) {
-                            $query->where('account_id', $authId)
-                                ->where('type', ActionType::LIKE);
-                        }
-                    });
+                    ->withLiked($authId);
     }
 }

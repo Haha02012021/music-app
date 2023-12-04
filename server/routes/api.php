@@ -65,15 +65,19 @@ Route::middleware('auth.api')->group(function () {
         Route::prefix('genre')->name('genre.')->group(function () {
             Route::post('create', [GenreController::class, 'create'])->name('create');
             Route::put('update', [GenreController::class, 'update'])->name('update');
+            Route::get('all-short', [GenreController::class, 'getAllShortGenres'])->name('all-short');
             Route::delete('{id}', [GenreController::class, 'delete'])->name('delete');
         });
         Route::prefix('singer')->name('singer.')->group(function () {
             Route::post('create', [SingerController::class, 'create'])->name('create');
             Route::post('update', [SingerController::class, 'update'])->name('update');
             Route::delete('{id}', [SingerController::class, 'delete'])->name('delete');
+            Route::get('all', [SingerController::class, 'getAllSingers'])->name('all');
         });
     });
 });
+
+Route::get('search', [AccountController::class, 'search']);
 
 Route::get('songs', [SongController::class, 'getAllSongs'])->name('song.all');
 Route::prefix('song')->name('song.')->group(function () {
@@ -86,6 +90,7 @@ Route::prefix('song')->name('song.')->group(function () {
 
 Route::prefix('album')->name('album.')->group(function () {
     Route::get('top-100', [AlbumController::class, 'getTop100'])->name('top-100');
+    Route::put('top-100/update', [AlbumController::class, 'updateTop100'])->name('top-100.update');
     Route::get('top', [AlbumController::class, 'getHotAlbums'])->name('top');
     Route::get('{id}', [AlbumController::class, 'getAlbumById'])->name('detail');
     Route::get('genre/{genreId}', [AlbumController::class, 'getAlbumsByGenreId'])->name('genre-id');
@@ -94,7 +99,6 @@ Route::prefix('album')->name('album.')->group(function () {
 
 Route::prefix('singer')->name('singer.')->group(function () {
     Route::get('top', [SingerController::class, 'getTopSingers'])->name('top');
-    Route::get('all', [SingerController::class, 'getAllSingers'])->name('all');
     Route::get('{id}', [SingerController::class, 'getSingerById'])->name('detail');
 });
 

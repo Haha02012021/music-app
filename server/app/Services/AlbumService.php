@@ -152,12 +152,9 @@ class AlbumService
         $album = Album::where('title', $item['title'])->with('singers')->first();
         if (!$album) {
             $album = Album::create($item);
-            $album->singers;
-            $album->is_liked = $album->where('account_id', $authId)
-                                    ->where('type', ActionType::LIKE)
-                                    ->exists();
         }
         $this->updateSingersSongs($songIds, $album, $authId);
+        $album->touch();
 
         return $album;
     }
@@ -167,7 +164,6 @@ class AlbumService
         $lastDateOfMonth = date('Y-m-d',strtotime('last day of this month'));
 
         $outstandingAlbums = Album::where('type', 'like', AlbumType::TOP100.'%')
-                                    ->with('singers')
                                     ->with('songs')
                                     ->withCount(['actions' => function ($query) use ($firstDateOfMonth, $lastDateOfMonth) {
                                         $query->whereBetween('actions.created_at', [$firstDateOfMonth, $lastDateOfMonth]);

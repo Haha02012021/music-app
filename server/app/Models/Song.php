@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\ActionItem;
+use App\Traits\FullTextSearch;
+use App\Traits\WithAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,6 +13,8 @@ class Song extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use FullTextSearch;
+    use WithAction;
 
     protected $fillable = [
         'name',
@@ -22,6 +26,8 @@ class Song extends Model
         'audio',
         'released_at',
     ];
+
+    protected $searchable = ['name'];
 
     public function author() {
         return $this->belongsTo(Account::class, 'account_id');
@@ -49,6 +55,8 @@ class Song extends Model
     }
 
     public function albums() {
-        return $this->belongsToMany(Album::class, 'albums_songs', 'song_id', 'album_id');
+        return $this->belongsToMany(Album::class, 'albums_songs', 'song_id', 'album_id')
+                    ->withCount('actions')
+                    ->orderByDesc('albums.released_at', 'albums.updated_at', 'actions_count');
     }
 }

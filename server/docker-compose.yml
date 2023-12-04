@@ -1,6 +1,7 @@
 version: '3'
 services:
   app:
+    image: laravel-musicapp
     build:
       context: ./
     volumes:
@@ -9,3 +10,13 @@ services:
       - "8080:8080"
     environment:
       - APP_ENV=local
+  scheduler:
+    image: laravel-musicapp
+    container_name: laravel-scheduler
+    depends_on:
+      - app
+    volumes:
+      - .:/var/www/html
+    environment:
+      - APP_ENV=local
+      - CONTAINER_ROLE=scheduler

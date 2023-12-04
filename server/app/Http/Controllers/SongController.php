@@ -107,7 +107,7 @@ class SongController extends Controller
                     ->get()
                     ->map(function ($value) {
                         if ($value->thumbnail && !str_contains($value->thumbnail, 'https')) {
-                            $value->thumbnail = $this->fileService->getFileUrl($value->thumbnail, 'thumbnails');
+                            $value->thumbnail = $this->fileService->getFileUrl($value->thumbnail, THUMBNAILS_DIR);
                         }
 
                         return $value;
@@ -137,11 +137,11 @@ class SongController extends Controller
             ->find($id);
         
         if (!str_contains($song->thumbnail, 'https')) {
-            $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, 'thumbnails/');
+            $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, THUMBNAILS_DIR);
         }
 
         if (!str_contains($song->audio, 'https')) {
-            $song->audio = $this->fileService->getFileUrl($song->audio, 'audios/');
+            $song->audio = $this->fileService->getFileUrl($song->audio, AUDIOES_DIR);
         }
 
         if ($song) {

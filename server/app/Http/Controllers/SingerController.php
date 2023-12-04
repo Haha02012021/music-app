@@ -20,25 +20,21 @@ class SingerController extends Controller
     }
 
     public function getAllSingers(CustomRequest $request) {
-        $limit = $request->limit;
-        if (!$limit) {
-            $limit = PAGE_LENGTH;
-        }
-
+        $keyword = $request->keyword ?? '';
+        $limit = $request->limit ?? PAGE_LENGTH;
         $singers = Singer::select([
                         'id',
                         'name',
                         'thumbnail',
                         'updated_at',
                     ])
+                    ->where('name', 'like', '%'.trim($keyword).'%')
                     ->paginate($limit);
-        collect($singers->items())->map(function ($singer) {
+        foreach ($singers->items() as $singer) {
             if (!str_contains($singer->thumbnail, 'https')) {
                 $singer->thumbnail = $this->fileService->getFileUrl($singer->thumbnail, THUMBNAILS_DIR);
-            };
-
-            return $singer;
-        });
+            }
+        }
 
         return response()->json([
             'success' => true,

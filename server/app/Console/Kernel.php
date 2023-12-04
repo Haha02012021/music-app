@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('app:top100-command')->weeklyOn(1, '18:40')->timezone('Asia/Ho_Chi_Minh');
+        $schedule->command('app:top100-command')->weeklyOn(1, '19:30')->timezone('Asia/Ho_Chi_Minh');
     }
 
     /**

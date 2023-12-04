@@ -271,6 +271,7 @@ class AlbumController extends Controller
     }
 
     public function getHotAlbums(CustomRequest $request) {
+        $limit = $request->limit ?? 20;
         $authAccount = $request->authAccount();
         $authId = $authAccount ? $authAccount->id : null;
         $albums = Album::where('type', AlbumType::ALBUM)
@@ -289,7 +290,7 @@ class AlbumController extends Controller
                         return ($songs_actions_count + $album['actions_count']) / $songs_count;
                     return 0;
                 })
-                ->take(20)
+                ->take($limit)
                 ->map(function ($album) {
                     unset($album['songs']);
                     if (!str_contains($album->thumbnail, 'https')) {

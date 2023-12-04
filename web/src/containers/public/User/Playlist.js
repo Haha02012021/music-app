@@ -1,12 +1,12 @@
 import React, { useEffect, useState, memo } from 'react';
 import { useParams } from 'react-router-dom';
-import * as apis from '../../apis';
+import * as apis from '../../../apis';
 import moment from 'moment';
-import { ListSong, AudioSpinner, TriangleLoading } from '../../components';
+import { ListSong, AudioSpinner, TriangleLoading } from '../../../components';
 import { useDispatch, useSelector } from 'react-redux';
-import * as actions from '../../store/actions';
-import icons from '../../utils/icons';
-import defaultBackground from '../../assets/PlaylistDefaultBackground.png';
+import * as actions from '../../../store/actions';
+import icons from '../../../utils/icons';
+import defaultBackground from '../../../assets/PlaylistDefaultBackground.png';
 
 const { TbPlayerPlayFilled } = icons;
 
@@ -35,7 +35,7 @@ const Playlist = () => {
 
     useEffect(() => {
         setIsPlaylistSong(playlistData?.songs?.filter(item => item?.id === curSongId))
-        console.log(isPlaylistSong);
+        //console.log(isPlaylistSong);
     }, [curSongId])
 
     return (

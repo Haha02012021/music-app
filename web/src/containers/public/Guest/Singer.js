@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import * as apis from '../../apis';
-import icons from '../../utils/icons';
+import * as apis from '../../../apis';
+import icons from '../../../utils/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import * as actions from '../../store/actions';
-import { ListItem, HomeSectionItem, TriangleLoading } from '../../components';
+import * as actions from '../../../store/actions';
+import { ListItem, HomeSectionItem, TriangleLoading } from '../../../components';
 
 const { TbUserPlus, FaCheck } = icons;
 

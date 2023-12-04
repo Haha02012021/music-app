@@ -1,14 +1,14 @@
 import { React, useEffect, useState } from 'react';
 import icons from '../utils/icons';
+import RotateLine from './LoadingEffect/RotateLine';
 
 const { FaAngleDown, GoArrowLeft, GoArrowRight } = icons;
 
-const Dropdown = ({setSongs, data, setSongPageId, pageId, lastPage, songNames, songIds}) => {
+const Dropdown = ({setSongs, data, setSongPageId, pageId, lastPage, songNames=[], songIds=[], loading}) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedItems, setSelectedItems] = useState(songNames !== null ? songNames : []);
-    const [selectedIds, setSelectedIds] = useState(songIds !== null ? songIds : []);
+    const [selectedItems, setSelectedItems] = useState(songNames);
+    const [selectedIds, setSelectedIds] = useState(songIds);
     const [searchTerm, setSearchTerm] = useState('');
-    console.log(selectedItems);
 
     const filteredItems = data.filter((item) =>
         (item?.name ? item?.name : item?.title)?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -23,9 +23,9 @@ const Dropdown = ({setSongs, data, setSongPageId, pageId, lastPage, songNames, s
     }, [selectedIds])
 
     const handleItemClick = (item) => {
-        if (selectedItems.includes(item?.name ? item?.name : item?.title)) {
-            setSelectedItems(selectedItems.filter((selected) => selected !== (item?.name ? item?.name : item?.title)));
-            setSelectedIds(selectedIds.filter((selected) => selected !== item?.id))
+        if (selectedItems?.includes(item?.name ? item?.name : item?.title)) {
+            setSelectedItems(selectedItems?.filter((selected) => selected !== (item?.name ? item?.name : item?.title)));
+            setSelectedIds(selectedIds?.filter((selected) => selected !== item?.id))
         } else {
             setSelectedItems([...selectedItems, (item?.name ? item?.name : item?.title)]);
             setSelectedIds([...selectedIds, item?.id])
@@ -45,7 +45,7 @@ const Dropdown = ({setSongs, data, setSongPageId, pageId, lastPage, songNames, s
                     aria-haspopup="true"
                     aria-expanded="true"
                 >
-                    {selectedItems.length === 0
+                    {(selectedItems?.length === 0 || !selectedItems)
                         ? 'Danh sách'
                         : selectedItems.join(', ')}
                     {/* Icon dropdown ở đây */}
@@ -71,7 +71,7 @@ const Dropdown = ({setSongs, data, setSongPageId, pageId, lastPage, songNames, s
                         />
 
                         {/* Filtered items */}
-                        {filteredItems.map((item) => (
+                        {!loading && filteredItems.map((item) => (
                             <div
                                 key={item?.id}
                                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -81,12 +81,15 @@ const Dropdown = ({setSongs, data, setSongPageId, pageId, lastPage, songNames, s
                                 <input
                                     type="checkbox"
                                     className="mr-2"
-                                    checked={selectedItems.includes(item?.name ? item?.name : item?.title)}
+                                    checked={selectedItems?.includes(item?.name ? item?.name : item?.title)}
                                     readOnly
                                 />
                                 <span>{item?.name ? item?.name : item?.title}</span>
                             </div>
                         ))}
+                        {loading && <div className='h-[220px] flex justify-center items-center'>
+                            <RotateLine width={20}/>
+                        </div>}
                         <div className='flex flex-row-reverse px-4 py-2 cursor-pointer'>
                             <div className='flex gap-2'>
                             {pageId > 1 && <GoArrowLeft onClick={() => setSongPageId(pageId - 1)}/>}

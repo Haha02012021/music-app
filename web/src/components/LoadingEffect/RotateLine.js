@@ -1,13 +1,13 @@
 import { React, memo } from 'react';
 import { RotatingLines } from 'react-loader-spinner';
 
-const RotateLine = () => {
+const RotateLine = ({width}) => {
     return (
         <RotatingLines
             strokeColor='black'
             strokeWidth="5"
             animationDuration="0.75"
-            width="20"
+            width={width}
             visible={true}
         />
     )

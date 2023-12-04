@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { LeftSideBar, RightSideBar, Player, Header } from '../../components';
+import { LeftSideBar, RightSideBar, Player, Header } from '../../../components';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 

@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
-import { HomeSection, NewRelease, Slider, TriangleLoading } from '../../components';
-import * as apis from '../../apis';
+import { HomeSection, NewRelease, Slider, TriangleLoading } from '../../../components';
+import * as apis from '../../../apis';
 
 const Home = () => {
 
@@ -10,6 +10,7 @@ const Home = () => {
     useEffect(() => {
         const fetchData = async () => {
             const response = await apis.apiGetTopNewReleaseSongs();
+            console.log(response);
             setLoading(prev => prev + 1);
             const data = response?.data?.data?.slice(0, 8);
             setBanner([...data, ...data]);

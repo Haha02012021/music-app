@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import icons from '../../utils/icons';
-import * as apis from '../../apis';
-import ListSong from '../../components/ListSong';
-import * as actions from '../../store/actions';
+import icons from '../../../utils/icons';
+import * as apis from '../../../apis';
+import ListSong from '../../../components/ListSong';
+import * as actions from '../../../store/actions';
 import { useDispatch } from 'react-redux';
 
 const { TbPlayerPlayFilled } = icons;

@@ -1,8 +1,15 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import * as apis from "../../apis";
-import * as actions from '../../store/actions';
+import React, { useEffect, useRef } from "react";
+import * as apis from "../../../apis";
+import * as actions from '../../../store/actions';
 import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+
+const screenWidth = window.innerWidth;
+const screenHeight = window.innerHeight;
+const popupWidth = 600;
+const popupHeight = 600;
+const left = (screenWidth - popupWidth) / 2;
+const top = (screenHeight - popupHeight) / 2;
 
 const Login = () => {
   const popupRef = useRef(null);
@@ -13,7 +20,8 @@ const Login = () => {
     window.addEventListener("message", (e) => {
       if (e.source === popupRef.current) {
         const res = e.data;
-        if (res.success) {
+        console.log(res);
+        if (res?.success) {
           localStorage.setItem('accessToken', res?.data?.tokens?.access_token)
           dispatch(actions.getLogin(true));
           dispatch(actions.getUserInfo(res?.data?.user));
@@ -38,7 +46,7 @@ const Login = () => {
         popupRef.current = window.open(
           qrCodeData,
           "Zalo login",
-          "width=600,height=600,left=calc(50% - 300px)",
+          `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
         );
       }
       } catch (error) {

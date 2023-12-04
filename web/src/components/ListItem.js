@@ -5,10 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as actions from '../store/actions';
 import * as apis from '../apis';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-const { PiMusicNotesSimpleLight, IoRemoveOutline, AiOutlineHeart, AiFillHeart, BsPlusLg } = icons;
+const { PiMusicNotesSimpleLight, IoRemoveOutline, AiOutlineHeart, AiFillHeart, BsPlusLg,
+    IoIosCloseCircleOutline,
+} = icons;
 
-const ListItem = ({ songData, index, release, is_liked, setIsAdd, setAddItem, myMusic }) => {
+const ListItem = ({ songData, index, release, is_liked, setIsAdd, setAddItem, myMusic, setAddSongLoad, isUploaded }) => {
 
     const dispatch = useDispatch();
     const [hover, setHover] = useState(false);
@@ -18,13 +21,32 @@ const ListItem = ({ songData, index, release, is_liked, setIsAdd, setAddItem, my
     const navigate = useNavigate();
     //console.log(songData);
 
+    const likeSong = async () => {
+        if (myMusic) setAddSongLoad(true);
+        const res = await apis.apiLikeSong(songData?.id, 2);
+        setLiked(prev => !prev)
+        toast.success('Xóa bài hát khỏi thư viện thành công');
+    }
+
+    const handleDelete = (e) => {
+        const deleteModel = async () => {
+        if (myMusic) setAddSongLoad(true);
+          const res = await apis.apiDelete('song', songData?.id);
+          if (res?.data?.success === true) {
+            toast.success(res?.data?.message);
+          }
+        }
+        deleteModel();
+      }
+
     const handleLikeSong = (e) => {
         e.stopPropagation();
-        const likeSong = async () => {
-            const res = await apis.apiLikeSong(songData?.id, 2);
-            setLiked(prev => !prev)
+        if (!isUploaded) {
+            likeSong();
         }
-        likeSong();
+        else {
+            handleDelete();
+        }
     }
 
     return (
@@ -75,7 +97,7 @@ const ListItem = ({ songData, index, release, is_liked, setIsAdd, setAddItem, my
             {!hover && <div className='flex-1 flex justify-end'>
                 {moment.utc(songData?.duration * 1000).format("mm:ss")}
             </div>}
-            {hover && login && <div className='flex-1 flex justify-end gap-7 cursor-pointer'>
+            {hover && login && !isUploaded && <div className='flex-1 flex justify-end gap-7 cursor-pointer'>
                 <div onClick={handleLikeSong}>
                     {liked ? <AiFillHeart title='Xóa khỏi thư viện' size={16} /> : <AiOutlineHeart title='Thêm vào thư viện' size={16} />}
                 </div>
@@ -83,6 +105,9 @@ const ListItem = ({ songData, index, release, is_liked, setIsAdd, setAddItem, my
                     setIsAdd(true);
                     setAddItem(songData)
                 }} />}
+            </div>}
+            {hover && login && isUploaded && <div className='flex-1 flex justify-end gap-7 cursor-pointer' onClick={handleLikeSong}>
+                <IoIosCloseCircleOutline size={16} />
             </div>}
         </div>
 

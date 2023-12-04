@@ -289,6 +289,9 @@ class SongController extends Controller
     public function delete(int $id) {
         $song = Song::find($id);
         if ($song) {
+            $song->update([
+                'name' => $song->name.'-deleted',
+            ]);
             $song->delete();
 
             return response()->json([

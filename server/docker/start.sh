@@ -13,12 +13,12 @@ if [ "$role" = "app" ]; then
  
     exec apache2-foreground
  
-elif [ "$role" = "queue" ]; then
+# elif [ "$role" = "queue" ]; then
  
-    echo "Queue role"
-    exit 1
+#     echo "Queue role"
+#     exit 1
  
-elif [ "$role" = "scheduler" ]; then
+# elif [ "$role" = "scheduler" ]; then
  
     while [ true ]
     do 

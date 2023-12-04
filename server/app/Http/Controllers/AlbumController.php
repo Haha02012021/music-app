@@ -3,19 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ActionType;
+use App\Enums\ActionItem;
 use App\Enums\AlbumType;
-use App\Enums\Role;
 use App\Http\Requests\Album\AlbumCreateRequest;
 use App\Http\Requests\Album\AlbumUpdateRequest;
 use App\Http\Requests\CustomRequest;
 use App\Models\Album;
 use App\Models\Genre;
 use App\Models\Singer;
-use App\Models\Song;
 use App\Services\AlbumService;
 use App\Services\FileService;
-use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AlbumController extends Controller
@@ -109,16 +106,12 @@ class AlbumController extends Controller
 
     public function getPlaylists(CustomRequest $request) {
         $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
         $playlists = $authAccount->albums()
                                 ->where('type', AlbumType::PLAYLIST)
                                 ->orderByDesc('updated_at')
                                 ->with('singers')
-                                ->withExists('actions as is_liked', function ($query) use ($authAccount) {
-                                    if ($authAccount) {
-                                        $query->where('account_id', $authAccount->authAccount()->id)
-                                            ->where('type', ActionType::LIKE);
-                                    }
-                                })
+                                ->withActed($authId)
                                 ->get()
                                 ->map(function ($playlist) use ($authAccount) {
                                     $playlist->song_ids = $playlist->songs($authAccount->id)->get('id');
@@ -141,19 +134,13 @@ class AlbumController extends Controller
         $album = Album::with('author', 'singers')
                     ->withCount([
                         'actions as listens_count' => function ($query) {
-                            $query->where('type', ActionType::LISTEN);
+                            return $query->where('type', ActionType::LISTEN);
                         },
                         'actions as likes_count' => function ($query) {
-                            $query->where('type', ActionType::LIKE);
+                            return $query->where('type', ActionType::LIKE);
                         },
                     ])
-                    ->withExists('actions as is_liked', function ($query) use ($request) {
-                        $authAccount = $request->authAccount();
-                        if ($authAccount) {
-                            $query->where('account_id', $request->authAccount()->id)
-                                ->where('type', ActionType::LIKE);
-                        }
-                    })
+                    ->withActed($authId)
                     ->find($id);
 
         if ($album) {
@@ -181,6 +168,8 @@ class AlbumController extends Controller
     }
 
     public function getAllAlbums(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+        $authId = $authAccount->id;
         $limit = $request->limit;
         if (!$limit) {
             $limit = PAGE_LENGTH;
@@ -191,13 +180,7 @@ class AlbumController extends Controller
                         'thumbnail',
                     ])
                     ->where('type', AlbumType::ALBUM)
-                    ->withExists('actions as is_liked', function ($query) use ($request) {
-                        $authAccount = $request->authAccount();
-                        if ($authAccount) {
-                            $query->where('account_id', $request->authAccount()->id)
-                                ->where('type', ActionType::LIKE);
-                        }
-                    })
+                    ->withActed($authId)
                     ->with('singers')
                     ->paginate($limit);
         collect($albums->items())->map(function ($album) use ($request) {
@@ -251,17 +234,13 @@ class AlbumController extends Controller
     }
 
     public function getAlbumsBySingerId(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
         $singerId = $request->singerId;
         $albums = Singer::find($singerId)
                         ->albums()
                         ->with('singers')
-                        ->withExists('actions as is_liked', function ($query) use ($request) {
-                            $authAccount = $request->authAccount();
-                            if ($authAccount) {
-                                $query->where('account_id', $request->authAccount()->id)
-                                    ->where('type', ActionType::LIKE);
-                            }
-                        })
+                        ->withActed($authId)
                         ->get()
                         ->map(function ($album) {
                             if (!str_contains($album->thumbnail, 'https')) {
@@ -297,17 +276,11 @@ class AlbumController extends Controller
         $authAccount = $request->authAccount();
         $authId = $authAccount ? $authAccount->id : null;
         $albums = Album::where('type', AlbumType::ALBUM)
+                ->orWhere('type', AlbumType::PLAYLIST)
                 ->has('songs')
                 ->with('songs')
-                ->orWhere('type', AlbumType::PLAYLIST)
                 ->whereNotNull('thumbnail')
-                ->withExists('actions as is_liked', function ($query) use ($request) {
-                    $authAccount = $request->authAccount();
-                    if ($authAccount) {
-                        $query->where('account_id', $request->authAccount()->id)
-                            ->where('type', ActionType::LIKE);
-                    }
-                })
+                ->withActed($authId)
                 ->withCount('actions')
                 ->orderByDesc('released_at')
                 ->get()
@@ -339,13 +312,7 @@ class AlbumController extends Controller
         $authAccount = $request->authAccount();
         $authId = $authAccount ? $authAccount->id : null;
         $albums = Album::where('type', 'like', AlbumType::TOP100.'%')
-                        ->withExists('actions as is_liked', function ($query) use ($request) {
-                            $authAccount = $request->authAccount();
-                            if ($authAccount) {
-                                $query->where('account_id', $request->authAccount()->id)
-                                    ->where('type', ActionType::LIKE);
-                            }
-                        })
+                        ->withActed($authId)
                         ->withCount('actions')
                         ->orderByDesc('released_at')
                         ->get();

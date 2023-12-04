@@ -56,6 +56,3 @@ jobs:
           --image=gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA \
           --platform="managed" \
           --allow-unauthenticated
-      
-      - name: Deploy cron app
-        run: gcloud app deploy cron.yaml

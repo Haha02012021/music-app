@@ -158,9 +158,7 @@ class AlbumService
                                     ->exists();
         }
         $this->updateSingersSongs($songIds, $album, $authId);
-        $album->update([
-            'updated_at' => now(),
-        ]);
+        $album->touch();
 
         return $album;
     }

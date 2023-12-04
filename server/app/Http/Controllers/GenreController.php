@@ -5,28 +5,62 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CustomRequest;
 use App\Http\Requests\Genre\GenreCreateRequest;
 use App\Http\Requests\Genre\GenreUpdateRequest;
+use App\Models\Album;
 use App\Models\Genre;
+use App\Services\FileService;
 
 class GenreController extends Controller
 {
+    private FileService  $fileService;
+
+    /**
+     * Define constructors.
+     * 
+     * @param (\App\Services\FileService): $fileService
+     */
+    public function __construct(FileService $fileService)
+    {
+        $this->fileService = $fileService;
+    }
+
     public function getAllGenres(CustomRequest $request) {
+        $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
         $limit = $request->limit;
         if (!$limit) {
             $limit = PAGE_LENGTH;
         }
         $genres = Genre::with('account')
-                    ->with('songs.albums')
                     ->paginate($limit);
         foreach ($genres->items() as $genre) {
-            $albums = $genre->songs
-                            ->pluck('albums')
-                            ->flatten(1)
-                            ->unique('id')
-                            ->values();
-            $genre->albums_count = $albums->count();
-            $genre->albums_slice = $albums->take($limit);
-            unset($genre->songs);
+            $genre->albums_slice = Album::whereHas('songs.genres', function ($query) use ($genre) {
+                                        $query->where('name', $genre->name);
+                                    })
+                                    ->withLiked($authId)
+                                    ->withCount('actions')
+                                    ->orderByDesc('actions_count')
+                                    ->orderByDesc('released_at')
+                                    ->limit($limit)
+                                    ->get()
+                                    ->map(function ($album) {
+                                        if (!str_contains($album->thumbnail, 'https')) {
+                                            $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR);
+                                        }
+                                        return $album;
+                                    });
         }
+
+        return response()->json([
+            'success' => true,
+            'data' => $genres,
+        ]);
+    }
+
+    public function getAllShortGenres(CustomRequest $request) {
+        $keyword = $request->keyword ?? '';
+        $limit = $request->limit ?? PAGE_LENGTH;
+        $genres = Genre::where('name', 'like', '%'.trim($keyword).'%')
+                    ->paginate($limit);
 
         return response()->json([
             'success' => true,

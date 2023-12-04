@@ -63,6 +63,7 @@ class SongController extends Controller
     }
 
     public function getNewLastestSongs(CustomRequest $request) {
+        $limit = $request->limit ?? 40;
         $authAccount = $request->authAccount();
         $authId = $authAccount ? $authAccount->id : null;
 
@@ -102,7 +103,7 @@ class SongController extends Controller
                                 break;
                         }
                     })
-                    ->limit(40)
+                    ->limit($limit)
                     ->get()
                     ->map(function ($value) {
                         if ($value->thumbnail && !str_contains($value->thumbnail, 'https')) {

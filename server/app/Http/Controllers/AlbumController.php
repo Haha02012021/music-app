@@ -201,21 +201,19 @@ class AlbumController extends Controller
         $genreId = $request->genreId;
         $genre = Genre::find($genreId);
 
+        $authAccount = $request->authAccount();
+        $authId = $authAccount ? $authAccount->id : null;
+
         if ($genre) {
-            $albums = $genre->songs()
-                        ->with('albums', 'albums.singers')
+            $albums = Album::whereHas('songs.genres', function ($query) use ($genre) {
+                            $query->where('name', $genre->name);
+                        })
+                        ->withLiked($authId)
+                        ->withCount('actions')
+                        ->orderByDesc('actions_count')
+                        ->orderByDesc('released_at')
                         ->get()
-                        ->pluck('albums')
-                        ->flatten(1)
-                        ->unique('id')
-                        ->values()
-                        ->map(function ($album) use ($request) {
-                            $authAccount = $request->authAccount();
-                            if ($authAccount) {
-                                $album->is_liked = $album->where('account_id', $authAccount->id)
-                                                        ->where('type', ActionType::LIKE)
-                                                        ->exists();
-                            }
+                        ->map(function ($album) {
                             if (!str_contains($album->thumbnail, 'https')) {
                                 $album->thumbnail = $this->fileService->getFileUrl($album->thumbnail, THUMBNAILS_DIR);
                             }
@@ -279,7 +277,6 @@ class AlbumController extends Controller
                 ->orWhere('type', AlbumType::PLAYLIST)
                 ->has('songs')
                 ->with('songs')
-                ->whereNotNull('thumbnail')
                 ->withLiked($authId)
                 ->withCount('actions')
                 ->orderByDesc('released_at')
@@ -321,23 +318,27 @@ class AlbumController extends Controller
         $vietnam = 'Việt Nam';
         $usuk = 'Âu Mỹ';
 
+        $onlyOutstanding = $request->onlyOutstanding;
         if (count($albums) !== 0) {
-            $albumsList = $albums->groupBy(function ($album) {
-                                return substr($album['type'], 2);
-                            })
-                            ->map(function ($items, $title) {
-                                $box = [];
-                                $box['title'] = 'Nhạc '.$title;
-                                $box['albums'] = collect($items)->map(function ($item) {
-                                    if (!str_contains($item->thumbnail, 'https')) {
-                                        $item->thumbnail = $this->fileService->getFileUrl($item->thumbnail, THUMBNAILS_DIR);
-                                    }
-                                    return $item;
-                                });
-                                return $box;
-                            })
-                            ->values()
-                            ->toArray();
+            $albumsList = [];
+            if (!$onlyOutstanding) {
+                $albumsList = $albums->groupBy(function ($album) {
+                                        return substr($album['type'], 2);
+                                    })
+                                    ->map(function ($items, $title) {
+                                        $box = [];
+                                        $box['title'] = 'Nhạc '.$title;
+                                        $box['albums'] = collect($items)->map(function ($item) {
+                                            if (!str_contains($item->thumbnail, 'https')) {
+                                                $item->thumbnail = $this->fileService->getFileUrl($item->thumbnail, THUMBNAILS_DIR);
+                                            }
+                                            return $item;
+                                        });
+                                        return $box;
+                                    })
+                                    ->values()
+                                    ->toArray();
+            }
             $outstandingAlbumsList = [[
                 'title' => $outstanding,
                 'albums' => $this->albumService->getOutstandingAlbums($authId),

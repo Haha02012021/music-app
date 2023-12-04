@@ -55,6 +55,8 @@ class Song extends Model
     }
 
     public function albums() {
-        return $this->belongsToMany(Album::class, 'albums_songs', 'song_id', 'album_id');
+        return $this->belongsToMany(Album::class, 'albums_songs', 'song_id', 'album_id')
+                    ->withCount('actions')
+                    ->orderByDesc('albums.released_at', 'albums.updated_at', 'actions_count');
     }
 }

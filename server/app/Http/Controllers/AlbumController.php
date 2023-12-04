@@ -111,7 +111,7 @@ class AlbumController extends Controller
                                 ->where('type', AlbumType::PLAYLIST)
                                 ->orderByDesc('updated_at')
                                 ->with('singers')
-                                ->withActed($authId)
+                                ->withLiked($authId)
                                 ->get()
                                 ->map(function ($playlist) use ($authAccount) {
                                     $playlist->song_ids = $playlist->songs($authAccount->id)->get('id');
@@ -140,7 +140,7 @@ class AlbumController extends Controller
                             return $query->where('type', ActionType::LIKE);
                         },
                     ])
-                    ->withActed($authId)
+                    ->withLiked($authId)
                     ->find($id);
 
         if ($album) {
@@ -180,7 +180,7 @@ class AlbumController extends Controller
                         'thumbnail',
                     ])
                     ->where('type', AlbumType::ALBUM)
-                    ->withActed($authId)
+                    ->withLiked($authId)
                     ->with('singers')
                     ->paginate($limit);
         collect($albums->items())->map(function ($album) use ($request) {
@@ -240,7 +240,7 @@ class AlbumController extends Controller
         $albums = Singer::find($singerId)
                         ->albums()
                         ->with('singers')
-                        ->withActed($authId)
+                        ->withLiked($authId)
                         ->get()
                         ->map(function ($album) {
                             if (!str_contains($album->thumbnail, 'https')) {
@@ -280,7 +280,7 @@ class AlbumController extends Controller
                 ->has('songs')
                 ->with('songs')
                 ->whereNotNull('thumbnail')
-                ->withActed($authId)
+                ->withLiked($authId)
                 ->withCount('actions')
                 ->orderByDesc('released_at')
                 ->get()
@@ -312,7 +312,7 @@ class AlbumController extends Controller
         $authAccount = $request->authAccount();
         $authId = $authAccount ? $authAccount->id : null;
         $albums = Album::where('type', 'like', AlbumType::TOP100.'%')
-                        ->withActed($authId)
+                        ->withLiked($authId)
                         ->withCount('actions')
                         ->orderByDesc('released_at')
                         ->get();

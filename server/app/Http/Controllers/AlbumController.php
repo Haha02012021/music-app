@@ -8,6 +8,7 @@ use App\Enums\AlbumType;
 use App\Http\Requests\Album\AlbumCreateRequest;
 use App\Http\Requests\Album\AlbumUpdateRequest;
 use App\Http\Requests\CustomRequest;
+use App\Jobs\Album\UpdateTop100;
 use App\Models\Album;
 use App\Models\Genre;
 use App\Models\Singer;
@@ -390,5 +391,10 @@ class AlbumController extends Controller
                 ],
             ]);
         }
+    }
+
+    public function updateTop100() {
+        $updateTop100Job = new UpdateTop100();
+        dispatch($updateTop100Job);
     }
 }

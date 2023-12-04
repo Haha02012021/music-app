@@ -48,7 +48,7 @@ jobs:
         run: |-
           docker push gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA
 
-      - name: Deploy
+      - name: Deploy Laravel
         run: |-
           gcloud run deploy $REPO_NAME \
           --project=$PROJECT_ID \
@@ -56,3 +56,6 @@ jobs:
           --image=gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA \
           --platform="managed" \
           --allow-unauthenticated
+      
+      - name: Deploy cron app
+        run: gcloud app deploy cron.yaml

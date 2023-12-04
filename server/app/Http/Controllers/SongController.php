@@ -76,7 +76,7 @@ class SongController extends Controller
                         'songs.audio', 
                         'songs.released_at'
                     ])
-                    ->withActed($authId)
+                    ->withLiked($authId)
                     ->with('genres')
                     ->with('singers')
                     ->orderByDesc('released_at')
@@ -132,7 +132,7 @@ class SongController extends Controller
                     $query->where('type', ActionType::LIKE);
                 },
             ])
-            ->withActed($authId)
+            ->withLiked($authId)
             ->find($id);
         
         if (!str_contains($song->thumbnail, 'https')) {
@@ -199,7 +199,7 @@ class SongController extends Controller
                     ])
                     ->where('name', 'like', '%'.$keyword.'%')
                     ->with('singers', 'genres')
-                    ->withActed($authId)
+                    ->withLiked($authId)
                     ->orderByDesc('released_at')
                     ->paginate($limit);
 
@@ -227,7 +227,7 @@ class SongController extends Controller
         if ($genre) {
             $songs = $genre->songs()
                         ->with('singers')
-                        ->withActed($authId)
+                        ->withLiked($authId)
                         ->get()
                         ->map(function ($song) {
                             if (!str_contains($song->thumbnail, 'https')) {
@@ -255,7 +255,7 @@ class SongController extends Controller
         $songs = Singer::find($singerId)
                         ->songs()
                         ->with('singers')
-                        ->withActed($authId)
+                        ->withLiked($authId)
                         ->get()
                         ->map(function ($song) {
                             if (!str_contains($song->thumbnail, 'https')) {
@@ -315,7 +315,7 @@ class SongController extends Controller
                     ->with('singers')
                     ->orderByDesc('created_at')
                     ->orderByDesc('actions_count')
-                    ->withActed($authId)
+                    ->withLiked($authId)
                     ->limit(100)
                     ->get()
                     ->map(function ($song) {

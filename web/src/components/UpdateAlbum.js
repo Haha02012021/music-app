@@ -3,10 +3,13 @@ import * as apis from '../apis';
 import icons from '../utils/icons';
 import { toast } from 'react-toastify';
 import Dropdown from './Dropdown';
+import ProgressBarLoading from './LoadingEffect/ProgressBarLoading';
 
 const { IoIosCloseCircleOutline } = icons;
 
 const UpdateAlbum = ({ setIsUpdate, albumId, setUpdateId }) => {
+
+    const [loading, setLoading] = useState();
     const [selectedImage, setSelectedImage] = useState(null);
     const [formData, setFormData] = useState({});
     const [songPageId, setSongPageId] = useState(1);
@@ -27,6 +30,7 @@ const UpdateAlbum = ({ setIsUpdate, albumId, setUpdateId }) => {
 
     useEffect(() => {
         const fetchAlbum = async () => {
+            setLoading(true);
             const res = await apis.apiGetDetailPlaylist(albumId);
             console.log(res);
             setAlbumData(res?.data?.data);
@@ -38,6 +42,8 @@ const UpdateAlbum = ({ setIsUpdate, albumId, setUpdateId }) => {
             });
             setSongs(albumSongs);
             setNameSongs(songsName);
+
+            setLoading(false);
 
         }
         fetchAlbum();
@@ -66,7 +72,7 @@ const UpdateAlbum = ({ setIsUpdate, albumId, setUpdateId }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        setLoading(true);
         const data = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
             data.append(key, value);
@@ -75,13 +81,13 @@ const UpdateAlbum = ({ setIsUpdate, albumId, setUpdateId }) => {
         songs.forEach((item, index) => {
             data.append(`song_ids[${index}]`, item);
         });
-
         apis.apiUpdateAlbum(data)
             .then(response => {
                 console.log('Response from server:', response.data);
                 setIsUpdate(false);
                 setUpdateId(albumData?.id);
                 toast.success(response?.data?.message);
+                setLoading(false);
             })
             .catch(error => {
                 console.error('Error creating song:', error);
@@ -89,35 +95,40 @@ const UpdateAlbum = ({ setIsUpdate, albumId, setUpdateId }) => {
 
     }
     return (
-        <div className='absolute w-full pb-36 bg-gray-400'>
-            <span className='w-full flex flex-row-reverse cursor-pointer p-4'
-                onClick={() => setIsUpdate(false)}
-            >
-                <IoIosCloseCircleOutline size={24} />
-            </span>
-            <form className='w-[75%] bg-white rounded-md flex flex-col p-6 gap-5 mx-auto' onSubmit={handleSubmit}>
-                <label htmlFor="title" className='text-base font-semibold'>Tên Album:</label>
-                <input type="text" id="title" name="title" onChange={handleInputChange} defaultValue={albumData?.title}
-                    className='p-2 border-gray-300 border-[2px] rounded-sm mx-5'
-                />
-                <label htmlFor="thumbnail" className='text-base font-semibold'>Ảnh: </label>
-                <input type="file" accept="image/*" onChange={handleImageChange} id="thumbnail" name="thumbnail" />
-                <div>
-                    <img src={selectedImage ? URL.createObjectURL(selectedImage) : albumData?.thumbnail} alt="Preview"
-                        className='w-[200px] h-[200px] rounded-md' />
-                </div>
-                <label htmlFor="song_ids" className='text-base font-semibold'>Danh sách bài hát:</label>
-                <Dropdown setSongs={setSongs} data={allSongs} setSongPageId={setSongPageId}
-                    pageId={songPageId} lastPage={lastSongPage} songNames={nameSongs} songIds={songs}
-                />
-                <label htmlFor="description" className='text-base font-semibold'>Lời tựa:</label>
-                <textarea id="description" name="description" onChange={handleInputChange} defaultValue={albumData?.description}
-                    className='p-2 border-gray-300 h-[200px] border-[1px] rounded-sm mx-5'
-                />
-                <div className='flex flex-row-reverse mr-5'>
-                    <button type="submit" className='bg-[#9431C6] rounded-md px-4 py-2 text-white'>Submit</button>
-                </div>
-            </form>
+        <div className='w-full pb-36 bg-gray-200'>
+            {loading && <div className='absolute top-0 bottom-0 right-0 left-0 z-10 h-full flex justify-center items-center bg-gray-200 rounded-md'>
+                <ProgressBarLoading />
+            </div>}
+            {!loading && <div>
+                <span className='w-full flex flex-row-reverse cursor-pointer p-4'
+                    onClick={() => setIsUpdate(false)}
+                >
+                    <IoIosCloseCircleOutline size={24} />
+                </span>
+                <form className='w-[75%] bg-white rounded-md flex flex-col p-6 gap-5 mx-auto' onSubmit={handleSubmit}>
+                    <label htmlFor="title" className='text-base font-semibold'>Tên Album:</label>
+                    <input type="text" id="title" name="title" onChange={handleInputChange} defaultValue={albumData?.title}
+                        className='p-2 w-1/2 h-[32px] border-gray-300 border-[2px] rounded-sm'
+                    />
+                    <label htmlFor="thumbnail" className='text-base font-semibold'>Ảnh: </label>
+                    <input type="file" accept="image/*" onChange={handleImageChange} id="thumbnail" name="thumbnail" />
+                    <div>
+                        <img src={selectedImage ? URL.createObjectURL(selectedImage) : albumData?.thumbnail} alt="Preview"
+                            className='w-[200px] h-[200px] rounded-md' />
+                    </div>
+                    <label htmlFor="song_ids" className='text-base font-semibold'>Danh sách bài hát:</label>
+                    <Dropdown setSongs={setSongs} data={allSongs} setSongPageId={setSongPageId}
+                        pageId={songPageId} lastPage={lastSongPage} songNames={nameSongs} songIds={songs}
+                    />
+                    <label htmlFor="description" className='text-base font-semibold'>Lời tựa:</label>
+                    <textarea id="description" name="description" onChange={handleInputChange} defaultValue={albumData?.description}
+                        className='p-2 border-gray-300 h-[150px] border-[1px] rounded-sm'
+                    />
+                    <div className='flex flex-row-reverse mr-5'>
+                        <button type="submit" className='bg-[#9431C6] rounded-md px-4 py-2 text-white'>Submit</button>
+                    </div>
+                </form>
+            </div>}
         </div>
     )
 }

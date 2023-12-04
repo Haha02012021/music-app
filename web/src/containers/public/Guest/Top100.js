@@ -1,9 +1,9 @@
 import React, { useEffect, useState, memo } from 'react';
-import top100Src from '../../assets/top100.svg';
-import * as apis from '../../apis';
-import HomeSectionItem from '../../components/HomeSectionItem';
+import top100Src from '../../../assets/top100.svg';
+import * as apis from '../../../apis';
+import HomeSectionItem from '../../../components/HomeSectionItem';
 import { useNavigate } from 'react-router-dom';
-import { TriangleLoading } from '../../components';
+import { TriangleLoading } from '../../../components';
 
 const Top100 = () => {
     const [data, setData] = useState([]);

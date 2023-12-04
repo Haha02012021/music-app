@@ -1,4 +1,4 @@
-import { Home, Login, Mymusic, Public, Playlist, ZingChartWeek, ZingChart, NewReleaseChart, 
+import { Home, Login, Mymusic, Public, Playlist, NewReleaseChart, 
   GenreTopic, Top100, Singer, NewRelease, CreateSinger, CreateGenre, CreateAlbum, CreateSong 
 } from './containers/public/';
 import { Routes, Route } from "react-router-dom";
@@ -18,8 +18,6 @@ function App() {
             <Route path={path.MYMUSIC} element={<Mymusic />} />
             <Route path={path.PLAYLIST__TITLE__PID} element={<Playlist />} />
             <Route path={path.ALBUM__TITLE__PID} element={<Playlist />} />
-            <Route path={path.ZINGCHARTWEEK__TITLE__CID} element={<ZingChartWeek />} />
-            <Route path={path.ZINGCHART} element={<ZingChart />} />
             <Route path={path.NEWRELEASECHART} element={<NewReleaseChart />} />
             <Route path={path.GENRETOPIC} element={<GenreTopic />} />
             <Route path={path.TOP100} element={<Top100 />} />

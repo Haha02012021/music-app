@@ -5,7 +5,7 @@ import icons from "../utils/icons";
 import * as actions from "../store/actions";
 import moment from "moment";
 import { toast } from "react-toastify";
-import RotateLine from "./RotateLine";
+import RotateLine from "./LoadingEffect/RotateLine";
 
 const {
   AiFillHeart,
@@ -43,9 +43,9 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    audio.pause();
-    audio.currentTime = 0;
     const fetchInfoSong = async () => {
+      audio.pause();
+      audio.currentTime = 0;
       setIsLoaded(false);
       const res = await apis.apiGetSong(curSongId);
       setIsLoaded(true);
@@ -53,7 +53,6 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
         setSongInfo(res?.data?.data);
         setLiked(res?.data?.data?.is_liked);
         dispatch(actions.setCurSongData(res?.data?.data));
-        audio.pause();
         intervalId && clearInterval(intervalId);
         const listRes = await apis.apiListenMusic(
           res?.data?.data?.id,
@@ -238,7 +237,7 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
                 border hover:text-[#9431C6] hover:border-[#9431C6] border-black"
           >
             {!isLoaded ? (
-              <RotateLine />
+              <RotateLine width={20} />
             ) : isPlaying ? (
               <TbPlayerPauseFilled size={20} />
             ) : (

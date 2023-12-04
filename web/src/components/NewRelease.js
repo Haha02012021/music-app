@@ -5,11 +5,13 @@ import * as apis from '../apis';
 import path from '../utils/path';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { RotateLine } from '../components';
 
 const { BsChevronRight, IoIosCloseCircleOutline } = icons;
 
 const NewRelease = ({setLoading}) => {
 
+    const [playlistLoading, setPlaylistLoading] = useState();
     const [type, setType] = useState(1);
     const [songData, setSongData] = useState([]);
     const [isAdd, setIsAdd] = useState(false);
@@ -28,7 +30,9 @@ const NewRelease = ({setLoading}) => {
 
     useEffect(() => {
         const fetchPlaylistData = async () => {
+            setPlaylistLoading(true);
             const resPlaylist = await apis.apiGetPlaylist();
+            setPlaylistLoading(false);
             setPlaylist(resPlaylist?.data?.data);
             console.log(resPlaylist?.data?.data);
         }
@@ -40,7 +44,9 @@ const NewRelease = ({setLoading}) => {
         formData.append(`song_ids[0]`, addItem?.id);
         formData.append('id', playlistData?.id);
         const updateAlbum = async () => {
+            setPlaylistLoading(true);
             const res = await apis.apiUpdateAlbum(formData);
+            setPlaylistLoading(false);
             if(res?.data?.success === true) {
                 console.log(res);
                 setIsAdd(false);
@@ -84,16 +90,24 @@ const NewRelease = ({setLoading}) => {
                     ))}
                 </div>
             </div>
-            {isAdd && <div className='absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center'>
-                <div className='w-[30%] rounded-md p-4 shadow-md bg-white'>
-                    <div className='flex flex-row-reverse cursor-pointer' onClick={() => setIsAdd(false)}>
-                        <IoIosCloseCircleOutline size={24} />
+            {isAdd && !playlistLoading &&
+            <div className='absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center'>
+                <div className='w-[30%] rounded-md p-4 border border-gray-200 shadow-lg bg-white flex flex-col'>
+                    <div className='flex items-center justify-between mb-7' onClick={() => setIsAdd(false)}>
+                        <span className='text-base font-semibold'>Thêm vào playlist</span>
+                        <IoIosCloseCircleOutline size={24} className='cursor-pointer' />
                     </div>
                     {playlist ? playlist?.map(item => (
-                        <div key={item?.id} className='w-[80%] cursor-pointer' onClick={() => handleAddPlaylist(item)}>
+                        <div key={item?.id} className='w-[80%] cursor-pointer mb-3' onClick={() => handleAddPlaylist(item)}>
                             <span className='w-full p-2 border-t-2 border-gray-300'>{item?.title}</span>
                         </div>
                     )) : <div>Hiện chưa có playlist</div>}
+                </div>
+            </div>}
+            {isAdd && playlistLoading && 
+            <div className='absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center '>
+                <div className='w-[30%] rounded-md p-4 border border-gray-200 shadow-lg bg-white flex justify-center items-center'>
+                    <RotateLine width={30} />
                 </div>
             </div>}
         </div>

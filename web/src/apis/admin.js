@@ -185,6 +185,7 @@ export const apiUpdateGenre = (formData) => new Promise(async (resolve, reject) 
                 'Content-Type': 'application/json'
             },
             data: {
+                'id': formData?.id,
                 'name': formData?.name,
                 'title': formData?.title,
             }

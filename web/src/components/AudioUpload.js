@@ -4,10 +4,11 @@ import * as apis from '../apis';
 import icons from '../utils/icons';
 import moment from 'moment';
 import { toast } from 'react-toastify';
+import defaultThumbnail from '../assets/songDefaultThumbnail.jpg';
 
 const { IoIosCloseCircleOutline } = icons;
 
-const AudioUpload = ({setIsCreate}) => {
+const AudioUpload = ({setIsCreate, setAddSongLoad}) => {
 
     const [formData, setFormData] = useState({});
     const [selectedAudio, setSelectedAudio] = useState(null);
@@ -66,10 +67,12 @@ const AudioUpload = ({setIsCreate}) => {
         Object.entries(formData).forEach(([key, value]) => {
             data.append(key, value);
         });
+        setAddSongLoad(true);
         apis.apiCreateSong(data)
         .then(response => {
             console.log('Response from server:', response.data);
             setIsCreate(false);
+            setAddSongLoad(false);
             toast.success(response?.data?.message);
         })
         .catch(error => {
@@ -78,7 +81,7 @@ const AudioUpload = ({setIsCreate}) => {
     }
 
     return (
-        <div className='w-full bg-gray-400 p-3 rounded-2xl'>
+        <div className='w-full bg-gray-200 p-3 rounded-2xl'>
             <span className='w-full flex flex-row-reverse cursor-pointer'
                 onClick={() => setIsCreate(false)}
             >
@@ -87,7 +90,7 @@ const AudioUpload = ({setIsCreate}) => {
             <form onSubmit={handleSubmit} className='w-[80%] rounded-2xl flex flex-col gap-4 my-10 p-5 mx-auto text-base bg-white'>
                 <label htmlFor="name" className='text-base font-semibold'>Tên bài hát:</label>
                 <input type="text" id="name" name="name" onChange={handleInputChange} 
-                className='p-2 border-gray-300 border-[2px] rounded-sm mx-5'
+                className='p-1 border-gray-300 border-[2px] rounded-sm mx-5'
                 />  
                 <label htmlFor="thumbnail" className='text-base font-semibold'>Ảnh: </label>
                 <input type="file" accept="image/*" onChange={handleImageChange} id="thumbnail" name="thumbnail" />
@@ -96,16 +99,23 @@ const AudioUpload = ({setIsCreate}) => {
                         <img src={URL.createObjectURL(selectedImage)} alt="Preview" className='w-[200px] h-[200px] rounded-md' />
                     </div>
                 )}
-                <div {...getRootProps()} className="w-full flex flex-col items-start border-dashed border-2 p-4 rounded-md text-center cursor-pointer">
+                <div {...getRootProps()} className="w-full flex flex-col items-start border-dashed border-2 p-4 rounded-md text-center">
                     <input {...getInputProps()} className='w-[80%]' />
-                    <p>Kéo và thả file âm thanh hoặc nhấp để chọn.</p>
+                    <p className='cursor-pointer'>Kéo và thả file âm thanh hoặc nhấp để chọn.</p>
                     {selectedAudio && (
-                        <div className='w-full h-[75px] rounded-lg py-2 px-4 flex gap-7 border-[2px] border-black text-sm mt-5'>
-                            <span className='text-base font-semibold'>Thông tin file âm thanh</span>
-                            <span>
-                                <p>File Name: {selectedAudio.name}</p>
-                                <p>File Size: {Math.round(selectedAudio.size / 1024)} KB</p>
-                                <p>Type: {selectedAudio.type}</p>
+                        <div className='w-[50%] h-[75px] rounded-lg py-2 px-4 flex items-center justify-between gap-7 bg-purple-100 mt-5'>
+                            <div className='flex items-center gap-7'>
+                                <img src={defaultThumbnail} alt='defaultThumbnail' className='w-[60px] h-[60px] rounded-full'/>
+                                <span className='flex flex-col'>
+                                    <span className='text-sm font-semibold'>{selectedAudio.name}</span>
+                                    <span className='text-xs text-gray-400'>{Math.round(selectedAudio.size / 1024)} KB</span>
+                                </span>
+                            </div>
+                            <span className='cursor-pointer' onClick={(event) => {
+                                event.stopPropagation();
+                                setSelectedAudio(null)
+                            }}>
+                                <IoIosCloseCircleOutline size={16}/>
                             </span>
                         </div>
                     )}

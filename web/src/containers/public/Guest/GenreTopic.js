@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import * as apis from '../../apis';
-import { HomeSection, TriangleLoading } from '../../components';
+import * as apis from '../../../apis';
+import { HomeSection, TriangleLoading } from '../../../components';
 
 const GenreTopic = () => {
 

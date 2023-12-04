@@ -24,7 +24,7 @@ const NewReleaseItem = ({ data, order, percent, style, sm, time, setIsAdd, setAd
         }
         likeSong();
     }
-    console.log(data);
+    
     return (
         <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
             className={`relative flex-auto flex justify-between items-center p-[10px] rounded-md
@@ -53,14 +53,14 @@ const NewReleaseItem = ({ data, order, percent, style, sm, time, setIsAdd, setAd
                     <span className={`cursor-pointer text-xs ${sm ? 'text-gray-300' : 'text-gray-500'}`}
                     >
                         {data?.singers?.map((item, index) => (
-                            index < 3 && <span key={index} className='hover:text-[#9431C6]'
+                            index < 2 && <span key={index} className='hover:text-[#9431C6]'
                                 onClick={(event) => {
                                     event.stopPropagation();
                                     const link = item?.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll(' ', '-');
                                     navigate(`/singer/${link}/${item?.id}`)
                                 }}
                             >
-                                {(index > 0 ? ', ' : '') + item?.name}
+                                {(index > 0 ? ', ' : '') + item?.name + ((data?.singers.length > 2 && index === 1) ? ' ...' : '')}
                             </span>
                         ))}
                     </span>

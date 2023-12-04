@@ -7,8 +7,8 @@ export { default as Player } from './Player';
 export { default as ListSong } from './ListSong';
 export { default as ListItem } from './ListItem';
 export { default as HomeSection } from './HomeSection';
-export { default as AudioSpinner } from './AudioSpinner';
-export { default as RotateLine } from './RotateLine';
+export { default as AudioSpinner } from './LoadingEffect/AudioSpinner';
+export { default as RotateLine } from './LoadingEffect/RotateLine';
 export { default as NewRelease } from './NewRelease';
 export { default as NewReleaseItem } from './NewReleaseItem';
 export { default as WeekChart } from './WeekChart';
@@ -19,5 +19,6 @@ export { default as Dropdown } from './Dropdown';
 export { default as UpdateSinger } from './UpdateSinger';
 export { default as UpdateAlbum } from './UpdateAlbum';
 export { default as UpdateSong } from './UpdateSong';
-export { default as TriangleLoading } from './TriangleLoading';
+export { default as TriangleLoading } from './LoadingEffect/TriangleLoading';
+export { default as ProgressBarLoading } from './LoadingEffect/ProgressBarLoading';
 

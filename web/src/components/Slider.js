@@ -7,6 +7,7 @@ const { BsChevronRight } = icons;
 
 const Slider = ({banner}) => {
     const navigate = useNavigate();
+
     useEffect(() => {
 
         const sliderElements = document.getElementsByClassName('slider-item');

@@ -111,9 +111,10 @@ class GenreController extends Controller
     public function delete(int $id) {
         $genre = Genre::find($id);
         if ($genre) {
+            $deletedTime = now();
             $genre->update([
-                'name' => $genre->name.'-deleted',
-                'title' => $genre->title.'-deleted',
+                'name' => $genre->name.'`'.$deletedTime,
+                'title' => $genre->title.'`'.$deletedTime,
             ]);
             $genre->delete();
 

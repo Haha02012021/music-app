@@ -24,7 +24,7 @@ class SingerUpdateRequest extends CustomRequest
         return [
             'id' => ['required', 'exists:singers,id'],
             'thumbnail' => ['file', 'mimes:png,jpg,jpeg'],
-            'name' => ['string', 'max:60'],
+            'name' => ['string', 'max:60', 'not_regex:/`/i'],
             'bio' => ['string'],
         ];
     }

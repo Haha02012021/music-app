@@ -23,7 +23,7 @@ class SongUpdateRequest extends CustomRequest
     {
         return [
             'id' => ['required', 'numeric', 'exists:songs,id'],
-            'name' => ['unique:songs', 'max:60'],
+            'name' => ['unique:songs', 'max:60', 'not_regex:/`/i'],
             'singer_ids' => ['array'],
             'genre_ids' => ['array'],
             'album_id' => ['exists:albums,id'],

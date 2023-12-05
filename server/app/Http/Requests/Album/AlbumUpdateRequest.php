@@ -23,7 +23,7 @@ class AlbumUpdateRequest extends CustomRequest
     {
         return [
             'id' => ['required', 'exists:albums,id'],
-            'title' => ['string'],
+            'title' => ['string', 'not_regex:/`/i'],
             'released_at' => ['date'],
             'song_ids' => ['array'],
             'thumbnail' => ['file', 'mimes:jpeg,png', 'mimetypes:image/jpeg,image/png'],

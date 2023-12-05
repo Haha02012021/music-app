@@ -22,7 +22,7 @@ class SingerCreateRequest extends CustomRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:60'],
+            'name' => ['required', 'string', 'max:60', 'not_regex:/`/i'],
             'thumbnail' => ['file', 'mimes:png,jpg,jpeg'],
             'name' => ['string', 'max:60'],
             'bio' => ['string'],

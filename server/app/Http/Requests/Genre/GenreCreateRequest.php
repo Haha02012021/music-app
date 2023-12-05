@@ -22,8 +22,8 @@ class GenreCreateRequest extends CustomRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:'.TITLE_LENGTH],
-            'title' => ['required', 'string', 'max:'.TITLE_LENGTH],
+            'name' => ['required', 'string', 'max:'.TITLE_LENGTH, 'not_regex:/`/i'],
+            'title' => ['required', 'string', 'max:'.TITLE_LENGTH, 'not_regex:/`/i'],
         ];
     }
 }

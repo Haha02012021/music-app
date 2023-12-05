@@ -289,9 +289,12 @@ class SongController extends Controller
     public function delete(int $id) {
         $song = Song::find($id);
         if ($song) {
+            $deletedTime = now();
             $song->update([
-                'name' => $song->name.'-deleted',
+                'name' => $song->name.'`'.$deletedTime,
             ]);
+            $this->fileService->deleteFile($song->thumbnail, THUMBNAILS_DIR);
+            $this->fileService->deleteFile($song->audio, AUDIOES_DIR);
             $song->delete();
 
             return response()->json([

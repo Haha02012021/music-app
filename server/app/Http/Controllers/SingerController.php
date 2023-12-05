@@ -105,9 +105,11 @@ class SingerController extends Controller
     public function delete(int $id) {
         $singer = Singer::find($id);
         if ($singer) {
+            $deletedTime = now();
             $singer->update([
-                'name' => $singer->name.'-deleted',
+                'name' => $singer->name.'`'.$deletedTime,
             ]);
+            $this->fileService->deleteFile($singer->thumbnail, THUMBNAILS_DIR);
             $singer->delete();
 
             return response()->json([

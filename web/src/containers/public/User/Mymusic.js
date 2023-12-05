@@ -150,8 +150,8 @@ const Mymusic = () => {
               <div key={index} className='w-[18%] flex flex-col gap-2 cursor-pointer'
                 onClick={() => {
                   const link = item?.title?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll(' ', '-');
-                  const newLink = '/album/'+link+'/'+item?.id;
-                  navigate(newLink);
+                  const newLink = (info.id === item?.account_id ? '/playlist/' : '/album/') +link+'/'+item?.id;
+                  navigate(newLink, { state: { isPlaylist: true }});
                 }}
               >
                 <HomeSectionItem thumbnail={item?.thumbnail} setAddLoad={setAddLoad} myMusic={true}

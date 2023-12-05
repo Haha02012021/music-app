@@ -72,7 +72,6 @@ const CreateSinger = () => {
     Object.entries(formData).forEach(([key, value]) => {
       data.append(key, value);
     });
-
     setCreateLoading(true);
     apis.apiCreateSinger(data)
     .then(response => {
@@ -83,6 +82,8 @@ const CreateSinger = () => {
         toast.success(response?.data?.message);
     })
     .catch(error => {
+        setCreateLoading(false);
+        toast.error('Tiểu sử quá dài')
         console.error('Error creating song:', error);
     });
     
@@ -132,8 +133,8 @@ const CreateSinger = () => {
           </span>
           <form className='w-[75%] bg-white rounded-md flex flex-col p-6 gap-5 mx-auto' onSubmit={handleSubmit}>
             <label htmlFor="name" className='text-base font-semibold'>Tên ca sĩ:</label>
-            <input type="text" id="name" name="name" onChange={handleInputChange} 
-            className='p-2 border-gray-300 border-[2px] rounded-sm mx-5'
+            <input type="text" id="name" name="name" onChange={handleInputChange} value={formData?.name}
+            className='p-2 border-gray-300 border-[2px] rounded-sm h-[32px]'
             />  
             <label htmlFor="thumbnail" className='text-base font-semibold'>Ảnh: </label>
             <input type="file" accept="image/*" onChange={handleImageChange} id="thumbnail" name="thumbnail" />
@@ -143,8 +144,8 @@ const CreateSinger = () => {
                 </div>
             )}
             <label htmlFor="bio" className='text-base font-semibold'>Tiểu sử:</label>
-            <textarea id="bio" name="bio" onChange={handleInputChange} 
-            className='p-2 border-gray-300 h-[200px] border-[1px] rounded-sm mx-5'
+            <textarea id="bio" name="bio" onChange={handleInputChange} value={formData?.bio}
+            className='p-2 border-gray-300 h-[150px] border-[1px] rounded-sm'
             />
             <div className='flex flex-row-reverse mr-5'>
             <button type="submit" className='bg-[#9431C6] rounded-md px-4 py-2 text-white'>Submit</button>

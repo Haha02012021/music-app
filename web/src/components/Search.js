@@ -19,20 +19,21 @@ const Search = () => {
   const [singerData, setSingerData] = useState([]);
   const [albumData, setAlbumData] = useState([]);
 
+
   useEffect(() => {
-    console.log('ok');
-    const handleClickOutSide = (event) => {
-      console.log(event);
+
+    const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setIsOpen(false);
       }
-      document.addEventListener('click', handleClickOutSide);
-      return () => {
-        document.removeEventListener('click', handleClickOutSide);
-      }
     }
-  }, []);
+    document.addEventListener('click', handleClickOutside);
 
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    }
+  }, [])
+  
   const handleSearch = (e) => {
     setIsOpen(true);
     setSearchText(e.target.value);

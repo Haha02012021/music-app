@@ -102,7 +102,7 @@ const CreateGenre = () => {
 
     console.log(formData);
     return (
-        <div className='w-full relative'>
+        <div className='w-full relative mb-36'>
             {loading && <div className='absolute bg-white right-0 left-0 top-0 bottom-0 z-20 ml-[500px] mt-[200px]'>
                 <TriangleLoading />
             </div>}

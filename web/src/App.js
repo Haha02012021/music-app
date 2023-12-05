@@ -1,5 +1,5 @@
 import { Home, Login, Mymusic, Public, Playlist, NewReleaseChart, 
-  GenreTopic, Top100, Singer, NewRelease, CreateSinger, CreateGenre, CreateAlbum, CreateSong 
+  GenreTopic, Top100, Singer, NewRelease, CreateSinger, CreateGenre, CreateAlbum, CreateSong, Search 
 } from './containers/public/';
 import { Routes, Route } from "react-router-dom";
 import path from "./utils/path";
@@ -27,6 +27,7 @@ function App() {
             <Route path={path.CREATEGENRE} element={<CreateGenre />} />
             <Route path={path.CREATEALBUM} element={<CreateAlbum />} />
             <Route path={path.CREATESONG} element={<CreateSong />} />
+            <Route path={path.SEARCH} element={<Search />} />
 
             <Route path={path.STAR} element={<Home />} />
           </Route>

@@ -13,6 +13,7 @@ const path = {
     ALBUM__TITLE__PID: 'album/:title/:pid',
     ZINGCHARTWEEK__TITLE__CID: 'zing-chart-tuan/:title/:cid',
     ZINGCHART: 'zing-chart',
+    SEARCH: 'tim-kiem/tat-ca/:searchText',
     //admin
     CREATESINGER: 'create-singer',
     CREATEGENRE: 'create-genre',

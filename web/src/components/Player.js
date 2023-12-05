@@ -32,10 +32,10 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
   const { login } = useSelector(state => state.user);
   const [songInfo, setSongInfo] = useState(null);
   const [playingTime, setPlayingTime] = useState(0);
-  const [audio, setAudio] = useState(new Audio());
+  const [audio, setAudio] = useState(null);
   const [isShuffle, setIsShuffle] = useState(false);
   const [isRepeat, setIsRepeat] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [volume, setVolume] = useState(100);
   const [liked, setLiked] = useState(false);
   const thumref = useRef();
@@ -44,8 +44,10 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
 
   useEffect(() => {
     const fetchInfoSong = async () => {
-      audio.pause();
-      audio.currentTime = 0;
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
       setIsLoaded(false);
       const res = await apis.apiGetSong(curSongId);
       setIsLoaded(true);
@@ -58,7 +60,10 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
           res?.data?.data?.id,
           res?.data?.data?.album_id,
         );
-        setAudio(new Audio(res?.data?.data?.audio));
+        const newAudio = new Audio(res?.data?.data?.audio);
+        newAudio.load();
+        if (isPlaying) newAudio.play();
+        setAudio(newAudio);
       } else {
         audio.pause();
         intervalId && clearInterval(intervalId);
@@ -74,13 +79,8 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
   }, [curSongId]);
 
   useEffect(() => {
-    audio.load();
-  }, [audio])
-
-  useEffect(() => {
     // intervalId && clearInterval(intervalId);
-    if (isPlaying) {
-      audio.play();
+    if (audio) {
       intervalId = setInterval(() => {
         var per =
           Math.round((audio.currentTime * 10000) / songInfo?.duration) / 100;
@@ -88,7 +88,7 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
         setPlayingTime(Math.round(audio.currentTime));
       }, 200);
     }
-  }, [audio, isPlaying]);
+  }, [audio]);
 
   useEffect(() => {
     const endSong = () => {
@@ -102,10 +102,10 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
       }
     };
 
-    audio.addEventListener("ended", endSong);
+    audio?.addEventListener("ended", endSong);
 
     return () => {
-      audio.removeEventListener("ended", endSong);
+      audio?.removeEventListener("ended", endSong);
     };
   }, [audio, isShuffle, isRepeat]);
 
@@ -192,7 +192,7 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
           <span className="text-gray-500">{songInfo?.singers[0]?.name}</span>
         </div>
 
-       {login && <div className="flex">
+        {login && <div className="flex">
           <span
             className="p-2 mx-[2px] cursor-pointer"
             onClick={handleLikeSong}
@@ -246,11 +246,10 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
           </span>
           <span
             onClick={handleNextSong}
-            className={`${
-              id === null || id === songs.length - 1 || songs.length < 2
-                ? "text-gray-200"
-                : "cursor-pointer"
-            }`}
+            className={`${id === null || id === songs.length - 1 || songs.length < 2
+              ? "text-gray-200"
+              : "cursor-pointer"
+              }`}
           >
             <BiSkipNext size={36} />
           </span>
@@ -320,11 +319,10 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
         />
         <span
           onClick={() => setOpenRightSideBar(!openRightSideBar)}
-          className={`cursor-pointer ${
-            openRightSideBar
-              ? "bg-main-500 text-white"
-              : "text-gray-800 hover:bg-gray-200"
-          } rounded-sm p-1`}
+          className={`cursor-pointer ${openRightSideBar
+            ? "bg-main-500 text-white"
+            : "text-gray-800 hover:bg-gray-200"
+            } rounded-sm p-1`}
         >
           <PiPlaylistLight size={20} />
         </span>

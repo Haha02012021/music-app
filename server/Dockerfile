@@ -12,6 +12,7 @@ COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY .env.example /var/www/.env
 COPY docker/start.sh /usr/local/bin/start
 
+RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 64M/g' /usr/local/etc/php/php.ini
 RUN chmod 777 -R /var/www/storage/ && \
     echo "Listen 8080" >> /etc/apache2/ports.conf && \
     chown -R www-data:www-data /var/www/ && \

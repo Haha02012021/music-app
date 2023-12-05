@@ -51,4 +51,11 @@ class FileService
         }
         return null;
     }
+
+    public function deleteFile($file, $fileDir)
+    {
+        if ($file && !str_contains($file, 'https')) {
+            $this->storage->getBucket()->object($fileDir.$file)->delete();
+        }
+    }
 }

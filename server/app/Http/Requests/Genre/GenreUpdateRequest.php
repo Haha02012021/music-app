@@ -23,8 +23,8 @@ class GenreUpdateRequest extends CustomRequest
     {
         return [
             'id' => ['required', 'exists:genres,id'],
-            'name' => ['string', 'max:'.TITLE_LENGTH],
-            'title' => ['string', 'max:'.TITLE_LENGTH],
+            'name' => ['string', 'max:'.TITLE_LENGTH, 'not_regex:/`/i'],
+            'title' => ['string', 'max:'.TITLE_LENGTH, 'not_regex:/`/i'],
         ];
     }
 }

@@ -23,7 +23,7 @@ class AlbumCreateRequest extends CustomRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string'],
+            'title' => ['required', 'string', 'not_regex:/`/i'],
             'released_at' => ['date'],
             'song_ids' => ['array'],
             'thumbnail' => ['file'],

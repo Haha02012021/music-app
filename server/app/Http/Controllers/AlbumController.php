@@ -257,9 +257,11 @@ class AlbumController extends Controller
     public function delete(int $id) {
         $album = Album::find($id);
         if ($album) {
+            $deletedTime = now();
             $album->update([
-                'name' => $album->title.'-deleted',
+                'name' => $album->title.'`'.$deletedTime,
             ]);
+            $this->fileService->deleteFile($album->thumbnail, THUMBNAILS_DIR);
             $album->delete();
 
             return response()->json([

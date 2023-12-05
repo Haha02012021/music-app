@@ -22,7 +22,7 @@ class SongCreateRequest extends CustomRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'unique:songs', 'max:60'],
+            'name' => ['required', 'unique:songs', 'max:60', 'not_regex:/`/i'],
             'singer_ids' => ['array'],
             'genre_ids' => ['array'],
             'thumbnail' => ['file', 'mimes:jpeg,png', 'mimetypes:image/jpeg,image/png'],

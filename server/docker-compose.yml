@@ -19,5 +19,5 @@ services:
     volumes:
       - .:/var/www/html
     environment:
-      - APP_ENV=local
-      - CONTAINER_ROLE=scheduler
+      - APP_ENV: local
+      - CONTAINER_ROLE: scheduler

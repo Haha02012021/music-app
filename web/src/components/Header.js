@@ -16,10 +16,10 @@ const Header = () => {
                 <span>
                     <GoArrowRight size={24}/>
                 </span>
-            </div>
+            </div> */}
             <div className='w-1/2'>
                 <Search />
-            </div> */}
+            </div>
         </div>
         <div className='w-1/5'>
             <Login />

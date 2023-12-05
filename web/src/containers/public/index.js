@@ -12,3 +12,4 @@ export { default as CreateSinger } from './Admin/CreateSinger';
 export { default as CreateGenre } from './Admin/CreateGenre';
 export { default as CreateAlbum } from './Admin/CreateAlbum';
 export { default as CreateSong } from './Admin/CreateSong';
+export { default as Search } from './Guest/Search';

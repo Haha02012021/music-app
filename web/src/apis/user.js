@@ -214,3 +214,16 @@ export const apiGetUploadedSongs = () => new Promise(async (resolve, reject) => 
         reject(error);
     }
 })
+
+export const apiSearch = (searchText) => new Promise(async (resolve, reject) => {
+    try {
+        const response = await axios({
+            url: '/search',
+            method: 'get',
+            params: {keyword: searchText}
+        });
+        resolve(response);
+    } catch (error) {
+        reject(error);
+    }
+})

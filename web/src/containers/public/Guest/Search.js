@@ -71,7 +71,7 @@ const Search = () => {
                     <div className='flex justify-between items-center'>
                         <span className='text-xl font-medium'>Bài hát</span>
                     </div>
-                    <div className='flex flex-wrap gap-4 mt-7'>
+                    <div className='flex flex-wrap gap-7 mt-7'>
                         {songData?.map((item, index) => (index < maxSong &&
                             <div className='p-2 flex flex-col items-center w-[18%] shadow-lg border border-gray-200 rounded-md cursor-pointer'
                                 onClick={() => {
@@ -99,7 +99,7 @@ const Search = () => {
                     <div className='flex justify-between items-center'>
                         <span className='text-xl font-medium'>Album</span>
                     </div>
-                    <div className='flex flex-wrap gap-4 mt-7'>
+                    <div className='flex flex-wrap gap-7 mt-7'>
                         {albumData?.map((item, index) => (index < maxAlbum &&
                             <div className='p-2 flex flex-col items-center w-[18%] shadow-lg border border-gray-200 rounded-md cursor-pointer'
                                 onClick={() => {

@@ -169,7 +169,7 @@ const CreateAlbum = () => {
           <div className='absolute top-0 bottom-0 right-0 left-0 z-10 pb-36 flex justify-center items-center bg-gray-200 rounded-md'>
             <ProgressBarLoading />
           </div>}
-        <div className='w-full flex flex-wrap justify-start items-center gap-7'>
+        <div className='w-full flex flex-wrap justify-start items-center gap-5'>
           {data?.map(item => (
             <div key={item?.id} className='w-[20%] flex flex-col justify-center items-center px-4 py-6 m-5 shadow-md gap-4 rounded-md cursor-pointer'
               onClick={() => {

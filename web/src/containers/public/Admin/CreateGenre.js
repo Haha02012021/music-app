@@ -53,12 +53,19 @@ const CreateGenre = () => {
         if (isOpen) {
             const createGenre = async () => {
                 setCreateLoading(true);
-                const res = await apis.apiCreateGenre(formData);
-                console.log(res);
-                setCreateLoading(false);
-                if (res?.data?.success === true) {
-                    setIsOpen(false);
-                    toast.success(res?.data?.message);
+                if (formData?.name?.includes('`')) {
+                    toast.error('Tên thể loại không được có dấu `')
+                    setCreateLoading(false);
+                } else {
+                    const res = await apis.apiCreateGenre(formData);
+                    console.log(res);
+                    setCreateLoading(false);
+                    if (res?.data?.success === true) {
+                        setIsOpen(false);
+                        toast.success(res?.data?.message);
+                    } else {
+                        setIsOpen(false);
+                    }
                 }
             }
             createGenre();

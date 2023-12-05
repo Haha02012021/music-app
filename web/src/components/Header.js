@@ -6,6 +6,7 @@ import { Login } from '../containers/public';
 const {GoArrowRight, GoArrowLeft} = icons;
 
 const Header = () => {
+
   return (
     <div className='w-full flex justify-between'>
         <div className='w-4/5 flex gap-6 items-center'>

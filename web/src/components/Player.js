@@ -110,10 +110,10 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
   }, [audio, isShuffle, isRepeat]);
 
   const handleTogglePlayMusic = () => {
-    if (isPlaying) {
+    if (isPlaying && audio) {
       dispatch(actions.playSong(false));
       audio.pause();
-    } else {
+    } else if (audio) {
       audio.play();
       dispatch(actions.playSong(true));
     }
@@ -169,14 +169,17 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
     volume > 0 ? setVolume(0) : setVolume(100);
   };
 
-  const handleLikeSong = (e) => {
-    e.stopPropagation();
-    const likeSong = async () => {
-      const res = await apis.apiLikeSong(songInfo?.id, 2);
-      setLiked((prev) => !prev);
-    };
-    likeSong();
-  };
+  const handleWheel = (e) => {
+    console.log(e);
+    if (e.deltaY > 0) {
+      setVolume(volume >= 6 ? volume - 6 : 0);
+      audio.volume = (volume >= 6 ? volume - 6 : 0) / 100;
+    }
+    if (e.deltaY < 0) {
+      setVolume(volume + 6 <= 100 ? volume + 6 : 100);
+      audio.volume = (volume + 6 <= 100 ? volume + 6 : 100) / 100;
+    }
+  }
 
   return (
     <div className="bg-main-400 border-t-2 px-5 h-full flex z-40">
@@ -191,22 +194,6 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
           <span className="font-medium text-[#5E5E67]">{songInfo?.name}</span>
           <span className="text-gray-500">{songInfo?.singers[0]?.name}</span>
         </div>
-
-        {login && <div className="flex">
-          <span
-            className="p-2 mx-[2px] cursor-pointer"
-            onClick={handleLikeSong}
-          >
-            {liked ? (
-              <AiFillHeart title="Xoá khỏi thư viện" size={16} />
-            ) : (
-              <AiOutlineHeart title="Thêm vào thư viện" size={16} />
-            )}
-          </span>
-          <span className="p-2 mx-[2px] cursor-pointer">
-            <BsPlusLg title="Thêm vào playlist" size={16} />
-          </span>
-        </div>}
       </div>
 
       <div className="flex flex-col flex-auto justify-center items-center">
@@ -316,6 +303,7 @@ const Player = ({ setOpenRightSideBar, openRightSideBar }) => {
           max={100}
           value={volume}
           onChange={handleVolume}
+          onWheel={handleWheel}
         />
         <span
           onClick={() => setOpenRightSideBar(!openRightSideBar)}

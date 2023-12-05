@@ -24,6 +24,7 @@ const NewRelease = ({setLoading}) => {
             const response = await apis.getNewRelease(type);
             setLoading(prev => prev + 1);
             setSongData(response?.data?.data);
+            console.log(response);
         }
         fetchData();
     }, [type]);

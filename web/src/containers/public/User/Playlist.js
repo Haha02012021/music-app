@@ -1,5 +1,5 @@
 import React, { useEffect, useState, memo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import * as apis from '../../../apis';
 import moment from 'moment';
 import { ListSong, AudioSpinner, TriangleLoading } from '../../../components';
@@ -11,12 +11,16 @@ import defaultBackground from '../../../assets/PlaylistDefaultBackground.png';
 const { TbPlayerPlayFilled } = icons;
 
 const Playlist = () => {
+    const location = useLocation();
+    const isPlaylist = location.state?.isPlaylist;
     const { pid } = useParams();
     const { isPlaying, curSongId } = useSelector(state => state.music);
     const [playlistData, setPlaylistData] = useState({});
     const [loading, setLoading] = useState();
+    const [isDelete, setIsDelete] = useState(false);
     const [isPlaylistSong, setIsPlaylistSong] = useState();
     const dispatch = useDispatch();
+
     useEffect(() => {
         const fetchDataDetailPlaylist = async () => {
             setLoading(true);
@@ -31,7 +35,7 @@ const Playlist = () => {
         }
 
         fetchDataDetailPlaylist();
-    }, [])
+    }, [isDelete])
 
     useEffect(() => {
         setIsPlaylistSong(playlistData?.songs?.filter(item => item?.id === curSongId))
@@ -73,7 +77,7 @@ const Playlist = () => {
                     <span>{playlistData?.sortDescription}</span>
                 </div>
                 <div className='mb-10'>
-                    <ListSong />
+                    <ListSong isPlaylist={isPlaylist} setIsDelete={setIsDelete} />
                 </div>
             </div>}
         </div>

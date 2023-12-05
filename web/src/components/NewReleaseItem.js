@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import icons from '../utils/icons';
 import * as apis from '../apis';
+import { toast } from 'react-toastify';
 
 const { AiOutlineHeart, AiFillHeart, BsPlusLg } = icons;
 const NewReleaseItem = ({ data, order, percent, style, sm, time, setIsAdd, setAddItem }) => {
@@ -16,11 +17,16 @@ const NewReleaseItem = ({ data, order, percent, style, sm, time, setIsAdd, setAd
     const { nearlyListenSongs } = useSelector(state => state.music);
     const { login } = useSelector(state => state.user);
 
+    //console.log(data);
     const handleLikeSong = (e) => {
         e.stopPropagation();
         const likeSong = async () => {
             const res = await apis.apiLikeSong(data?.id, 2);
-            setLiked(prev => !prev)
+            console.log(res);
+            if (res?.data?.success === true) {
+                toast.success(res?.data?.message);
+                setLiked(prev => !prev)
+            }
         }
         likeSong();
     }

@@ -39,14 +39,14 @@ const Mymusic = () => {
       }
       const res2 = await apis.apiGetLikedSongs();
       if (res2?.data?.success === false) {
-        toast.warn(res2?.data?.message);
+        //toast.warn(res2?.data?.message);
         dispatch(actions.getLogin(false))
       } else {
         setLikedSongData(res2?.data?.data);
       }
       const res3 = await apis.apiGetPlaylist();
       if (res3?.data?.success === false) {
-        toast.warn(res3?.data?.message);
+        //toast.warn(res3?.data?.message);
         dispatch(actions.getLogin(false))
       } else {
         setData([...res3?.data?.data, ...res?.data?.data]);
@@ -54,7 +54,7 @@ const Mymusic = () => {
       const res4 = await apis.apiGetUploadedSongs();
       setLoading(false);
       if (res4?.data?.success === false) {
-        toast.warn(res4?.data?.message);
+        //toast.warn(res4?.data?.message);
         dispatch(actions.getLogin(false))
       } else {
         setUploadedSongData(res4?.data?.data);
@@ -67,12 +67,12 @@ const Mymusic = () => {
     const getPlaylist = async () => {
       const res = await apis.apiGetLikedAlbums();
       if (res?.data?.success === false) {
-        toast.warn(res?.data?.message);
+        //toast.warn(res?.data?.message);
         dispatch(actions.getLogin(false))
       }
       const res3 = await apis.apiGetPlaylist();
       if (res3?.data?.success === false) {
-        toast.warn(res3?.data?.message);
+        //toast.warn(res3?.data?.message);
         dispatch(actions.getLogin(false))
       } else {
         setData([...res3?.data?.data, ...res?.data?.data]);
@@ -86,7 +86,7 @@ const Mymusic = () => {
     const addSong = async () => {
       const res2 = await apis.apiGetLikedSongs();
       if (res2?.data?.success === false) {
-        toast.warn(res2?.data?.message);
+        //toast.warn(res2?.data?.message);
         dispatch(actions.getLogin(false))
       } else {
         setLikedSongData(res2?.data?.data);
@@ -94,7 +94,7 @@ const Mymusic = () => {
       const res4 = await apis.apiGetUploadedSongs();
       setAddSongLoad(false);
       if (res4?.data?.success === false) {
-        toast.warn(res4?.data?.message);
+        //toast.warn(res4?.data?.message);
         dispatch(actions.getLogin(false))
       } else {
         setUploadedSongData(res4?.data?.data);

@@ -145,7 +145,7 @@ class AlbumController extends Controller
                     ->find($id);
 
         if ($album) {
-            $songs = $album->songs($authId)->get()
+            $songs = $album->songs($authId)->withLiked($authId)->get()
                     ->map(function ($song) {
                         if (!str_contains($song->thumbnail, 'https')) {
                             $song->thumbnail = $this->fileService->getFileUrl($song->thumbnail, THUMBNAILS_DIR);

@@ -33,32 +33,13 @@ const Mymusic = () => {
     const getLiked = async () => {
       setLoading(true);
       const res = await apis.apiGetLikedAlbums();
-      if (res?.data?.success === false) {
-        toast.warn(res?.data?.message);
-        dispatch(actions.getLogin(false))
-      }
       const res2 = await apis.apiGetLikedSongs();
-      if (res2?.data?.success === false) {
-        //toast.warn(res2?.data?.message);
-        dispatch(actions.getLogin(false))
-      } else {
-        setLikedSongData(res2?.data?.data);
-      }
+      setLikedSongData(res2?.data?.data);
       const res3 = await apis.apiGetPlaylist();
-      if (res3?.data?.success === false) {
-        //toast.warn(res3?.data?.message);
-        dispatch(actions.getLogin(false))
-      } else {
-        setData([...res3?.data?.data, ...res?.data?.data]);
-      }
+      setData([...res3?.data?.data, ...res?.data?.data]);
       const res4 = await apis.apiGetUploadedSongs();
       setLoading(false);
-      if (res4?.data?.success === false) {
-        //toast.warn(res4?.data?.message);
-        dispatch(actions.getLogin(false))
-      } else {
-        setUploadedSongData(res4?.data?.data);
-      }
+      setUploadedSongData(res4?.data?.data);
   }
   getLiked();
   }, []);
@@ -66,17 +47,8 @@ const Mymusic = () => {
   useEffect(() => {
     const getPlaylist = async () => {
       const res = await apis.apiGetLikedAlbums();
-      if (res?.data?.success === false) {
-        //toast.warn(res?.data?.message);
-        dispatch(actions.getLogin(false))
-      }
       const res3 = await apis.apiGetPlaylist();
-      if (res3?.data?.success === false) {
-        //toast.warn(res3?.data?.message);
-        dispatch(actions.getLogin(false))
-      } else {
-        setData([...res3?.data?.data, ...res?.data?.data]);
-      }
+      setData([...res3?.data?.data, ...res?.data?.data]);
       setAddLoad(false);
     }
     getPlaylist();
@@ -85,20 +57,12 @@ const Mymusic = () => {
   useEffect(() => {
     const addSong = async () => {
       const res2 = await apis.apiGetLikedSongs();
-      if (res2?.data?.success === false) {
-        //toast.warn(res2?.data?.message);
-        dispatch(actions.getLogin(false))
-      } else {
-        setLikedSongData(res2?.data?.data);
-      }
+      setLikedSongData(res2?.data?.data);
+      
       const res4 = await apis.apiGetUploadedSongs();
       setAddSongLoad(false);
-      if (res4?.data?.success === false) {
-        //toast.warn(res4?.data?.message);
-        dispatch(actions.getLogin(false))
-      } else {
-        setUploadedSongData(res4?.data?.data);
-      }
+      setUploadedSongData(res4?.data?.data);
+      
     }
 
     addSong();

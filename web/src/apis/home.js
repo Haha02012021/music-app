@@ -1,6 +1,6 @@
 import axios from '../axios';
 
-export const getTop100 = () => new Promise (async( resolve, reject) => {
+export const getTop100 = (onlyOutstanding) => new Promise (async( resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
         const response = await axios ({
@@ -10,6 +10,7 @@ export const getTop100 = () => new Promise (async( resolve, reject) => {
                 'Authorization': accessToken ? `Bearer ${accessToken}` : '',
                 'Content-Type': 'application/json',
             },
+            params: {onlyOutstanding: onlyOutstanding ? true : ''}
         });
         resolve(response);
     } catch (error) {
@@ -17,12 +18,13 @@ export const getTop100 = () => new Promise (async( resolve, reject) => {
     }
 })
 
-export const getTopSinger = () => new Promise (async( resolve, reject) => {
+export const getTopSinger = (limitSinger) => new Promise (async( resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
         const response = await axios ({
             url: '/singer/top',
             method: 'get',
+            params: {limit: limitSinger ? limitSinger : ''},
             headers: {
                 'Authorization': accessToken ? `Bearer ${accessToken}` : '',
                 'Content-Type': 'application/json',
@@ -34,12 +36,15 @@ export const getTopSinger = () => new Promise (async( resolve, reject) => {
     }
 })
 
-export const getAlbumTop = () => new Promise (async( resolve, reject) => {
+export const getAlbumTop = (limitAlbum) => new Promise (async( resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
         const response = await axios ({
             url: '/album/top',
             method: 'get',
+            params: {
+                limit: limitAlbum ? limitAlbum : ''
+            },
             headers: {
                 'Authorization': accessToken ? `Bearer ${accessToken}` : '',
                 'Content-Type': 'application/json',
@@ -51,7 +56,7 @@ export const getAlbumTop = () => new Promise (async( resolve, reject) => {
     }
 })
 
-export const getNewRelease = (id) => new Promise (async( resolve, reject) => {
+export const getNewRelease = (id, limitSong) => new Promise (async( resolve, reject) => {
     try {
         const accessToken = localStorage.getItem('accessToken');
         const response = await axios ({
@@ -61,7 +66,10 @@ export const getNewRelease = (id) => new Promise (async( resolve, reject) => {
                 'Authorization': accessToken ? `Bearer ${accessToken}` : '',
                 'Content-Type': 'application/json',
             },
-            params: {isVietNamese: id},
+            params: {
+                isVietNamese: id,
+                limit: limitSong ? limitSong : '',
+            },
         });
         resolve(response);
     } catch (error) {

@@ -26,7 +26,7 @@ const Home = () => {
       <div className='flex flex-col gap-12 overflow-y-auto'>
         <Slider banner={banner} />
 
-        <NewRelease setLoading={setLoading}/>
+        <NewRelease setLoading={setLoading} loading={loading} />
 
         <HomeSection id={3} name='Album hot' setLoading={setLoading}/>
         <HomeSection id={2} name='Nghệ sĩ thịnh hành' setLoading={setLoading}/>

@@ -4,22 +4,26 @@ import * as apis from '../../../apis';
 import ListSong from '../../../components/ListSong';
 import * as actions from '../../../store/actions';
 import { useDispatch } from 'react-redux';
+import { TriangleLoading } from '../../../components';
 
 const { TbPlayerPlayFilled } = icons;
 const NewRelease = () => {
 
     const dispatch = useDispatch();
     const [type, setType] = useState(1);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             const response = await apis.getNewRelease(type);
+            setLoading(false);
             if (response?.status === 200) {
                 dispatch(actions.setSong(response?.data?.data));
             }
         }
         fetchData();
-    })
+    }, [type])
 
     return (
         <div className='flex flex-col gap-7'>
@@ -43,8 +47,12 @@ const NewRelease = () => {
                     QUỐC TẾ
                 </button>
             </div>
-            <div>
-                <ListSong release={true} />
+
+            <div className='relative'>
+                {loading && <div className='absolute bg-white right-0 left-0 top-0 bottom-0 z-20 ml-[500px] mt-[200px]'>
+                    <TriangleLoading />
+                </div>}
+                {!loading && <ListSong release={true} />}
             </div>
         </div>
     )

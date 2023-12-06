@@ -317,12 +317,12 @@ class SongController extends Controller
         $first_date = date('Y-m-d',strtotime('first day of this month'));
         $last_date = date('Y-m-d',strtotime('last day of this month'));
         $songs = Song::whereBetween('released_at', [$first_date, $last_date])
+                    ->withLiked($authId)
                     ->whereRelation('author', 'role', Role::ADMIN)
                     ->withCount('actions')
                     ->with('singers')
                     ->orderByDesc('created_at')
                     ->orderByDesc('actions_count')
-                    ->withLiked($authId)
                     ->limit(100)
                     ->get()
                     ->map(function ($song) {

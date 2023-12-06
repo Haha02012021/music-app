@@ -164,6 +164,7 @@ class AlbumService
         $lastDateOfMonth = date('Y-m-d',strtotime('last day of this month'));
 
         $outstandingAlbums = Album::where('type', 'like', AlbumType::TOP100.'%')
+                                    ->withLike($authId)
                                     ->with('songs')
                                     ->withCount(['actions' => function ($query) use ($firstDateOfMonth, $lastDateOfMonth) {
                                         $query->whereBetween('actions.created_at', [$firstDateOfMonth, $lastDateOfMonth]);

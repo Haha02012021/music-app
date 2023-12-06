@@ -30,6 +30,7 @@ const CreateSinger = () => {
     const fetchData = async () => {
       setLoading(true);
       const res = await apis.apiGetAllSingers(pageId);
+      console.log(res);
       setLoading(false);
       setLastPage(res?.data?.data?.last_page);
       setData(res?.data?.data?.data);

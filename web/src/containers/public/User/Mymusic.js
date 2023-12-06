@@ -27,27 +27,12 @@ const Mymusic = () => {
     name: '',
   });
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const getLiked = async () => {
-      setLoading(true);
-      const res = await apis.apiGetLikedAlbums();
-      const res2 = await apis.apiGetLikedSongs();
-      setLikedSongData(res2?.data?.data);
-      const res3 = await apis.apiGetPlaylist();
-      setData([...res3?.data?.data, ...res?.data?.data]);
-      const res4 = await apis.apiGetUploadedSongs();
-      setLoading(false);
-      setUploadedSongData(res4?.data?.data);
-  }
-  getLiked();
-  }, []);
 
   useEffect(() => {
     const getPlaylist = async () => {
       const res = await apis.apiGetLikedAlbums();
       const res3 = await apis.apiGetPlaylist();
+      console.log(res3);
       setData([...res3?.data?.data, ...res?.data?.data]);
       setAddLoad(false);
     }
@@ -85,12 +70,14 @@ const Mymusic = () => {
 
   return (
     <div className='relative mb-36 w-full'>
-      {loading && <div className='absolute top-0 bottom-0 left-0 right-0 z-10 bg-white over'>
+      {(data.length === 0 || likedSongData.length === 0 || uploadedSongData.length === 0) && 
+        <div className='absolute top-0 bottom-0 left-0 right-0 z-10 bg-white over'>
         <div className='ml-[500px] mt-[200px]'>
           <TriangleLoading />
         </div>
       </div>}
-      {!loading && <div className='w-full flex flex-col gap-7 mb-36'>
+      { (data.length > 0 && likedSongData.length > 0 && uploadedSongData.length > 0) && 
+      <div className='w-full flex flex-col gap-7 mb-36'>
         <span className='text-[40px] font-bold'>Thư viện</span>
         <div className='relative w-full flex flex-col gap-4'>
           {addLoad && <div className='absolute top-0 bottom-0 right-0 left-0 z-10 flex justify-center items-center bg-gray-200 rounded-md'>
@@ -102,11 +89,11 @@ const Mymusic = () => {
           </div>
           {isOpenPopup && <div>
             <form onSubmit={handleSubmit}>
-              <label htmlFor="name" className='text-xl font-semibold'>Tên Playlist:</label>
+              <label htmlFor="name" className='text-lg font-semibold'>Tên Playlist:</label>
               <input type="text" id="name" name="name" onChange={handleInputChange} 
-                className='p-2 border-gray-300 border-[2px] rounded-sm mx-5'
+                className='p-2 border-gray-300 border-[2px] h-[32px] rounded-sm mx-5'
               />          
-              <button type="submit" className='bg-[#9431C6] rounded-md px-4 py-2 text-white'>Submit</button>
+              <button type="submit" className='bg-[#9431C6] rounded-md px-5 py-2 text-sm text-white'>Submit</button>
             </form>
           </div>}
           <div className='w-full flex flex-wrap gap-7'>

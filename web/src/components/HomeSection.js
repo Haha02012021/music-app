@@ -13,24 +13,13 @@ const HomeSection = ({id, name, gid, setLoading}) => {
             if (id === 1) {
                 const response = await apis.getTop100();
                 setLoading(prev => prev + 1);
-                const dataTop100 = response?.data?.data;
-                var index = 0;
-                const dataFake = [];
-                var nho = [];
-                dataTop100?.map(dataItem => (dataItem?.albums?.map(item => {
-                    if (index < 5 && !nho[item.id]) {
-                        dataFake.push(item);
-                        nho[item.id] = 1;
-                        index++;
-                    }
-                })));
-                setData(dataFake);
+                setData(response?.data?.data?.[0]?.albums);
             } else if (id === 2) {
-                const response = await apis.getTopSinger();
+                const response = await apis.getTopSinger(5);
                 setLoading(prev => prev + 1);
                 setData(response?.data?.data);
             } else if (id === 3) {
-                const response = await apis.getAlbumTop();
+                const response = await apis.getAlbumTop(5);
                 setLoading(prev => prev + 1);
                 setData(response?.data?.data);
             } else if (gid) {
@@ -49,7 +38,7 @@ const HomeSection = ({id, name, gid, setLoading}) => {
             <div className='flex gap-7 items-start '>
                 {data?.filter((item, index) => index < 5)?.map(item => (
                     <div key={item.id}
-                        className='w-1/5 flex flex-col gap-2 items-center justify-center cursor-pointer'
+                        className='w-[18%] flex flex-col gap-2 items-center justify-center cursor-pointer'
                         onClick={() => {
                             if (id !== 2) {
                                 const link = item?.title?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll(' ', '-');

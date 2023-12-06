@@ -9,19 +9,23 @@ import { RotateLine } from '../components';
 
 const { BsChevronRight, IoIosCloseCircleOutline } = icons;
 
-const NewRelease = ({setLoading}) => {
+const NewRelease = ({setLoading, loading}) => {
 
     const [playlistLoading, setPlaylistLoading] = useState();
+    const [releaseLoading, setReleaseLoading] = useState(false);
     const [type, setType] = useState(1);
     const [songData, setSongData] = useState([]);
     const [isAdd, setIsAdd] = useState(false);
     const [addItem, setAddItem] = useState({});
     const [playlist, setPlaylist] = useState([]);
     const navigate = useNavigate();
+    console.log(loading);
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await apis.getNewRelease(type);
+            setReleaseLoading(true);
+            const response = await apis.getNewRelease(type, 12);
+            setReleaseLoading(false);
             setLoading(prev => prev + 1);
             setSongData(response?.data?.data);
             console.log(response);
@@ -83,8 +87,11 @@ const NewRelease = ({setLoading}) => {
                         <BsChevronRight size={16} />
                     </div>
                 </div>
-                <div className='flex flex-wrap w-full'>
-                    {songData?.filter((item, index) => index < 12)?.map((item) => (
+                <div className={`relative flex flex-wrap w-full ${releaseLoading && 'h-[320px]'}`}>
+                    {loading >= 5 && releaseLoading && <div className='absolute bg-white right-0 left-0 top-0 bottom-0 z-20 flex justify-center items-center'>
+                        <RotateLine width={40} />
+                    </div>}
+                    {!releaseLoading && songData?.filter((item, index) => index < 12)?.map((item) => (
                         <div key={item.id}  className='w-[300px] min-[1024px]:w-[30%]'>
                             <NewReleaseItem data={item} time={true} setIsAdd={setIsAdd} setAddItem={setAddItem} />
                         </div>

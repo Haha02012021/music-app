@@ -17,9 +17,9 @@ const Mymusic = () => {
   const [loading, setLoading] = useState(false);
   const [addLoad, setAddLoad] = useState();
   const [addSongLoad, setAddSongLoad] = useState();
-  const [data, setData] = useState([]);
-  const [likedSongData, setLikedSongData] = useState([]);
-  const [uploadedSongData, setUploadedSongData] = useState([]);
+  const [data, setData] = useState(null);
+  const [likedSongData, setLikedSongData] = useState(null);
+  const [uploadedSongData, setUploadedSongData] = useState(null);
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [type, setType] = useState(1);
   const [isCreate, setIsCreate] = useState(false);
@@ -70,13 +70,13 @@ const Mymusic = () => {
 
   return (
     <div className='relative mb-36 w-full'>
-      {(data.length === 0 || likedSongData.length === 0 || uploadedSongData.length === 0) && 
+      {(data === null || likedSongData === null || uploadedSongData === null) && 
         <div className='absolute top-0 bottom-0 left-0 right-0 z-10 bg-white over'>
         <div className='ml-[500px] mt-[200px]'>
           <TriangleLoading />
         </div>
       </div>}
-      { (data.length > 0 && likedSongData.length > 0 && uploadedSongData.length > 0) && 
+      { (data && likedSongData && uploadedSongData) && 
       <div className='w-full flex flex-col gap-7 mb-36'>
         <span className='text-[40px] font-bold'>Thư viện</span>
         <div className='relative w-full flex flex-col gap-4'>
